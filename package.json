@@ -1,0 +1,24 @@
+{
+    "name": "fw5-backend-begineer-tugas",
+    "version": "1.0.0",
+    "description": "backend egineer task",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon index.js"
+    },
+    "keywords": [
+        "backend",
+        "engineer",
+        "task"
+    ],
+    "author": "Sella",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.2",
+        "mysql": "^2.18.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}
