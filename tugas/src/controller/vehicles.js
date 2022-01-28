@@ -4,7 +4,6 @@ const vehicleModel = require('../model/vehicles');
 
 const getVehicles = (req, res) => {
     vehicleModel.getDataVehicles(results => {
-        console.log(results);
         return res.json({
             success: true,
             message: 'List Data Vehicle',
