@@ -40,10 +40,17 @@ const insertVehicle = (req, res) => {
     };
 
     vehicleModel.insertDataVehicle(data, (results) => {
-        return res.json({
-            success: true,
-            message: 'Data Vehicle entered successfully.'
-        });
+        if (results.affectedRows > 0) {
+            return res.json({
+                success: true,
+                message: 'Data Vehicle entered successfully.'
+            });
+        } else {
+            return res.status(500).json({
+                success: false,
+                message: 'Data Vehicle failed to enter.'
+            });
+        }
     });
 };
 
@@ -59,10 +66,17 @@ const updateVehicle = (req, res) => {
     vehicleModel.getDataVehicle(id, (results) => {
         if (results.length > 0) {
             vehicleModel.updateDataVehicle(id, data, (results) => {
-                return res.json({
-                    success: true,
-                    message: 'Data Vehicle updated sucessfully.'
-                });
+                if (results.affectedRows > 0) {
+                    return res.json({
+                        success: true,
+                        message: 'Data Vehicle updated sucessfully.'
+                    });
+                } else {
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Data Vehicle failed to update.'
+                    });
+                }
             });
         } else {
             return res.status(404).json({
@@ -79,10 +93,17 @@ const deleteVehicle = (req, res) => {
     vehicleModel.getDataVehicle(id, (results) => {
         if (results.length > 0) {
             vehicleModel.deleteDataVehicle(id, (results) => {
-                return res.json({
-                    success: true,
-                    message: 'Data Vehicle deleted successfully.'
-                });
+                if (results.affectedRows > 0) {
+                    return res.json({
+                        success: true,
+                        message: 'Data Vehicle deleted successfully.'
+                    });
+                } else {
+                    return res.status(500).json({
+                        success: true,
+                        message: 'Data Vehicle failed to delete.'
+                    });
+                }
             });
         } else {
             return res.status(404).json({
