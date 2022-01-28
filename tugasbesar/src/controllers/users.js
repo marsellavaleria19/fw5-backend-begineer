@@ -17,7 +17,7 @@ const getUser = (request, response) => {
             return response.json({
                 success: true,
                 message: "Detail user",
-                results: results
+                results: results[0]
             })
         } else {
             return response.status(404).json({
