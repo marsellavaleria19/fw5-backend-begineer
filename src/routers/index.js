@@ -1,3 +1,3 @@
 const route = require('express').Router();
-route.use('/vehiclerent', require('./vehicleRents'));
+route.use('/vehicle', require('./vehicles'));
 module.exports = route;
