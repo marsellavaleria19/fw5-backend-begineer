@@ -13,11 +13,18 @@ exports.getDataUser = (id, cb) => {
     });
 };
 
-exports.getDataUserEmail = (email, cb) => {
-    db.query('select * from users where email=?', [email], (err, res) => {
-        if (err) throw err;
-        cb(res);
-    });
+exports.getDataUserEmail = (email, id, cb) => {
+    if (id == null) {
+        db.query('select * from users where email=?', [email, id], (err, res) => {
+            if (err) throw err;
+            cb(res);
+        });
+    } else {
+        db.query('select * from users where email=? and id!=?', [email, id], (err, res) => {
+            if (err) throw err;
+            cb(res);
+        });
+    }
 };
 
 exports.insertDataUser = (data, cb) => {

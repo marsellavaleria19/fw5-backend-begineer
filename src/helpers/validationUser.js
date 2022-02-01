@@ -2,7 +2,7 @@ exports.validationDataUser = (data) => {
     var result = null;
     const { fullName, nickName, gender, photo, address, birthDate, mobileNumber, email, password } = data;
     if (fullName == null || fullName == '') {
-        result = { name: 'Fullname must be filled' };
+        result = { fullName: 'Fullname must be filled' };
     }
     if (nickName == null || nickName == '') {
         result = {...result, nickName: 'Nickname must be filled.' };

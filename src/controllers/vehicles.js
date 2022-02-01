@@ -43,14 +43,14 @@ const insertVehicle = (req, res) => {
     };
 
     if (validation.validationDataVehicles(data) == null) {
-        vehicleModel.getDataVehicleName(data.name, (result) => {
+        vehicleModel.getDataVehicleName(data.name, null, (result) => {
             if (result.length == 0) {
                 vehicleModel.insertDataVehicle(data, (results) => {
                     if (results.affectedRows > 0) {
                         return res.json({
                             success: true,
                             message: 'Data Vehicle created successfully.',
-                            results: data
+                            results: {...data, price: parseInt(data.price), qty: parseInt(data.qty), isAvailable: parseInt(data.isAvailable) }
                         });
                     } else {
                         return res.status(500).json({
@@ -62,7 +62,7 @@ const insertVehicle = (req, res) => {
             } else {
                 return res.status(400).json({
                     success: false,
-                    message: 'Name has already used."'
+                    message: 'Name has already used.'
                 });
             }
         });
@@ -79,24 +79,28 @@ const insertVehicle = (req, res) => {
 
 const updateVehicle = (req, res) => {
     const { id } = req.params;
-    if (id !== null && id !== '') {
+    if (id !== ' ') {
         const data = {
-            brand: req.body.brand,
-            type: req.body.type,
-            rentPrice: req.body.rentPrice,
-            qty: req.body.qty
+            id: parseInt(id),
+            name: req.body.name,
+            category: req.body.category,
+            photo: req.body.photo,
+            location: req.body.location,
+            price: req.body.price,
+            qty: req.body.qty,
+            isAvailable: req.body.isAvailable
         };
-        vehicleModel.getDataVehicle(id, (result) => {
-            if (result.length > 0) {
+        vehicleModel.getDataVehicle(id, (resultDataVehicle) => {
+            if (resultDataVehicle.length > 0) {
                 if (validation.validationDataVehicles(data) == null) {
-                    vehicleModel.getDataVehicleName(data.name, (resultName) => {
+                    vehicleModel.getDataVehicleName(data.name, id, (resultName) => {
                         if (resultName.length == 0) {
                             vehicleModel.updateDataVehicle(id, data, (results) => {
                                 if (results.affectedRows > 0) {
                                     return res.json({
                                         success: true,
                                         message: 'Data Vehicle updated sucessfully.',
-                                        results: result
+                                        results: data
                                     });
                                 } else {
                                     return res.status(500).json({
@@ -108,7 +112,7 @@ const updateVehicle = (req, res) => {
                         } else {
                             return res.status(400).json({
                                 success: false,
-                                message: 'Name has already used."'
+                                message: 'Name has already used.'
                             });
                         }
                     });
@@ -123,7 +127,7 @@ const updateVehicle = (req, res) => {
             } else {
                 return res.status(400).json({
                     success: false,
-                    message: 'Data Vehicle was not valid.'
+                    message: 'Data Vehicle not found.'
                 });
             }
         });
@@ -139,14 +143,15 @@ const updateVehicle = (req, res) => {
 const deleteVehicle = (req, res) => {
     const { id } = req.params;
 
-    if (id !== null && id !== '') {
-        vehicleModel.getDataVehicle(id, (results) => {
-            if (results.length > 0) {
+    if (id !== ' ') {
+        vehicleModel.getDataVehicle(id, (resultDataVehicle) => {
+            if (resultDataVehicle.length > 0) {
                 vehicleModel.deleteDataVehicle(id, (results) => {
                     if (results.affectedRows > 0) {
                         return res.json({
                             success: true,
-                            message: 'Data Vehicle deleted successfully.'
+                            message: 'Data Vehicle deleted successfully.',
+                            results: resultDataVehicle
                         });
                     } else {
                         return res.status(500).json({

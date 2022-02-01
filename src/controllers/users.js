@@ -43,7 +43,7 @@ const insertUser = (request, response) => {
     };
 
     if (validation.validationDataUser(data) == null) {
-        userModel.getDataUserEmail(data.email, (result) => {
+        userModel.getDataUserEmail(data.email, null, (result) => {
             if (result.length == 0) {
                 userModel.insertDataUser(data, (results) => {
                     if (results.affectedRows > 0) {
@@ -69,7 +69,8 @@ const insertUser = (request, response) => {
     } else {
         return response.status(400).json({
             success: false,
-            message: 'Data user was not valid.'
+            message: 'Data user was not valid.',
+            error: validation.validationDataUser(data)
         });
     }
 };
@@ -77,8 +78,9 @@ const insertUser = (request, response) => {
 const updateUser = (request, response) => {
     const { id } = request.params;
 
-    if (id !== null && id !== '') {
+    if (id !== ' ') {
         const data = {
+            id: parseInt(id),
             fullName: request.body.fullName,
             nickName: request.body.nickName,
             gender: request.body.gender,
@@ -89,36 +91,47 @@ const updateUser = (request, response) => {
             email: request.body.email,
             password: request.body.password
         };
-        if (validation.validationDataUser(data) == null) {
-            userModel.getDataUserEmail(data.email, (result) => {
-                if (result.length == 0) {
-                    userModel.updateDataUser(id, data, (results) => {
-                        if (results.affectedRows > 0) {
-                            return response.json({
-                                success: true,
-                                message: 'Data user updated successfully.',
-                                results: data
+        userModel.getDataUser(id, (resultDataUser) => {
+            if (resultDataUser.length > 0) {
+                if (validation.validationDataUser(data) == null) {
+                    userModel.getDataUserEmail(data.email, id, (result) => {
+                        if (result.length == 0) {
+                            userModel.updateDataUser(id, data, (results) => {
+                                if (results.affectedRows > 0) {
+                                    return response.json({
+                                        success: true,
+                                        message: 'Data user updated successfully.',
+                                        results: data
+                                    });
+                                } else {
+                                    return response.status(500).json({
+                                        success: false,
+                                        message: 'Data user failed to update.'
+                                    });
+                                }
                             });
                         } else {
-                            return response.status(500).json({
+                            return response.status(400).json({
                                 success: false,
-                                message: 'Data user failed to update.'
+                                message: 'Email has already used.'
                             });
                         }
                     });
                 } else {
                     return response.status(400).json({
                         success: false,
-                        message: 'Email has already used.'
+                        message: 'Data user was not valid.',
+                        error: validation.validationDataUser(data)
                     });
                 }
-            });
-        } else {
-            return response.status(400).json({
-                success: false,
-                message: 'Data user was not valid.'
-            });
-        }
+            } else {
+                return response.status(404).json({
+                    success: false,
+                    message: 'Data user not found.'
+                });
+            }
+        });
+
     } else {
         return response.status(400).json({
             success: false,
@@ -130,27 +143,34 @@ const updateUser = (request, response) => {
 
 const deleteUser = (request, response) => {
     const { id } = request.params;
-    if (id !== null && id !== '') {
-        userModel.getDataUser(id, (result) => {
-            userModel.deleteDataUser(id, (results) => {
-                if (results.affectedRows > 0) {
-                    return response.json({
-                        success: true,
-                        message: 'Data user deleted successfully.',
-                        results: result
-                    });
-                } else {
-                    return response.status(500).json({
-                        success: false,
-                        message: 'Data user failed to delete.'
-                    });
-                }
-            });
+    if (id !== ' ') {
+        userModel.getDataUser(id, (resultDataUser) => {
+            if (resultDataUser.length > 0) {
+                userModel.deleteDataUser(id, (results) => {
+                    if (results.affectedRows > 0) {
+                        return response.json({
+                            success: true,
+                            message: 'Data user deleted successfully.',
+                            results: resultDataUser
+                        });
+                    } else {
+                        return response.status(500).json({
+                            success: false,
+                            message: 'Data user failed to delete.'
+                        });
+                    }
+                });
+            } else {
+                return response.status(404).json({
+                    success: false,
+                    message: 'id not found.'
+                });
+            }
         });
     } else {
-        return response.status(500).json({
+        return response.status(400).json({
             success: false,
-            message: 'Data user failed to delete.'
+            message: 'id must filled.'
         });
     }
 };
