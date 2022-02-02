@@ -1,9 +1,18 @@
 const db = require('../helpers/database');
 
-exports.getDataVehicles = (search = '', cb) => {
+exports.getDataVehicles = (data, cb) => {
     db.query(`select v.id,v.name,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
     join categories c on v.category_id = c.id 
-      where v.name like '%${search}%' or c.name like '%${search}%'`, function(error, results) {
+      where v.name like '%${data.search}%' or c.name like '%${data.search}%' LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
+        if (error) throw error;
+        cb(results);
+    });
+};
+
+exports.countDataVehicles = (data, cb) => {
+    db.query(`select count(*) as total from vehicles v 
+  join categories c on v.category_id = c.id 
+    where v.name like '%${data.search}%' or c.name like '%${data.search}%'`, function(error, results) {
         if (error) throw error;
         cb(results);
     });

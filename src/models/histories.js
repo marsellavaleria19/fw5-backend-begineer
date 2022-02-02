@@ -1,12 +1,25 @@
 const db = require('../helpers/database');
 
-exports.getDataHistories = (search = '', cb) => {
+exports.getDataHistories = (data, cb) => {
     db.query(`select h.id,u.fullName,v.name as brand,c.name as category,h.rentStartDate,h.rentEndDate,h.prepayment,s.status 
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id 
     join status s on h.status = s.id 
-    where u.fullName like '%${search}%' or v.name like '%${search}%' or c.name like '%${search}%' or status like '%${search}%'`, (error, result) => {
+    where u.fullName like '%${data.search}%' or v.name like '%${data.search}%' or c.name like '%${data.search}%' or s.status like '%${data.search}%'
+    limit ${data.limit} offset ${data.offset}`, (error, result) => {
+        if (error) throw error;
+        cb(result);
+    });
+};
+
+exports.countDataHistories = (data, cb) => {
+    db.query(`select count(*) as total
+  from histories h join users u on h.user_id = u.id 
+  join vehicles v on h.vehicle_id = v.id 
+  join categories c on v.category_id = c.id 
+  join status s on h.status = s.id 
+  where u.fullName like '%${data.search}%' or v.name like '%${data.search}%' or c.name like '%${data.search}%' or s.status like '%${data.search}%'`, (error, result) => {
         if (error) throw error;
         cb(result);
     });

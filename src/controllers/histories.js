@@ -1,14 +1,25 @@
 /* eslint-disable no-unused-vars */
 const historyModel = require('../models/histories');
 const validation = require('../helpers/validation');
+const { pagination } = require('../helpers/pagination');
 
 const getHistories = (request, response) => {
-    const { search } = request.query;
-    historyModel.getDataHistories(search, (result) => {
-        return response.json({
-            success: true,
-            message: 'List Data Histories',
-            results: result
+    let { search, page, limit } = request.query;
+    search = search || '';
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 5;
+    const offset = (page - 1) * limit;
+    const data = { search, limit, offset };
+    historyModel.getDataHistories(data, (result) => {
+        historyModel.countDataHistories(data, (count) => {
+            const { total } = count[0];
+            console.log(total);
+            return response.json({
+                success: true,
+                message: 'List Data Histories',
+                results: result,
+                pageInfo: pagination(data, total, page, 'histories')
+            });
         });
     });
 };

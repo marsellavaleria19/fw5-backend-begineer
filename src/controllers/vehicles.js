@@ -1,14 +1,24 @@
 /* eslint-disable no-unused-vars */
 const vehicleModel = require('../models/vehicles');
 const validation = require('../helpers/validation');
+const { pagination } = require('../helpers/pagination');
 
 const getVehicles = (req, res) => {
-    const { search } = req.query;
-    vehicleModel.getDataVehicles(search, results => {
-        return res.json({
-            success: true,
-            message: 'List Data Vehicle',
-            results: results
+    let { search, page, limit } = req.query;
+    search = search || '';
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 5;
+    const offset = (page - 1) * limit;
+    const data = { search, limit, offset };
+    vehicleModel.getDataVehicles(data, results => {
+        vehicleModel.countDataVehicles(data, (count) => {
+            const { total } = count[0];
+            return res.json({
+                success: true,
+                message: 'List Data Vehicle',
+                results: results,
+                pageInfo: pagination(data, total, page, 'vehicles')
+            });
         });
     });
 };
