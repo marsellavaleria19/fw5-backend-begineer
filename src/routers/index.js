@@ -4,4 +4,5 @@ route.use('/users', require('./users'));
 route.use('/histories', require('./histories'));
 route.use('/profile', require('./profile'));
 route.use('/popular', require('./popularVehicle'));
+route.use('/categories', require('./categories'));
 module.exports = route;
