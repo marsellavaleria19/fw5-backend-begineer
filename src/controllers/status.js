@@ -1,102 +1,101 @@
 /* eslint-disable no-unused-vars */
-const categoryModel = require('../models/categories');
+const statusModel = require('../models/status');
 const validation = require('../helpers/validation');
 
-const getCategories = (request, response) => {
-    categoryModel.getDataCategories((result) => {
+const getAllStatus = (request, response) => {
+    statusModel.getAllDataStatus((result) => {
         return response.json({
             success: true,
-            message: 'List Data Categories',
+            message: 'List Data Status',
             results: result
         });
     });
 };
 
-const getCategory = (request, response) => {
+const getStatus = (request, response) => {
     const { id } = request.params;
-    categoryModel.getDataCategory(id, (result) => {
+    statusModel.getDataStatus(id, (result) => {
         if (result.length > 0) {
             return response.json({
                 success: true,
-                message: 'Detail Data Category',
+                message: 'Detail Data Status',
                 results: result[0]
             });
         } else {
             return response.status(404).json({
                 success: false,
-                message: 'Data Category not found'
+                message: 'Data Status not found'
             });
         }
     });
 };
 
-const insertCategory = (request, response) => {
-    const name = request.body.name;
-    if (validation.validationName(name) == null) {
-        categoryModel.getDataCategoriesByName(name, null, (resultDataCategory) => {
-            if (resultDataCategory.length == 0) {
-                categoryModel.insertDataCategory(name, (result) => {
+const insertStatus = (request, response) => {
+    const status = request.body.status;
+    if (validation.validationStatus(status) == null) {
+        statusModel.getDataStatusByStatus(status, null, (resultDataStatus) => {
+            if (resultDataStatus.length == 0) {
+                statusModel.insertDataStatus(status, (result) => {
                     if (result.affectedRows > 0) {
                         return response.json({
                             success: true,
-                            message: 'Data category created successfully.',
-                            results: { name: name }
+                            message: 'Data status created successfully.',
+                            results: { status: status }
                         });
                     } else {
                         return response.status(500).json({
                             success: false,
-                            message: 'Data category failed to create.'
+                            message: 'Data status failed to create.',
                         });
                     }
-
                 });
             } else {
                 return response.status(400).json({
                     success: true,
-                    message: 'Name has already used.'
+                    message: 'Status has already used.'
                 });
             }
         });
     } else {
         return response.status(400).json({
             success: false,
-            message: 'Data category not valid.',
-            error: validation.validationName(name)
+            message: 'Data status not valid.',
+            error: validation.validationStatus(status)
         });
     }
 };
 
-const updateCategory = (request, response) => {
+const updateStatus = (request, response) => {
     const { id } = request.params;
     if (id !== ' ') {
         const data = {
             id: parseInt(id),
-            name: request.body.name
+            status: request.body.status
         };
 
-        categoryModel.getDataCategory(id, (resultDataCategories) => {
-            if (resultDataCategories.length > 0) {
-                if (validation.validationName(data.name) == null) {
-                    categoryModel.getDataCategoriesByName(data.name, id, (resultDataCategory) => {
-                        if (resultDataCategory.length == 0) {
-                            categoryModel.updateDataCategory(id, data.name, (result) => {
+        statusModel.getDataStatus(id, (resultStatus) => {
+            if (resultStatus.length > 0) {
+                if (validation.validationStatus(data.status) == null) {
+                    statusModel.getDataStatusByStatus(data.status, id, (resultDataStatus) => {
+                        if (resultDataStatus.length == 0) {
+                            statusModel.updateDataStatus(id, data.status, (result) => {
                                 if (result.affectedRows > 0) {
                                     return response.json({
                                         success: true,
-                                        message: 'Data category updated successfull.',
+                                        message: 'Data status updated successfull.',
                                         results: data
                                     });
                                 } else {
                                     return response.status(500).json({
                                         success: false,
-                                        message: 'Data category failed to update.',
+                                        message: 'Data status failed to update.',
                                     });
                                 }
                             });
                         } else {
                             return response.status(400).json({
                                 success: true,
-                                message: 'Name has already used.'
+                                message: 'Status has already used.'
                             });
                         }
                     });
@@ -104,14 +103,14 @@ const updateCategory = (request, response) => {
                 } else {
                     return response.status(400).json({
                         success: false,
-                        message: 'Data category not valid.',
-                        error: validation.validationName(data)
+                        message: 'Data status not valid.',
+                        error: validation.validationStatus(data.status)
                     });
                 }
             } else {
                 return response.status(404).json({
                     success: false,
-                    message: 'Data category not found.',
+                    message: 'Data status not found.',
                 });
             }
         });
@@ -124,29 +123,29 @@ const updateCategory = (request, response) => {
 
 };
 
-const deleteCategory = (request, response) => {
+const deleteStatus = (request, response) => {
     const { id } = request.params;
     if (id !== ' ') {
-        categoryModel.getDataCategory(id, (resultDataCategory) => {
-            if (resultDataCategory.length > 0) {
-                categoryModel.deleteDataCategory(id, (result) => {
+        statusModel.getDataStatus(id, (resultDataStatus) => {
+            if (resultDataStatus.length > 0) {
+                statusModel.deleteDataStatus(id, (result) => {
                     if (result.affectedRows > 0) {
                         return response.json({
                             success: true,
-                            message: 'Data category deleted successfully.',
-                            results: resultDataCategory
+                            message: 'Data status deleted successfull.',
+                            results: resultDataStatus
                         });
                     } else {
                         return response.status(500).json({
                             success: false,
-                            message: 'Data category failed to delete.',
+                            message: 'Data status failed to delete.',
                         });
                     }
                 });
             } else {
                 return response.status(404).json({
                     success: false,
-                    message: 'Data category not found.',
+                    message: 'Data status not found.',
                 });
             }
         });
@@ -159,4 +158,4 @@ const deleteCategory = (request, response) => {
 
 };
 
-module.exports = { getCategories, getCategory, insertCategory, updateCategory, deleteCategory };
+module.exports = { getAllStatus, getStatus, insertStatus, updateStatus, deleteStatus };

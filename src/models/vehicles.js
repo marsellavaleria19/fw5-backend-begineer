@@ -1,14 +1,16 @@
 const db = require('../helpers/database');
 
-exports.getDataVehicles = (cb) => {
-    db.query('select id,name,category,photo,location,price,qty,isAvailable from vehicles', function(error, results) {
+exports.getDataVehicles = (search = '', cb) => {
+    db.query(`select v.id,v.name,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
+    join categories c on v.category_id = c.id 
+      where v.name like '%${search}%' or c.name like '%${search}%'`, function(error, results) {
         if (error) throw error;
         cb(results);
     });
 };
 
 exports.getDataVehicle = (id, cb) => {
-    db.query('SELECT id,name,category,photo,location,price,qty,isAvailable FROM vehicles WHERE id=?', [id], (err, res) => {
+    db.query('select v.id,v.name,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?', [id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
@@ -23,19 +25,19 @@ exports.getDataVehicleName = (name, id, cb) => {
 };
 
 exports.insertDataVehicle = (data, cb) => {
-    const { name, category, photo, location, price, qty, isAvailable } = data;
-    db.query(`insert into vehicles (name,category,photo,location,price,qty,isAvailable) 
-    values(?,?,?,?,?,?,?)`, [name, category, photo, location, price, qty, isAvailable], (error, results) => {
+    const { name, category_id, photo, location, price, qty, isAvailable } = data;
+    db.query(`insert into vehicles (name,category_id,photo,location,price,qty,isAvailable) 
+    values(?,?,?,?,?,?,?)`, [name, category_id, photo, location, price, qty, isAvailable], (error, results) => {
         if (error) throw error;
         cb(results);
     });
 };
 
 exports.updateDataVehicle = (id, data, cb) => {
-    const { name, category, photo, location, price, qty, isAvailable } = data;
+    const { name, category_id, photo, location, price, qty, isAvailable } = data;
     db.query(`update vehicles set 
-      name=?,category=?,photo=?,location=?,price=?,qty=?,isAvailable=?
-    where id = ?`, [name, category, photo, location, price, qty, isAvailable, id], (error, results) => {
+      name=?,category_id=?,photo=?,location=?,price=?,qty=?,isAvailable=?
+    where id = ?`, [name, category_id, photo, location, price, qty, isAvailable, id], (error, results) => {
         if (error) throw error;
         cb(results);
     });

@@ -1,23 +1,33 @@
 const db = require('../helpers/database');
 
-exports.getDataHistories = (cb) => {
-    db.query('select id,idUser,idVehicle,startRentDate,endRentDate,prepayment,paymentStatus,rentStatus from histories', (error, result) => {
+exports.getDataHistories = (search = '', cb) => {
+    db.query(`select h.id,u.fullName,v.name as brand,c.name as category,h.rentStartDate,h.rentEndDate,h.prepayment,s.status 
+    from histories h join users u on h.user_id = u.id 
+    join vehicles v on h.vehicle_id = v.id 
+    join categories c on v.category_id = c.id 
+    join status s on h.status = s.id 
+    where u.fullName like '%${search}%' or v.name like '%${search}%' or c.name like '%${search}%' or status like '%${search}%'`, (error, result) => {
         if (error) throw error;
         cb(result);
     });
 };
 
 exports.getDataHistory = (id, cb) => {
-    db.query('select id,idUser,idVehicle,startRentDate,endRentDate,prepayment,paymentStatus,rentStatus from histories where id=?', [id], (error, result) => {
+    db.query(`select h.id,u.fullName,v.name as brand,c.name as category,h.rentStartDate,h.rentEndDate,h.prepayment,s.status 
+    from histories h join users u on h.user_id = u.id 
+    join vehicles v on h.vehicle_id = v.id 
+    join categories c on v.category_id = c.id
+    join status s on h.status = s.id 
+    where h.id=?`, [id], (error, result) => {
         if (error) throw error;
         cb(result);
     });
 };
 
 exports.insertDataHistory = (data, cb) => {
-    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, paymentStatus, rentStatus } = data;
-    db.query(`insert into histories (idUser,idVehicle,startRentDate,endRentDate,prepayment,paymentStatus,rentStatus)
-  values(?,?,?,?,?,?,?)`, [idUser, idVehicle, startRentDate, endRentDate, prepayment, paymentStatus, rentStatus], (error, result) => {
+    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, status } = data;
+    db.query(`insert into histories (user_id,vehicle_id,rentStartDate,rentEndDate,prepayment,status)
+  values(?,?,?,?,?,?)`, [idUser, idVehicle, startRentDate, endRentDate, prepayment, status], (error, result) => {
         if (error) throw error;
         cb(result);
     });
@@ -25,9 +35,9 @@ exports.insertDataHistory = (data, cb) => {
 
 
 exports.updateDataHistory = (id, data, cb) => {
-    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, paymentStatus, rentStatus } = data;
-    db.query(`update histories set idUser = ?,idVehicle = ?,startRentDate = ?,endRentDate = ?,prepayment = ?,paymentStatus = ?,rentStatus = ?
-  where id=?`, [idUser, idVehicle, startRentDate, endRentDate, prepayment, paymentStatus, rentStatus, id], (error, result) => {
+    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, status } = data;
+    db.query(`update histories set user_id = ?,vehicle_id = ?,rentStartDate = ?,rentEndDate = ?,prepayment = ?,status = ?
+  where id=?`, [idUser, idVehicle, startRentDate, endRentDate, prepayment, status, id], (error, result) => {
         if (error) throw error;
         cb(result);
     });

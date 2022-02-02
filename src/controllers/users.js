@@ -1,5 +1,5 @@
 const userModel = require('../models/users');
-const validation = require('../helpers/validationUser');
+const validation = require('../helpers/validation');
 
 const getUsers = (request, response) => {
     userModel.getDataUsers((results) => {

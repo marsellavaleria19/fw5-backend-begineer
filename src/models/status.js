@@ -1,35 +1,35 @@
 const db = require('../helpers/database');
 
-exports.getDataStatus = (cb) => {
-    db.query('select id,name from status', (error, result) => {
+exports.getAllDataStatus = (cb) => {
+    db.query('select id,status from status', (error, result) => {
         if (error) throw error;
         cb(result);
     });
 };
 
 exports.getDataStatus = (id, cb) => {
-    db.query('select id,name from status where id=?', [id], (error, result) => {
+    db.query('select id,status from status where id=?', [id], (error, result) => {
         if (error) throw error;
         cb(result);
     });
 };
 
-exports.getDataStatusByName = (name, id, cb) => {
-    db.query('select * from status where name=?' + (id !== null ? 'and id!=?' : ''), [name, id], (err, res) => {
+exports.getDataStatusByStatus = (status, id, cb) => {
+    db.query('select * from status where status=?' + (id !== null ? 'and id!=?' : ''), [status, id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
 };
 
-exports.insertDataStatus = (name, cb) => {
-    db.query('insert into status (name) values(?)', [name], (err, res) => {
+exports.insertDataStatus = (status, cb) => {
+    db.query('insert into status (status) values(?)', [status], (err, res) => {
         if (err) throw err;
         cb(res);
     });
 };
 
-exports.updateDataStatus = (name, id, cb) => {
-    db.query('update status set name=? where id=?', [name, id], (err, res) => {
+exports.updateDataStatus = (id, status, cb) => {
+    db.query('update status set status=? where id=?', [status, id], (err, res) => {
         if (err) throw err;
         cb(res);
     });

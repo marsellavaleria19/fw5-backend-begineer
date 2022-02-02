@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 const historyModel = require('../models/histories');
-const validation = require('../helpers/validationHistory');
+const validation = require('../helpers/validation');
 
 const getHistories = (request, response) => {
-    historyModel.getDataHistories((result) => {
+    const { search } = request.query;
+    historyModel.getDataHistories(search, (result) => {
         return response.json({
             success: true,
             message: 'List Data Histories',
@@ -37,17 +38,23 @@ const insertHistory = (request, response) => {
         startRentDate: request.body.startRentDate,
         endRentDate: request.body.endRentDate,
         prepayment: request.body.prepayment,
-        paymentStatus: request.body.paymentStatus,
-        rentStatus: request.body.rentStatus
+        status: request.body.status
     };
 
     if (validation.validationDataHistories(data) == null) {
         historyModel.insertDataHistory(data, (result) => {
-            return response.json({
-                success: true,
-                message: 'Data history created successfull.',
-                results: {...data, idUser: parseInt(data.idUser), idVehicle: parseInt(data.idVehicle) }
-            });
+            if (result.affectedRows > 0) {
+                return response.json({
+                    success: true,
+                    message: 'Data history created successfull.',
+                    results: {...data, idUser: parseInt(data.idUser), idVehicle: parseInt(data.idVehicle) }
+                });
+            } else {
+                return response.status(500).json({
+                    success: false,
+                    message: 'Data history failed to create.'
+                });
+            }
         });
     } else {
         return response.status(400).json({
@@ -68,8 +75,7 @@ const updateHistory = (request, response) => {
             startRentDate: request.body.startRentDate,
             endRentDate: request.body.endRentDate,
             prepayment: request.body.prepayment,
-            paymentStatus: request.body.paymentStatus,
-            rentStatus: request.body.rentStatus
+            status: request.body.status
         };
 
 
@@ -86,7 +92,7 @@ const updateHistory = (request, response) => {
                         } else {
                             return response.status(500).json({
                                 success: false,
-                                message: 'Data history failed to create.',
+                                message: 'Data history failed to update.',
                             });
                         }
                     });

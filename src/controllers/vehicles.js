@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 const vehicleModel = require('../models/vehicles');
-const validation = require('../helpers/validationVehicle');
+const validation = require('../helpers/validation');
 
 const getVehicles = (req, res) => {
-    vehicleModel.getDataVehicles(results => {
-
+    const { search } = req.query;
+    vehicleModel.getDataVehicles(search, results => {
         return res.json({
             success: true,
             message: 'List Data Vehicle',
@@ -34,7 +34,7 @@ const getVehicle = (req, res) => {
 const insertVehicle = (req, res) => {
     const data = {
         name: req.body.name,
-        category: req.body.category,
+        category_id: req.body.category_id,
         photo: req.body.photo,
         location: req.body.location,
         price: req.body.price,
@@ -83,7 +83,7 @@ const updateVehicle = (req, res) => {
         const data = {
             id: parseInt(id),
             name: req.body.name,
-            category: req.body.category,
+            category_id: req.body.category_id,
             photo: req.body.photo,
             location: req.body.location,
             price: req.body.price,
