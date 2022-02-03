@@ -1,7 +1,11 @@
 const db = require('../helpers/database');
 
-exports.getDataPopularVehicle = (cb) => {
-    db.query('SELECT v.id,v.name,v.location, count(*) as total FROM `histories` h join vehicles v on v.id = h.idVehicle group by h.idVehicle', (error, result) => {
+exports.getDataPopularVehicle = (month, cb) => {
+    db.query(`select v.id, v.name,v.location,count(*) as total 
+    from histories h join vehicles v on h.vehicle_id = v.id 
+    where month(h.createdAt)=? 
+    group by h.vehicle_id
+    order by total desc`, [month], (error, result) => {
         if (error) throw error;
         cb(result);
     });

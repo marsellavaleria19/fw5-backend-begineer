@@ -7,7 +7,7 @@ exports.getDataHistories = (data, cb) => {
     join categories c on v.category_id = c.id 
     join status s on h.status = s.id 
     where u.fullName like '%${data.search}%' or v.name like '%${data.search}%' or c.name like '%${data.search}%' or s.status like '%${data.search}%'
-    limit ${data.limit} offset ${data.offset}`, (error, result) => {
+    order by h.createdAt desc limit ${data.limit} offset ${data.offset}`, (error, result) => {
         if (error) throw error;
         cb(result);
     });
@@ -38,9 +38,7 @@ exports.getDataHistory = (id, cb) => {
 };
 
 exports.insertDataHistory = (data, cb) => {
-    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, status } = data;
-    db.query(`insert into histories (user_id,vehicle_id,rentStartDate,rentEndDate,prepayment,status)
-  values(?,?,?,?,?,?)`, [idUser, idVehicle, startRentDate, endRentDate, prepayment, status], (error, result) => {
+    db.query(`insert into histories set ? `, [data], (error, result) => {
         if (error) throw error;
         cb(result);
     });
@@ -48,9 +46,7 @@ exports.insertDataHistory = (data, cb) => {
 
 
 exports.updateDataHistory = (id, data, cb) => {
-    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, status } = data;
-    db.query(`update histories set user_id = ?,vehicle_id = ?,rentStartDate = ?,rentEndDate = ?,prepayment = ?,status = ?
-  where id=?`, [idUser, idVehicle, startRentDate, endRentDate, prepayment, status, id], (error, result) => {
+    db.query('update histories set ? where id=?', [data, id], (error, result) => {
         if (error) throw error;
         cb(result);
     });

@@ -23,6 +23,27 @@ const getVehicles = (req, res) => {
     });
 };
 
+const getDataVehiclesByCategory = (req, res) => {
+    let { page, limit } = req.query;
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 5;
+    const offset = (page - 1) * limit;
+    const data = { limit, offset };
+    const { id } = req.params;
+    vehicleModel.getDataVehiclesByCategory(data, id, results => {
+        vehicleModel.countDataVehiclesByCategory(id, (count) => {
+            const { total } = count[0];
+            return res.json({
+                success: true,
+                message: 'List Data Vehicle By Category',
+                results: results,
+                pageInfo: pagination(data, total, page, 'vehicles')
+            });
+        });
+    });
+};
+
+
 const getVehicle = (req, res) => {
     const { id } = req.params;
     vehicleModel.getDataVehicle(id, (results) => {
@@ -186,4 +207,4 @@ const deleteVehicle = (req, res) => {
 
 };
 
-module.exports = { getVehicles, getVehicle, insertVehicle, updateVehicle, deleteVehicle };
+module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, updateVehicle, deleteVehicle };

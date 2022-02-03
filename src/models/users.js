@@ -28,19 +28,14 @@ exports.getDataUserEmail = (email, id, cb) => {
 };
 
 exports.insertDataUser = (data, cb) => {
-    const { fullName, nickName, gender, photo, address, birthDate, mobileNumber, email, password } = data;
-    db.query(`insert into users(fullName,nickName,gender,photo,address,
-        birthDate,mobileNumber,email,password) values(?,?,?,?,?,?,?,?,?)`, [fullName, nickName, gender, photo, address, birthDate, mobileNumber, email, password], (err, res) => {
+    db.query('insert into users set ?', [data], (err, res) => {
         if (err) throw err;
         cb(res);
     });
 };
 
 exports.updateDataUser = (id, data, cb) => {
-    const { fullName, nickName, gender, photo, address, birthDate, mobileNumber, email, password } = data;
-    db.query(`update users set fullName = ?,nickName = ?, gender = ?,photo = ?,
-                address = ?,birthDate = ?,mobileNumber = ?,email = ?,password = ? 
-                where id = ?`, [fullName, nickName, gender, photo, address, birthDate, mobileNumber, email, password, id], (err, res) => {
+    db.query('update users set ? where id = ?', [data, id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
