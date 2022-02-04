@@ -25,67 +25,58 @@ const getHistories = (request, response) => {
 
 const getHistory = (request, response) => {
     const { id } = request.params;
+    let dataJson = { response: response, message: '' };
     historyModel.getDataHistory(id, (result) => {
         if (result.length > 0) {
-            return response.json({
-                success: true,
-                message: 'Detail Data History',
-                results: result[0]
-            });
+            dataJson = {...dataJson, message: 'Detail Data History.', result: result[0] };
+            return showApi.showSuccess(dataJson);
         } else {
-            return response.status(404).json({
-                success: false,
-                message: 'Data History not found'
-            });
+            dataJson = { response: response, message: 'Data History not found', status: 404 };
+            return showApi(dataJson);
         }
     });
 };
 
 const insertHistory = (request, response) => {
     const data = {
-        idUser: request.body.idUser,
-        idVehicle: request.body.idVehicle,
-        startRentDate: request.body.startRentDate,
-        endRentDate: request.body.endRentDate,
+        user_id: request.body.idUser,
+        vehicle_id: request.body.idVehicle,
+        rentStartDate: request.body.startRentDate,
+        rentEndDate: request.body.endRentDate,
         prepayment: request.body.prepayment,
-        status: request.body.status
+        status_id: request.body.status
     };
+
+    let dataJson = { response: response, message: '' };
 
     if (validation.validationDataHistories(data) == null) {
         historyModel.insertDataHistory(data, (result) => {
             if (result.affectedRows > 0) {
-                return response.json({
-                    success: true,
-                    message: 'Data history created successfull.',
-                    results: {...data, idUser: parseInt(data.idUser), idVehicle: parseInt(data.idVehicle) }
-                });
+                dataJson = {...dataJson, message: 'Data History created successfully', result: {...data, user_id: parseInt(data.user_id), vehicle_id: parseInt(data.vehicle_id) } };
+                return showApi.showSuccess(dataJson);
             } else {
-                return response.status(500).json({
-                    success: false,
-                    message: 'Data history failed to create.'
-                });
+                dataJson = {...dataJson, message: 'Data History failed to create.', status: 500 };
+                return showApi.showError(dataJson);
             }
         });
     } else {
-        return response.status(400).json({
-            success: false,
-            message: 'Data history not valid.',
-            error: validation.validationDataHistories(data)
-        });
+        dataJson = {...dataJson, message: 'Data History failed to create.', status: 400, error: validation.validationDataHistories(data) };
+        return showApi.showError(dataJson);
     }
 };
 
 const updateHistory = (request, response) => {
     const { id } = request.params;
+    let dataJson = { response: response, message: '' };
     if (id !== ' ') {
         const data = {
             id: parseInt(id),
-            idUser: request.body.idUser,
-            idVehicle: request.body.idVehicle,
-            startRentDate: request.body.startRentDate,
-            endRentDate: request.body.endRentDate,
+            user_id: request.body.idUser,
+            vehicle_id: request.body.idVehicle,
+            rentStartDate: request.body.startRentDate,
+            rentEndDate: request.body.endRentDate,
             prepayment: request.body.prepayment,
-            status: request.body.status
+            status_id: request.body.status
         };
 
 
@@ -94,73 +85,52 @@ const updateHistory = (request, response) => {
                 if (validation.validationDataHistories(data) == null) {
                     historyModel.updateDataHistory(id, data, (result) => {
                         if (result.affectedRows > 0) {
-                            return response.json({
-                                success: true,
-                                message: 'Data history created successfull.',
-                                results: data
-                            });
+                            dataJson = {...dataJson, message: 'Data History created successfully.', result: data };
+                            return showApi.showSuccess(dataJson);
                         } else {
-                            return response.status(500).json({
-                                success: false,
-                                message: 'Data history failed to update.',
-                            });
+                            dataJson = {...dataJson, message: 'Data History failed to create.', status: 500 };
+                            return showApi.showError(dataJson);
                         }
                     });
                 } else {
-                    return response.status(400).json({
-                        success: false,
-                        message: 'Data history not valid.',
-                        error: validation.validationDataHistories(data)
-                    });
-
+                    dataJson = {...dataJson, message: 'Data History failed to create.', status: 400, error: validation.validationDataHistories(data) };
+                    return showApi.showError(dataJson);
                 }
             } else {
-                return response.status(404).json({
-                    success: false,
-                    message: 'Data history not found.',
-                });
+                dataJson = {...dataJson, message: 'Data History not found.', status: 404 };
+                return showApi.showError(dataJson);
             }
         });
     } else {
-        return response.status(400).json({
-            success: false,
-            message: 'Id must be filled.'
-        });
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
     }
 
 };
 
 const deleteHistory = (request, response) => {
     const { id } = request.params;
+    let dataJson = { response: response, message: '' };
     if (id !== ' ') {
         historyModel.getDataHistory(id, (resultDataHistory) => {
             if (resultDataHistory.length > 0) {
                 historyModel.deleteDataHistory(id, (result) => {
                     if (result.affectedRows > 0) {
-                        return response.json({
-                            success: true,
-                            message: 'Data history created successfull.',
-                            results: resultDataHistory
-                        });
+                        dataJson = {...dataJson, message: 'Data History deleted successfully.', result: resultDataHistory };
+                        return showApi.showSuccess(dataJson);
                     } else {
-                        return response.status(500).json({
-                            success: false,
-                            message: 'Data history failed to create.',
-                        });
+                        dataJson = {...dataJson, message: 'Data History failed to delete.', status: 500 };
+                        return showApi.showError(dataJson);
                     }
                 });
             } else {
-                return response.status(404).json({
-                    success: false,
-                    message: 'Data history not found.',
-                });
+                dataJson = {...dataJson, message: 'Data History not found.', status: 404 };
+                return showApi.showError(dataJson);
             }
         });
     } else {
-        return response.status(400).json({
-            success: false,
-            message: 'Id must be filled.'
-        });
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
     }
 
 };
