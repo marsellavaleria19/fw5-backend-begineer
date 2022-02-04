@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const vehicleModel = require('../models/vehicles');
 const validation = require('../helpers/validation');
-const { pagination } = require('../helpers/pagination');
+const showApi = require('../helpers/showApi');
 
 const getVehicles = (req, res) => {
     let { search, page, limit } = req.query;
@@ -10,15 +10,14 @@ const getVehicles = (req, res) => {
     limit = parseInt(limit) || 5;
     const offset = (page - 1) * limit;
     const data = { search, limit, offset };
+    let dataJson = { response: res, message: '' };
+    let pagination = { total: 0, limit: limit, page: page };
     vehicleModel.getDataVehicles(data, results => {
         vehicleModel.countDataVehicles(data, (count) => {
             const { total } = count[0];
-            return res.json({
-                success: true,
-                message: 'List Data Vehicle',
-                results: results,
-                pageInfo: pagination(data, total, page, 'vehicles')
-            });
+            pagination = {...pagination, total: total };
+            dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
+            return showApi.showSuccessWithPagination(dataJson, pagination);
         });
     });
 };
@@ -30,15 +29,14 @@ const getDataVehiclesByCategory = (req, res) => {
     const offset = (page - 1) * limit;
     const data = { limit, offset };
     const { id } = req.params;
-    vehicleModel.getDataVehiclesByCategory(data, id, results => {
+    let dataJson = { response: res, message: '' };
+    let pagination = { total: 0, limit: limit, page: page };
+    vehicleModel.getDataVehiclesByCategory(data, id, (results) => {
         vehicleModel.countDataVehiclesByCategory(id, (count) => {
             const { total } = count[0];
-            return res.json({
-                success: true,
-                message: 'List Data Vehicle By Category',
-                results: results,
-                pageInfo: pagination(data, total, page, 'vehicles')
-            });
+            pagination = {...pagination, total: total };
+            dataJson = {...dataJson, message: 'List Data Vehicles by category.', result: results, pagination };
+            return showApi.showSuccessWithPagination(dataJson, pagination);
         });
     });
 };
@@ -46,18 +44,14 @@ const getDataVehiclesByCategory = (req, res) => {
 
 const getVehicle = (req, res) => {
     const { id } = req.params;
+    let dataJson = { response: res, message: '' };
     vehicleModel.getDataVehicle(id, (results) => {
         if (results.length > 0) {
-            return res.json({
-                success: true,
-                message: 'Detail Vehicle',
-                results: results[0]
-            });
+            dataJson = {...dataJson, message: 'Detail Vehicle', result: results[0] };
+            return showApi.showSuccess(dataJson);
         } else {
-            return res.status(404).json({
-                success: false,
-                message: 'Detail Vehicle not found',
-            });
+            dataJson = {...dataJson, message: 'Detail Vehicle not found', status: 404 };
+            return showApi.showError(dataJson);
         }
     });
 };
@@ -72,37 +66,27 @@ const insertVehicle = (req, res) => {
         qty: req.body.qty,
         isAvailable: req.body.isAvailable
     };
-
+    let dataJson = { response: res, message: '' };
     if (validation.validationDataVehicles(data) == null) {
         vehicleModel.getDataVehicleName(data.name, null, (result) => {
             if (result.length == 0) {
                 vehicleModel.insertDataVehicle(data, (results) => {
                     if (results.affectedRows > 0) {
-                        return res.json({
-                            success: true,
-                            message: 'Data Vehicle created successfully.',
-                            results: {...data, price: parseInt(data.price), qty: parseInt(data.qty), isAvailable: parseInt(data.isAvailable) }
-                        });
+                        dataJson = {...dataJson, message: 'Data Vehicle created successfully.', result: {...data, price: parseInt(data.price), qty: parseInt(data.qty), isAvailable: parseInt(data.isAvailable) } };
+                        return showApi.showSuccess(dataJson);
                     } else {
-                        return res.status(500).json({
-                            success: false,
-                            message: 'Data Vehicle failed to create.'
-                        });
+                        dataJson = {...dataJson, message: 'Data Vehicle failed to create', status: 500 };
+                        return showApi.showError(dataJson);
                     }
                 });
             } else {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Name has already used.'
-                });
+                dataJson = {...dataJson, message: 'Name has already used.', status: 400 };
+                return showApi.showError(dataJson);
             }
         });
     } else {
-        return res.status(400).json({
-            success: false,
-            message: 'Data Vehicle was not valid.',
-            error: validation.validationDataVehicles(data)
-        });
+        dataJson = {...dataJson, message: 'Data Vehicle was not valid.', status: 400, error: validation.validationDataVehicles(data) };
+        return showApi.showError(dataJson);
     }
 
 
@@ -110,6 +94,7 @@ const insertVehicle = (req, res) => {
 
 const updateVehicle = (req, res) => {
     const { id } = req.params;
+    let dataJson = { response: res, message: '' };
     if (id !== ' ') {
         const data = {
             id: parseInt(id),
@@ -121,6 +106,7 @@ const updateVehicle = (req, res) => {
             qty: req.body.qty,
             isAvailable: req.body.isAvailable
         };
+
         vehicleModel.getDataVehicle(id, (resultDataVehicle) => {
             if (resultDataVehicle.length > 0) {
                 if (validation.validationDataVehicles(data) == null) {
@@ -128,81 +114,58 @@ const updateVehicle = (req, res) => {
                         if (resultName.length == 0) {
                             vehicleModel.updateDataVehicle(id, data, (results) => {
                                 if (results.affectedRows > 0) {
-                                    return res.json({
-                                        success: true,
-                                        message: 'Data Vehicle updated sucessfully.',
-                                        results: data
-                                    });
+                                    dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: data };
+                                    return showApi.showSuccess(dataJson);
                                 } else {
-                                    return res.status(500).json({
-                                        success: false,
-                                        message: 'Data Vehicle failed to update.'
-                                    });
+                                    dataJson = {...dataJson, message: 'Data Vehicle failed to update.', status: 500 };
+                                    return showApi.showError(dataJson);
                                 }
                             });
                         } else {
-                            return res.status(400).json({
-                                success: false,
-                                message: 'Name has already used.'
-                            });
+                            dataJson = {...dataJson, message: 'Name has already used.', status: 400 };
+                            return showApi.showError(dataJson);
                         }
                     });
                 } else {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Data Vehicle was not valid.',
-                        error: validation.validationDataVehicles(data)
-                    });
+                    dataJson = {...dataJson, message: 'Data Vehicle was not valid.', status: 400, error: validation.validationDataVehicles(data) };
+                    return showApi.showError(dataJson);
                 }
 
             } else {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Data Vehicle not found.'
-                });
+                dataJson = {...dataJson, message: 'Data Vehicle not found.', status: 400 };
+                return showApi.showError(dataJson);
             }
         });
 
     } else {
-        return res.status(400).json({
-            success: false,
-            message: 'id must be filled.'
-        });
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
     }
 };
 
 const deleteVehicle = (req, res) => {
     const { id } = req.params;
-
+    let dataJson = { response: res, message: '' };
     if (id !== ' ') {
         vehicleModel.getDataVehicle(id, (resultDataVehicle) => {
             if (resultDataVehicle.length > 0) {
                 vehicleModel.deleteDataVehicle(id, (results) => {
                     if (results.affectedRows > 0) {
-                        return res.json({
-                            success: true,
-                            message: 'Data Vehicle deleted successfully.',
-                            results: resultDataVehicle
-                        });
+                        dataJson = {...dataJson, message: 'Data Vehicle deleted successfully.', result: resultDataVehicle };
+                        return showApi.showSuccess(dataJson);
                     } else {
-                        return res.status(500).json({
-                            success: true,
-                            message: 'Data Vehicle failed to delete.'
-                        });
+                        dataJson = {...dataJson, message: 'Data Vehicle failed to delete.', status: 500 };
+                        return showApi.showError(dataJson);
                     }
                 });
             } else {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Data Vehicle not found.'
-                });
+                dataJson = {...dataJson, message: 'Data Vehicle not found.', status: 404 };
+                return showApi.showError(dataJson);
             }
         });
     } else {
-        return res.status(400).json({
-            success: false,
-            message: 'id must be filled'
-        });
+        dataJson = {...dataJson, message: 'id must be filled', status: 400 };
+        return showApi.showError(dataJson);
     }
 
 };

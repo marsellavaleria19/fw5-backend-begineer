@@ -5,7 +5,7 @@ exports.getDataHistories = (data, cb) => {
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id 
-    join status s on h.status = s.id 
+    join status s on h.status_id = s.id 
     where u.fullName like '%${data.search}%' or v.name like '%${data.search}%' or c.name like '%${data.search}%' or s.status like '%${data.search}%'
     order by h.createdAt desc limit ${data.limit} offset ${data.offset}`, (error, result) => {
         if (error) throw error;
@@ -18,7 +18,7 @@ exports.countDataHistories = (data, cb) => {
   from histories h join users u on h.user_id = u.id 
   join vehicles v on h.vehicle_id = v.id 
   join categories c on v.category_id = c.id 
-  join status s on h.status = s.id 
+  join status s on h.status_id = s.id 
   where u.fullName like '%${data.search}%' or v.name like '%${data.search}%' or c.name like '%${data.search}%' or s.status like '%${data.search}%'`, (error, result) => {
         if (error) throw error;
         cb(result);
@@ -30,7 +30,7 @@ exports.getDataHistory = (id, cb) => {
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id
-    join status s on h.status = s.id 
+    join status s on h.status_id = s.id 
     where h.id=?`, [id], (error, result) => {
         if (error) throw error;
         cb(result);

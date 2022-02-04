@@ -70,22 +70,22 @@ exports.validationDataUser = (data) => {
 
 exports.validationDataHistories = (data) => {
     var result = null;
-    const { idUser, idVehicle, startRentDate, endRentDate, prepayment, status } = data;
-    if (idUser == null || idUser == '') {
-        result = { idUser: 'Id user must be filled' };
-    } else if (isNaN(parseInt(idUser))) {
-        result = { idUser: 'Id user must be a number' };
+    const { user_id, vehicle_id, rentStartDate, rentEndDate, prepayment, status_id } = data;
+    if (user_id == null || user_id == '') {
+        result = { user_id: 'Id user must be filled' };
+    } else if (isNaN(parseInt(user_id))) {
+        result = { user_id: 'Id user must be a number' };
     }
 
-    if (idVehicle == null || idVehicle == '') {
-        result = {...result, idVehicle: 'Id vehicle must be filled.' };
-    } else if (isNaN(parseInt(idVehicle))) {
-        result = {...result, idUser: 'Id vehicle must be a number' };
+    if (vehicle_id == null || vehicle_id == '') {
+        result = {...result, vehicle_id: 'Id vehicle must be filled.' };
+    } else if (isNaN(parseInt(vehicle_id))) {
+        result = {...result, vehicle_id: 'Id vehicle must be a number' };
     }
-    if (startRentDate == null || startRentDate == '') {
-        result = {...result, startRentDate: 'Start rent date must be filled' };
+    if (rentStartDate == null || rentStartDate == '') {
+        result = {...result, rentStartDate: 'Start rent date must be filled' };
     }
-    if (endRentDate == null || endRentDate == '') {
+    if (rentEndDate == null || rentEndDate == '') {
         result = {...result, photo: 'End rent date must be filled.' };
     }
     if (prepayment == null || prepayment == '') {
@@ -95,7 +95,7 @@ exports.validationDataHistories = (data) => {
     } else if (parseInt(prepayment) == 0) {
         result = {...result, prepayment: 'Prepayment must be gather than 0.' };
     }
-    if (status == null || status == '') {
+    if (status_id == null || status_id == '') {
         result = {...result, status: 'Status must be filled' };
     }
 
