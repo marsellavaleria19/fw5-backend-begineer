@@ -26,15 +26,21 @@ const getHistories = (request, response) => {
 const getHistory = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
-    historyModel.getDataHistory(id, (result) => {
-        if (result.length > 0) {
-            dataJson = {...dataJson, message: 'Detail Data History.', result: result[0] };
-            return showApi.showSuccess(dataJson);
-        } else {
-            dataJson = { response: response, message: 'Data History not found', status: 404 };
-            return showApi(dataJson);
-        }
-    });
+    if (id !== ' ') {
+        historyModel.getDataHistory(id, (result) => {
+            if (result.length > 0) {
+                dataJson = {...dataJson, message: 'Detail Data History.', result: result[0] };
+                return showApi.showSuccess(dataJson);
+            } else {
+                dataJson = { response: response, message: 'Data History not found', status: 404 };
+                return showApi.showError(dataJson);
+            }
+        });
+    } else {
+        dataJson = { response: response, message: 'id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
+
 };
 
 const insertHistory = (request, response) => {

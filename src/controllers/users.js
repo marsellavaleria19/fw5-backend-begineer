@@ -4,10 +4,37 @@ const showApi = require('../helpers/showApi');
 
 const getUsers = (request, response) => {
     let dataJson = { response: response, message: '' };
-    userModel.getDataUsers((results) => {
-        dataJson = {...dataJson, message: 'List data user', result: results };
-        return showApi.showSuccess(dataJson);
-    });
+    let { search, page, limit, sort, order } = request.query;
+    sort = sort || '';
+    search = search || '';
+    page = ((page != null && page !== '') ? parseInt(page) : 1);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
+    order = order || 'desc';
+    let pagination = { page, limit };
+    if (validation.validationPagination(pagination) == null) {
+        const offset = (page - 1) * limit;
+        let data = { search, limit, offset, sort, order };
+        userModel.getDataUsers(data, results => {
+            if (results.length > 0) {
+                userModel.countDataUsers(data, (count) => {
+                    const { total } = count[0];
+                    pagination = {...pagination, total: total, route: 'users' };
+                    dataJson = {...dataJson, message: 'List Data User.', result: results, pagination };
+                    return showApi.showSuccessWithPagination(dataJson, pagination);
+                });
+            } else {
+                dataJson = {...dataJson, message: 'Data user not found.', status: 404 };
+                return showApi.showError(dataJson);
+            }
+        });
+
+    } else {
+        dataJson = { response: response, message: 'Pagination was not valid.', error: validation.validationPagination(pagination), status: 400 };
+        showApi.showError(dataJson);
+    }
+
+
+
 };
 
 const getUser = (request, response) => {
