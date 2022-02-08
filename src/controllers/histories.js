@@ -77,14 +77,12 @@ const insertHistory = (request, response) => {
     let dataJson = { response: response, message: '' };
 
     if (validation.validationDataHistories(data) == null) {
-        const historyByUserId = historyModel.getDataHistoryByIdUser(data.user_id, (resultUser) => {
-            console.log("User:" + resultUser);
-            // if (resultUser.length == 0) {
-            //     dataJson = {...dataJson, message: resultUser.message, status: 404 };
-            //     return showApi.showError(dataJson);
-            // }
+        historyModel.getDataHistoryByIdUser(data.user_id, (resultUser) => {
+            if (resultUser.length == 0) {
+                dataJson = {...dataJson, message: resultUser.message, status: 404 };
+                return showApi.showError(dataJson);
+            }
         });
-        console.log("show:" + historyByUserId);
         historyModel.getDataHistoryByIdVehicle(data.vehicle_id, (resultVehicle) => {
             if (resultVehicle.length == 0) {
                 dataJson = {...dataJson, message: 'Vehicle id not found.', status: 404 };
@@ -162,27 +160,20 @@ const updatePatchHistory = (req, res) => {
     if (id !== ' ') {
         historyModel.getDataHistory(id, (resultDataHistory) => {
             if (resultDataHistory.length > 0) {
-                const data = {
-                    id: parseInt(id),
-                    user_id: !request.body.idUser ? resultDataHistory[0].user_id : request.body.idUser,
-                    vehicle_id: !request.body.idVehicle ? resultDataHistory[0].vehicle_id : request.body.idUser,
-                    rentStartDate: request.body.startRentDate ? resultDataHistory[0].rentStartDate : request.body.startRentDate,
-                    rentEndDate: request.body.endRentDate ? resultDataHistory[0].rentEndDate : request.body.endRentDate,
-                    prepayment: request.body.prepayment ? resultDataHistory[0].prepayment : request.body.prepayment,
-                    status_id: request.body.status ? resultDataHistory[0].status_id : request.body.status
-                };
-                historyModel.updateDataVehicle(id, data, (results) => {
+                historyModel.updateDataHistory(id, req.body, (results) => {
                     if (results.affectedRows > 0) {
-                        dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: data };
-                        return showApi.showSuccess(dataJson);
+                        historyModel.getDataHistory(id, (resultDataHistoryUpdate) => {
+                            dataJson = {...dataJson, message: 'Data History updated successfully.', result: resultDataHistoryUpdate };
+                            return showApi.showSuccess(dataJson);
+                        });
                     } else {
-                        dataJson = {...dataJson, message: 'Data Vehicle failed to update.', status: 500 };
+                        dataJson = {...dataJson, message: 'Data History failed to update.', status: 500 };
                         return showApi.showError(dataJson);
                     }
                 });
 
             } else {
-                dataJson = {...dataJson, message: 'Data Vehicle not found.', status: 400 };
+                dataJson = {...dataJson, message: 'Data History not found.', status: 400 };
                 return showApi.showError(dataJson);
             }
         });
@@ -226,4 +217,4 @@ const deleteHistory = (request, response) => {
 
 };
 
-module.exports = { getHistories, getHistory, insertHistory, updateHistory, deleteHistory };
+module.exports = { getHistories, getHistory, insertHistory, updateHistory, updatePatchHistory, deleteHistory };

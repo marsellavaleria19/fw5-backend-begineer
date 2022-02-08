@@ -37,12 +37,8 @@ exports.getDataHistory = (id, cb) => {
 
 exports.getDataHistoryByIdUser = (idUser, cb) => {
     db.query(`select * from histories where user_id=?`, [idUser], (error, results) => {
-        if (error) {
-            console.log(error);
-            cb(error, null);
-        } else {
-            cb(results);
-        }
+        if (error) throw error;
+        cb(results);
     });
 };
 

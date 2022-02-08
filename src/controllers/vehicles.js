@@ -163,20 +163,12 @@ const updatePatchVehicle = (req, res) => {
     if (id !== ' ') {
         vehicleModel.getDataVehicle(id, (resultDataVehicle) => {
             if (resultDataVehicle.length > 0) {
-                const data = {
-                    id: parseInt(id),
-                    name: !req.body.name ? resultDataVehicle[0].name : req.body.name,
-                    category_id: !req.body.category_id ? resultDataVehicle[0].category_id : req.body.category_id,
-                    photo: !req.body.photo ? resultDataVehicle[0].photo : req.body.photo,
-                    location: !req.body.location ? resultDataVehicle[0].location : req.body.location,
-                    price: !req.body.price ? resultDataVehicle[0].price : req.body.price,
-                    qty: !req.body.qty ? resultDataVehicle[0].qty : req.body.qty,
-                    isAvailable: !req.body.isAvailable ? resultDataVehicle[0].isAvailable : req.body.isAvailable
-                };
-                vehicleModel.updateDataVehicle(id, data, (results) => {
+                vehicleModel.updateDataVehicle(id, req.body, (results) => {
                     if (results.affectedRows > 0) {
-                        dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: data };
-                        return showApi.showSuccess(dataJson);
+                        vehicleModel.getDataVehicle(id, (resultDataVehicleUpdate) => {
+                            dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: resultDataVehicleUpdate };
+                            return showApi.showSuccess(dataJson);
+                        });
                     } else {
                         dataJson = {...dataJson, message: 'Data Vehicle failed to update.', status: 500 };
                         return showApi.showError(dataJson);

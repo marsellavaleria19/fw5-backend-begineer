@@ -5,7 +5,7 @@ const showApi = require('../helpers/showApi');
 const getUsers = (request, response) => {
     let dataJson = { response: response, message: '' };
     let { search, page, limit, sort, order } = request.query;
-    sort = sort || '';
+    sort = sort || 'createdAt';
     search = search || '';
     page = ((page != null && page !== '') ? parseInt(page) : 1);
     limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
@@ -14,7 +14,7 @@ const getUsers = (request, response) => {
     if (validation.validationPagination(pagination) == null) {
         const offset = (page - 1) * limit;
         let data = { search, limit, offset, sort, order };
-        userModel.getDataUsers(data, results => {
+        userModel.getDataUsers(data, (results) => {
             if (results.length > 0) {
                 userModel.countDataUsers(data, (count) => {
                     const { total } = count[0];
@@ -32,9 +32,6 @@ const getUsers = (request, response) => {
         dataJson = { response: response, message: 'Pagination was not valid.', error: validation.validationPagination(pagination), status: 400 };
         showApi.showError(dataJson);
     }
-
-
-
 };
 
 const getUser = (request, response) => {
@@ -144,6 +141,37 @@ const updateUser = (request, response) => {
 
 };
 
+const updatePatchUser = (request, response) => {
+    const { id } = request.params;
+    let dataJson = { response: response, message: '' };
+    if (id !== ' ') {
+        userModel.getDataUser(id, (resultDataUser) => {
+            if (resultDataUser.length > 0) {
+                userModel.updateDataUser(id, request.body, (results) => {
+                    if (results.affectedRows > 0) {
+                        userModel.getDataUser(id, (resultDataUserUpdate) => {
+                            dataJson = {...dataJson, message: 'Data User updated successfully.', result: resultDataUserUpdate };
+                            return showApi.showSuccess(dataJson);
+                        });
+
+                    } else {
+                        dataJson = {...dataJson, message: 'Data User failed to update.', status: 500 };
+                        return showApi.showError(dataJson);
+                    }
+                });
+
+            } else {
+                dataJson = {...dataJson, message: 'Data user not found.', status: 400 };
+                return showApi.showError(dataJson);
+            }
+        });
+
+    } else {
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
+};
+
 const deleteUser = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -170,4 +198,4 @@ const deleteUser = (request, response) => {
     }
 };
 
-module.exports = { getUsers, getUser, insertUser, updateUser, deleteUser };
+module.exports = { getUsers, getUser, insertUser, updateUser, updatePatchUser, deleteUser };
