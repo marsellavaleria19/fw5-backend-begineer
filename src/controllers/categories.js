@@ -4,15 +4,36 @@ const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 
 const getCategories = (request, response) => {
-    categoryModel.getDataCategories((result) => {
-        const dataJson = {
-            response: response,
-            message: 'List data categories',
-            result: result
-        };
-        return showApi.showSuccess(dataJson);
+    let dataJson = { response: response, message: '' };
+    let { search, page, limit, sort, order } = request.query;
+    sort = sort || 'createdAt';
+    search = search || '';
+    page = ((page != null && page !== '') ? parseInt(page) : 1);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
+    order = order || 'desc';
+    let pagination = { page, limit };
+    if (validation.validationPagination(pagination) == null) {
+        const offset = (page - 1) * limit;
+        let data = { search, limit, offset, sort, order };
+        categoryModel.getDataCategories(data, results => {
+            if (results.length > 0) {
+                categoryModel.countDataCategories(data, (count) => {
+                    const { total } = count[0];
+                    pagination = {...pagination, total: total, route: 'categories' };
+                    dataJson = {...dataJson, message: 'List Data Category.', result: results, pagination };
+                    return showApi.showSuccessWithPagination(dataJson, pagination);
+                });
+            } else {
+                dataJson = {...dataJson, message: 'Data Category not found.', status: 404 };
+                return showApi.showError(dataJson);
+            }
+        });
 
-    });
+    } else {
+        dataJson = { response: response, message: 'Pagination was not valid.', error: validation.validationPagination(pagination), status: 400 };
+        showApi.showError(dataJson);
+    }
+
 };
 
 const getCategory = (request, response) => {

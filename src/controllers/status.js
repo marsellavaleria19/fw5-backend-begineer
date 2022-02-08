@@ -1,33 +1,64 @@
 /* eslint-disable no-unused-vars */
 const statusModel = require('../models/status');
 const validation = require('../helpers/validation');
+const showApi = require('../helpers/showApi');
 
 const getAllStatus = (request, response) => {
-    statusModel.getAllDataStatus((result) => {
-        return response.json({
-            success: true,
-            message: 'List Data Status',
-            results: result
+    let dataJson = { response: response, message: '' };
+    let { search, page, limit, sort, order } = request.query;
+    sort = sort || 'createdAt';
+    search = search || '';
+    page = ((page != null && page !== '') ? parseInt(page) : 1);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
+    order = order || 'desc';
+    let pagination = { page, limit };
+    if (validation.validationPagination(pagination) == null) {
+        const offset = (page - 1) * limit;
+        let data = { search, limit, offset, sort, order };
+        statusModel.getAllDataStatus(data, (results) => {
+            if (results.length > 0) {
+                statusModel.countDataStatus(data, (count) => {
+                    const { total } = count[0];
+                    pagination = {...pagination, total: total, route: 'status' };
+                    dataJson = {...dataJson, message: 'List Data Status.', result: results, pagination };
+                    return showApi.showSuccessWithPagination(dataJson, pagination);
+                });
+            } else {
+                dataJson = {...dataJson, message: 'Data Status not found.', status: 404 };
+                return showApi.showError(dataJson);
+            }
+
         });
-    });
+    } else {
+        dataJson = {...dataJson, message: 'Pagination not valid.', status: 400, error: validation.validationPagination(pagination) };
+        return showApi.showError(dataJson);
+    }
+
 };
 
 const getStatus = (request, response) => {
     const { id } = request.params;
-    statusModel.getDataStatus(id, (result) => {
-        if (result.length > 0) {
-            return response.json({
-                success: true,
-                message: 'Detail Data Status',
-                results: result[0]
+    let dataJson = { response: response, message: '' };
+    if (id == !' ') {
+        if (!isNaN(id)) {
+            statusModel.getDataStatus(id, (result) => {
+                if (result.length > 0) {
+                    dataJson = {...dataJson, message: 'Detail Data Status', result: result[0] };
+                    return showApi.showSuccess(dataJson);
+                } else {
+                    dataJson = {...dataJson, message: 'Data status not found.', status: 404 };
+                    return showApi.showError(dataJson);
+                }
             });
         } else {
-            return response.status(404).json({
-                success: false,
-                message: 'Data Status not found'
-            });
+            dataJson = {...dataJson, message: 'Id must be a number.', status: 400 };
+            return showApi.showError(dataJson);
         }
-    });
+
+    } else {
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
 };
 
 const insertStatus = (request, response) => {
