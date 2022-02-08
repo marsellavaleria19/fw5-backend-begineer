@@ -4,22 +4,36 @@ const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 
 const getVehicles = (req, res) => {
-    let { search, page, limit } = req.query;
+    let { search, page, limit, sort, order } = req.query;
+    sort = sort || 'v.createdAt';
     search = search || '';
-    page = parseInt(page) || 1;
-    limit = parseInt(limit) || 5;
-    const offset = (page - 1) * limit;
-    const data = { search, limit, offset };
+    page = ((page != null && page !== '') ? parseInt(page) : 1);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
+    order = order || 'desc';
+    let pagination = { page, limit };
     let dataJson = { response: res, message: '' };
-    let pagination = { total: 0, limit: limit, page: page };
-    vehicleModel.getDataVehicles(data, results => {
-        vehicleModel.countDataVehicles(data, (count) => {
-            const { total } = count[0];
-            pagination = {...pagination, total: total };
-            dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
-            return showApi.showSuccessWithPagination(dataJson, pagination);
+    if (validation.validationPagination(pagination) == null) {
+        const offset = (page - 1) * limit;
+        let data = { search, limit, offset, sort, order };
+        vehicleModel.getDataVehicles(data, results => {
+            if (results.length > 0) {
+                vehicleModel.countDataVehicles(data, (count) => {
+                    const { total } = count[0];
+                    pagination = {...pagination, total: total, route: 'vehicles' };
+                    dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
+                    return showApi.showSuccessWithPagination(dataJson, pagination);
+                });
+            } else {
+                dataJson = {...dataJson, message: 'Data Vehicle not found', status: 404 };
+                return showApi.showError(dataJson);
+            }
+
         });
-    });
+    } else {
+        dataJson = {...dataJson, message: 'Pagination not valid', status: 400, error: validation.validationPagination(pagination) };
+        return showApi.showError(dataJson);
+    }
+
 };
 
 const getDataVehiclesByCategory = (req, res) => {
@@ -143,6 +157,44 @@ const updateVehicle = (req, res) => {
     }
 };
 
+const updatePatchVehicle = (req, res) => {
+    const { id } = req.params;
+    let dataJson = { response: res, message: '' };
+    if (id !== ' ') {
+        vehicleModel.getDataVehicle(id, (resultDataVehicle) => {
+            if (resultDataVehicle.length > 0) {
+                const data = {
+                    id: parseInt(id),
+                    name: !req.body.name ? resultDataVehicle[0].name : req.body.name,
+                    category_id: !req.body.category_id ? resultDataVehicle[0].category_id : req.body.category_id,
+                    photo: !req.body.photo ? resultDataVehicle[0].photo : req.body.photo,
+                    location: !req.body.location ? resultDataVehicle[0].location : req.body.location,
+                    price: !req.body.price ? resultDataVehicle[0].price : req.body.price,
+                    qty: !req.body.qty ? resultDataVehicle[0].qty : req.body.qty,
+                    isAvailable: !req.body.isAvailable ? resultDataVehicle[0].isAvailable : req.body.isAvailable
+                };
+                vehicleModel.updateDataVehicle(id, data, (results) => {
+                    if (results.affectedRows > 0) {
+                        dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: data };
+                        return showApi.showSuccess(dataJson);
+                    } else {
+                        dataJson = {...dataJson, message: 'Data Vehicle failed to update.', status: 500 };
+                        return showApi.showError(dataJson);
+                    }
+                });
+
+            } else {
+                dataJson = {...dataJson, message: 'Data Vehicle not found.', status: 400 };
+                return showApi.showError(dataJson);
+            }
+        });
+
+    } else {
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
+};
+
 const deleteVehicle = (req, res) => {
     const { id } = req.params;
     let dataJson = { response: res, message: '' };
@@ -170,4 +222,4 @@ const deleteVehicle = (req, res) => {
 
 };
 
-module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, updateVehicle, deleteVehicle };
+module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, updateVehicle, updatePatchVehicle, deleteVehicle };
