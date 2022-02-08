@@ -1,9 +1,19 @@
 const db = require('../helpers/database');
 
-exports.getDataCategories = (cb) => {
-    db.query('select id,name from categories', (error, result) => {
+exports.getDataCategories = (data, cb) => {
+    db.query(`select id,name from categories
+    where name like '%${data.search}%'
+    order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset} `, (error, result) => {
         if (error) throw error;
         cb(result);
+    });
+};
+
+exports.countDataCategories = (data, cb) => {
+    db.query(`select count(*) as total from categories 
+  where name like '%${data.search}%'`, function(error, results) {
+        if (error) throw error;
+        cb(results);
     });
 };
 
