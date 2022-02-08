@@ -1,9 +1,19 @@
 const db = require('../helpers/database');
 
-exports.getAllDataStatus = (cb) => {
-    db.query('select id,status from status', (error, result) => {
+exports.getAllDataStatus = (data, cb) => {
+    db.query(`select id,status from status
+    where status like '%${data.search}%'
+    order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, (error, result) => {
         if (error) throw error;
         cb(result);
+    });
+};
+
+exports.countDataStatus = (data, cb) => {
+    db.query(`select count(*) as total from status 
+where status like '%${data.search}%'`, function(error, results) {
+        if (error) throw error;
+        cb(results);
     });
 };
 
