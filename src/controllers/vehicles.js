@@ -3,6 +3,8 @@ const vehicleModel = require('../models/vehicles');
 const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 
+
+
 const getVehicles = (req, res) => {
     let { search, page, limit, sort, order } = req.query;
     sort = sort || 'v.createdAt';
@@ -80,6 +82,44 @@ const insertVehicle = (req, res) => {
         qty: req.body.qty,
         isAvailable: req.body.isAvailable
     };
+
+    let dataJson = { response: res, message: '' };
+    if (validation.validationDataVehicles(data) == null) {
+        vehicleModel.getDataVehicleName(data.name, null, (result) => {
+            if (result.length == 0) {
+                vehicleModel.insertDataVehicle(data, (results) => {
+                    if (results.affectedRows > 0) {
+                        dataJson = {...dataJson, message: 'Data Vehicle created successfully.', result: {...data, price: parseInt(data.price), qty: parseInt(data.qty), isAvailable: parseInt(data.isAvailable) } };
+                        return showApi.showSuccess(dataJson);
+                    } else {
+                        dataJson = {...dataJson, message: 'Data Vehicle failed to create', status: 500 };
+                        return showApi.showError(dataJson);
+                    }
+                });
+            } else {
+                dataJson = {...dataJson, message: 'Name has already used.', status: 400 };
+                return showApi.showError(dataJson);
+            }
+        });
+    } else {
+        dataJson = {...dataJson, message: 'Data Vehicle was not valid.', status: 400, error: validation.validationDataVehicles(data) };
+        return showApi.showError(dataJson);
+    }
+
+
+};
+
+const insertVehicleUpload = (req, res) => {
+    const data = {
+        name: req.body.name,
+        category_id: req.body.category_id,
+        location: req.body.location,
+        photo: req.file.path,
+        price: req.body.price,
+        qty: req.body.qty,
+        isAvailable: req.body.isAvailable
+    };
+
     let dataJson = { response: res, message: '' };
     if (validation.validationDataVehicles(data) == null) {
         vehicleModel.getDataVehicleName(data.name, null, (result) => {
@@ -214,4 +254,4 @@ const deleteVehicle = (req, res) => {
 
 };
 
-module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, updateVehicle, updatePatchVehicle, deleteVehicle };
+module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, insertVehicleUpload, updateVehicle, updatePatchVehicle, deleteVehicle };

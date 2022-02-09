@@ -1,12 +1,11 @@
 const db = require('../helpers/database');
 exports.getDataUsers = (data, cb) => {
-    const query = db.query(`select *  from users 
+    db.query(`select *  from users 
   where concat(fullName,nickName,gender,address,birthDate,mobileNumber,email) like '%${data.search}%'  
   order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
         if (error) throw error;
         cb(results);
     });
-    console.log(query.sql);
 };
 
 exports.countDataUsers = (data, cb) => {
