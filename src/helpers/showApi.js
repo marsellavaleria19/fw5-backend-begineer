@@ -34,3 +34,15 @@ exports.showError = (data) => {
         ...result
     });
 };
+
+exports.showResponse = (res, message, result, status = 200) => {
+    let success = true;
+    if (status >= 400) {
+        success = false;
+    }
+    let data = { success, message };
+    if (result) {
+        data.result = result;
+    }
+    return res.status(status).json(data);
+};
