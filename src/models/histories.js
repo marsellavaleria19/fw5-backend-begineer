@@ -35,6 +35,13 @@ exports.getDataHistory = (id, cb) => {
     });
 };
 
+exports.getDataHistoryByIdUserAsync = (idUser) => new Promise((resolve, reject) => {
+    db.query(`select * from histories where user_id=?`, [idUser], (error, results) => {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
+
 exports.getDataHistoryByIdUser = (idUser, cb) => {
     db.query(`select * from histories where user_id=?`, [idUser], (error, results) => {
         if (error) throw error;
@@ -51,6 +58,15 @@ where vehicle_id=?`, [idVehicle], (error, result) => {
     });
 };
 
+exports.getDataHistoryByIdVehicleAsync = (idVehicle) => new Promise((resolve, reject) => {
+    db.query(`select * 
+  from histories 
+  where vehicle_id=?`, [idVehicle], (error, result) => {
+        if (error) reject(error);
+        resolve(result);
+    });
+});
+
 exports.getDataHistoryByIdStatus = (idStatus, cb) => {
     db.query(`select * 
 from histories 
@@ -59,6 +75,13 @@ where h.status_id=?`, [idStatus], (error, result) => {
         cb(result);
     });
 };
+
+exports.getDataHistoryByIdStatusAsync = (idStatus) => new Promise((resolve, reject) => {
+    db.query('select * from `histories` where status_id=?', [idStatus], (error, result) => {
+        if (error) reject(error);
+        resolve(result);
+    });
+});
 
 exports.insertDataHistory = (data, cb) => {
     db.query(`insert into histories set ? `, [data], (error, result) => {

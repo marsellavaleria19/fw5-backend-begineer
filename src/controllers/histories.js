@@ -107,6 +107,55 @@ const insertHistory = (request, response) => {
     }
 };
 
+const insertHistoryAsync = async(request, response) => {
+    const data = {
+        user_id: request.body.idUser,
+        vehicle_id: request.body.idVehicle,
+        rentStartDate: request.body.startRentDate,
+        rentEndDate: request.body.endRentDate,
+        prepayment: request.body.prepayment,
+        status_id: request.body.status
+    };
+
+    let dataJson = { response: response, message: '' };
+    var error = await validation.validationDataHistories(data);
+    if (error == null) {
+        historyModel.insertDataHistory(data, (result) => {
+            if (result.affectedRows > 0) {
+                historyModel.getDataHistory(result.insertId, (dataResult) => {
+                    dataJson = {...dataJson, message: 'Data History created successfully', result: dataResult };
+                    return showApi.showSuccess(dataJson);
+                });
+
+            } else {
+                dataJson = {...dataJson, message: 'Data History failed to create.', status: 500 };
+                return showApi.showError(dataJson);
+            }
+        });
+    } else {
+        if (data.user_id !== null && data.user_id !== '' && !isNaN(data.user_id)) {
+            const resultUserId = await historyModel.getDataHistoryByIdUserAsync(data.user_id);
+            if (resultUserId.length == 0) {
+                error = {...error, user_id: 'User id doesn\'t exist' };
+            }
+        }
+        if (data.vehicle_id !== null && data.vehicle_id !== '' && !isNaN(data.vehicle_id)) {
+            const resultVehicleId = await historyModel.getDataHistoryByIdVehicleAsync(data.vehicle_id);
+            if (resultVehicleId.length == 0) {
+                error = {...error, vehicle_id: 'Vehicle id doesn\'t exist' };
+            }
+        }
+        if (data.status_id !== null && data.status_id !== '' && !isNaN(data.status_id)) {
+            const resultStatusId = await historyModel.getDataHistoryByIdStatusAsync(data.vehicle_id);
+            if (resultStatusId.length == 0) {
+                error = {...error, status_id: 'Status id doesn\'t exist' };
+            }
+        }
+        dataJson = {...dataJson, message: 'Data History not valid.', status: 400, error: error };
+        return showApi.showError(dataJson);
+    }
+};
+
 const updateHistory = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -137,6 +186,72 @@ const updateHistory = (request, response) => {
                         });
                     } else {
                         dataJson = {...dataJson, message: 'Data History failed to create.', status: 400, error: validation.validationDataHistories(data) };
+                        return showApi.showError(dataJson);
+                    }
+                } else {
+                    dataJson = {...dataJson, message: 'Data History not found.', status: 404 };
+                    return showApi.showError(dataJson);
+                }
+            });
+        } else {
+            dataJson = {...dataJson, message: 'Id must be a number.', status: 400 };
+            return showApi.showError(dataJson);
+        }
+    } else {
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
+};
+
+
+const updateHistoryAsync = async(request, response) => {
+    const { id } = request.params;
+    let dataJson = { response: response, message: '' };
+    if (id !== ' ') {
+        if (!isNaN(id)) {
+            const data = {
+                id: parseInt(id),
+                user_id: request.body.idUser,
+                vehicle_id: request.body.idVehicle,
+                rentStartDate: request.body.startRentDate,
+                rentEndDate: request.body.endRentDate,
+                prepayment: request.body.prepayment,
+                status_id: request.body.status
+            };
+
+            var error = await validation.validationDataHistories(data);
+            historyModel.getDataHistory(id, async(resultDataHistory) => {
+                if (resultDataHistory.length > 0) {
+                    if (error == null) {
+                        historyModel.updateDataHistory(id, data, (result) => {
+                            if (result.affectedRows > 0) {
+                                dataJson = {...dataJson, message: 'Data History updated successfully.', result: resultDataHistory };
+                                return showApi.showSuccess(dataJson);
+                            } else {
+                                dataJson = {...dataJson, message: 'Data History failed to update.', status: 500 };
+                                return showApi.showError(dataJson);
+                            }
+                        });
+                    } else {
+                        if (data.user_id !== null && data.user_id !== '' && !isNaN(data.user_id)) {
+                            const resultUserId = await historyModel.getDataHistoryByIdUserAsync(data.user_id);
+                            if (resultUserId.length == 0) {
+                                error = {...error, user_id: 'User id doesn\'t exist' };
+                            }
+                        }
+                        if (data.vehicle_id !== null && data.vehicle_id !== '' && !isNaN(data.vehicle_id)) {
+                            const resultVehicleId = await historyModel.getDataHistoryByIdVehicleAsync(data.vehicle_id);
+                            if (resultVehicleId.length == 0) {
+                                error = {...error, vehicle_id: 'Vehicle id doesn\'t exist' };
+                            }
+                        }
+                        if (data.status_id !== null && data.status_id !== '' && !isNaN(data.status_id)) {
+                            const resultStatusId = await historyModel.getDataHistoryByIdStatusAsync(data.status_id);
+                            if (resultStatusId.length == 0) {
+                                error = {...error, status_id: 'Status id doesn\'t exist' };
+                            }
+                        }
+                        dataJson = {...dataJson, message: 'Data History is not valid.', status: 400, error: error };
                         return showApi.showError(dataJson);
                     }
                 } else {
@@ -217,4 +332,4 @@ const deleteHistory = (request, response) => {
 
 };
 
-module.exports = { getHistories, getHistory, insertHistory, updateHistory, updatePatchHistory, deleteHistory };
+module.exports = { getHistories, getHistory, insertHistory, insertHistoryAsync, updateHistory, updateHistoryAsync, updatePatchHistory, deleteHistory };

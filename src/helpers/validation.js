@@ -68,7 +68,7 @@ exports.validationDataUser = (data) => {
     return result;
 };
 
-exports.validationDataHistories = (data) => {
+exports.validationDataHistories = async(data) => {
     var result = null;
     const { user_id, vehicle_id, rentStartDate, rentEndDate, prepayment, status_id } = data;
     if (user_id == null || user_id == '') {
