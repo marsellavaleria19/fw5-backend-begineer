@@ -20,6 +20,33 @@
 							],
 							"path": [
 								"users"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "iskandar",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "birthDate",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -66,12 +93,12 @@
 							"urlencoded": [
 								{
 									"key": "fullName",
-									"value": "Candy Waston",
+									"value": "Elma Waston",
 									"type": "text"
 								},
 								{
 									"key": "nickName",
-									"value": "Candy",
+									"value": "Elma",
 									"type": "text"
 								},
 								{
@@ -101,7 +128,7 @@
 								},
 								{
 									"key": "email",
-									"value": "candy10@gmail.com",
+									"value": "elma@gmail.com",
 									"type": "text"
 								},
 								{
@@ -198,6 +225,85 @@
 					"response": []
 				},
 				{
+					"name": "UPDATE USER",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullName",
+									"value": "Bianca Waston",
+									"type": "text"
+								},
+								{
+									"key": "nickName",
+									"value": "Bianca",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "Female",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "address",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "birthDate",
+									"value": "1995-09-08",
+									"type": "text"
+								},
+								{
+									"key": "mobileNumber",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "DELETE USER",
 					"request": {
 						"method": "DELETE",
@@ -251,12 +357,22 @@
 								},
 								{
 									"key": "page",
-									"value": "2",
+									"value": "3",
 									"disabled": true
 								},
 								{
 									"key": "limit",
 									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "location",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
 									"disabled": true
 								}
 							]
@@ -336,44 +452,50 @@
 					"name": "ADD VEHICLE",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "name",
-									"value": "Toyota Calya",
+									"value": "aaaaaa",
 									"type": "text"
 								},
 								{
 									"key": "category_id",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "photo",
-									"value": "1.jpg",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "location",
-									"value": "Bandung",
+									"value": "Jakarta",
 									"type": "text"
 								},
 								{
 									"key": "price",
-									"value": "1000000",
+									"value": "100000",
 									"type": "text"
 								},
 								{
 									"key": "qty",
-									"value": "3",
+									"value": "5",
 									"type": "text"
 								},
 								{
 									"key": "isAvailable",
 									"value": "1",
 									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Pictures/202010061621341003.jpg"
 								}
 							]
 						},
@@ -399,7 +521,7 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "Honda HRV",
+									"value": "Kawasaki Ninja",
 									"type": "text"
 								},
 								{
@@ -446,7 +568,72 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6"
+									"value": "30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE VEHICLE",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "photo",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "location",
+									"value": "Kalimantan",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "qty",
+									"value": "8",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/vehicles/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "30"
 								}
 							]
 						}
@@ -476,6 +663,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "ADD VEHICLE UPLOAD",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -498,17 +693,17 @@
 							"query": [
 								{
 									"key": "search",
-									"value": "toyota",
+									"value": "TOYOTA",
 									"disabled": true
 								},
 								{
 									"key": "limit",
-									"value": "5",
+									"value": "2",
 									"disabled": true
 								},
 								{
 									"key": "page",
-									"value": null,
+									"value": "2",
 									"disabled": true
 								}
 							]
@@ -644,7 +839,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "11"
+									"value": "36"
 								}
 							]
 						}
@@ -674,6 +869,68 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "UPDATE HISTORY",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "vehicle_id",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "rentStartDate",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rentEndDate",
+									"value": "2022-01-09",
+									"type": "text"
+								},
+								{
+									"key": "prepayment",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "status_id",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}} /histories/:id",
+							"host": [
+								"{{baseURL}} "
+							],
+							"path": [
+								"histories",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "70"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -692,6 +949,33 @@
 							],
 							"path": [
 								"categories"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "car",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -924,6 +1208,44 @@
 			]
 		},
 		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "LOGIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "elma@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "PROFILE",
 			"request": {
 				"method": "GET",
@@ -959,10 +1281,72 @@
 					],
 					"path": [
 						"popular"
+					],
+					"query": [
+						{
+							"key": "month",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "search",
+							"value": "honda",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "total",
+							"disabled": true
+						},
+						{
+							"key": "order",
+							"value": "desc",
+							"disabled": true
+						}
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
