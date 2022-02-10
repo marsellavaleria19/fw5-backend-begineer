@@ -1,34 +1,30 @@
 exports.validationDataVehicles = (data) => {
     var result = null;
-    const { name, category_id, photo, location, price, qty, isAvailable } = data;
-    if (name == null || name == '') {
+    if (data.name == null || data.name == '') {
         result = { name: 'Name must be filled' };
     }
-    if (category_id == null || category_id == '') {
+    if (data.category_id == null || data.category_id == '') {
         result = {...result, category_id: 'Id category must be filled.' };
     }
-    if (photo == null || photo == '') {
-        result = {...result, photo: 'Photo must be filled.' };
-    }
-    if (location == null || location == '') {
+    if (data.location == null || data.location == '') {
         result = {...result, location: 'Location must be filled.' };
     }
-    if (price == null || price == '') {
+    if (data.price == null || data.price == '') {
         result = {...result, price: 'Price must be filled' };
-    } else if (isNaN(parseInt(price))) {
+    } else if (isNaN(parseInt(data.price))) {
         result = {...result, price: 'Price must be a number.' };
-    } else if (parseInt(price) == 0) {
+    } else if (parseInt(data.price) == 0) {
         result = {...result, price: 'Price must be must be greater than 0.' };
     }
 
-    if (qty == null || qty == '') {
+    if (data.qty == null || data.qty == '') {
         result = {...result, qty: 'Quantity must be filled' };
-    } else if (isNaN(parseInt(qty))) {
+    } else if (isNaN(parseInt(data.qty))) {
         result = {...result, qty: 'Quantity must be a number.' };
-    } else if (parseInt(qty) == 0) {
+    } else if (parseInt(data.qty) == 0) {
         result = {...result, qty: 'Quantity must be must be greater than 0.' };
     }
-    if (isAvailable == null || isAvailable == '') {
+    if (data.isAvailable == null || data.isAvailable == '') {
         result = {...result, isAvailable: 'isAvailable must be filled.' };
     }
 

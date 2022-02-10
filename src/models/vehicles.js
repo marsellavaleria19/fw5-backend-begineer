@@ -45,12 +45,26 @@ exports.getDataVehicle = (id, cb) => {
     });
 };
 
+exports.getDataVehicleAsync = (id) => new Promise((resolve, reject) => {
+    db.query('select v.id,v.name,v.category_id,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?', [id], (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+    });
+});
+
 exports.getDataVehicleName = (name, id, cb) => {
     db.query('select * from vehicles where name=?' + (id !== null ? 'and id!=?' : ''), [name, id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
 };
+
+exports.getDataVehicleNameAsync = (name, id) => new Promise((resolve, reject) => {
+    db.query('select * from vehicles where name=?' + (id !== null ? 'and id!=?' : ''), [name, id], (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+    });
+});
 
 exports.insertDataVehicle = (data, cb) => {
     db.query('insert into vehicles set ?', [data], (error, results) => {
