@@ -22,3 +22,21 @@ exports.login = async(req, res) => {
         return showApi.showResponse(res, "Wrong email and password!", null, 400);
     }
 };
+
+// exports.verify = (req, res) => {
+//     const auth = req.headers.authorization;
+//     if (auth.startsWith("Bearer")) {
+//         const token = auth.split(' ')[1];
+//         if (token) {
+//             try {
+//                 if (jwt.verify(token, APP_SECRET)) {
+//                     return showApi.showResponse(res, 'User Verified');
+//                 } else {
+//                     return showApi.showResponse('User not verified!', null, 403);
+//                 }
+//             } catch (err) {
+//                 return showApi.showResponse('User not verified!', null, 403);
+//             }
+//         }
+//     }
+// };
