@@ -1,6 +1,7 @@
 const userModel = require('../models/users');
 const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
+const argon = require('argon2');
 
 const getUsers = (request, response) => {
     let dataJson = { response: response, message: '' };
@@ -80,6 +81,46 @@ const insertUser = (request, response) => {
                 return showApi.showError(dataJson);
             }
         });
+    } else {
+        dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: validation.validationDataUser(data) };
+        return showApi.showError(dataJson);
+    }
+};
+
+const insertUserAsync = async(request, response) => {
+    const data = {
+        fullName: request.body.fullName,
+        nickName: request.body.nickName,
+        gender: request.body.gender,
+        photo: request.body.photo,
+        address: request.body.address,
+        birthDate: request.body.birthDate,
+        mobileNumber: request.body.mobileNumber,
+        email: request.body.email,
+        password: request.body.password
+    };
+
+    let dataJson = { response: response, message: '' };
+    var errValidation = validation.validationDataUser(data);
+    if (errValidation == null) {
+        const checkUserEmail = await userModel.getDataUserEmailAsync(data.email, null);
+        if (checkUserEmail.length == 0) {
+            const hashPassword = await argon.hash(data.password);
+            data.password = hashPassword;
+            userModel.insertDataUser(data, (results) => {
+                if (results.affectedRows > 0) {
+                    dataJson = {...dataJson, message: 'Data user created successfully.', result: data };
+                    return showApi.showSuccess(dataJson);
+                } else {
+                    dataJson = {...dataJson, message: 'Data user failed to create.', status: 500 };
+                    return showApi.showError(dataJson);
+                }
+            });
+        } else {
+            dataJson = {...dataJson, message: 'Email has already used.', status: 400 };
+            return showApi.showError(dataJson);
+        }
+
     } else {
         dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: validation.validationDataUser(data) };
         return showApi.showError(dataJson);
@@ -198,4 +239,4 @@ const deleteUser = (request, response) => {
     }
 };
 
-module.exports = { getUsers, getUser, insertUser, updateUser, updatePatchUser, deleteUser };
+module.exports = { getUsers, getUser, insertUser, insertUserAsync, updateUser, updatePatchUser, deleteUser };

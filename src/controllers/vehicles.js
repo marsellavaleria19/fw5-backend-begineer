@@ -111,29 +111,26 @@ const insertVehicle = (req, res) => {
         dataJson = {...dataJson, message: 'Data Vehicle was not valid.', status: 400, error: validation.validationDataVehicles(data) };
         return showApi.showError(dataJson);
     }
-
-
 };
 
-const insertVehicleUpload = (req, res) => {
-    upload(req, res, function(error) {
-        let dataJson = { response: res, message: '' };
-        if (error) {
-            dataJson.message = error.message;
-            dataJson.status = 400;
-            return showApi.showError(dataJson);
-        }
+const insertVehicleAsync = (request, response) => {
+    upload(request, response, function(error) {
+        let dataJson = { response: response, message: '' };
+
         const data = {
-            name: req.body.name,
-            category_id: req.body.category_id,
-            location: req.body.location,
-            photo: req.file.path,
-            price: req.body.price,
-            qty: req.body.qty,
-            isAvailable: req.body.isAvailable
+            name: request.body.name,
+            category_id: request.body.category_id,
+            location: request.body.location,
+            price: request.body.price,
+            qty: request.body.qty,
+            isAvailable: request.body.isAvailable
         };
 
-        if (validation.validationDataVehicles(data) == null) {
+        var errValidation = validation.validationDataVehicles(data);
+        if (request.file) {
+            data.photo = request.file.path;
+        }
+        if (errValidation == null) {
             vehicleModel.getDataVehicleName(data.name, null, (result) => {
                 if (result.length == 0) {
                     vehicleModel.insertDataVehicle(data, (results) => {
@@ -160,7 +157,10 @@ const insertVehicleUpload = (req, res) => {
                 }
             });
         } else {
-            dataJson = {...dataJson, message: 'Data Vehicle was not valid.', status: 400, error: validation.validationDataVehicles(data) };
+            if (error) {
+                errValidation = {...errValidation, photo: error.message };
+            }
+            dataJson = {...dataJson, message: 'Data Vehicle was not valid.', status: 400, error: errValidation };
             return showApi.showError(dataJson);
         }
     });
@@ -216,6 +216,69 @@ const updateVehicle = (req, res) => {
         return showApi.showError(dataJson);
     }
 };
+
+const updateVehicleAsync = (req, res) => {
+    upload(req, res, async(error) => {
+        const { id } = req.params;
+        let dataJson = { response: res, message: '' };
+        if (id !== ' ') {
+            const data = {
+                id: parseInt(id),
+                name: req.body.name,
+                category_id: req.body.category_id,
+                location: req.body.location,
+                price: req.body.price,
+                qty: req.body.qty,
+                isAvailable: req.body.isAvailable
+            };
+
+            var errValidation = validation.validationDataVehicles(data);
+            if (req.file) {
+                data.photo = req.file.path;
+            }
+
+            try {
+                const resultDataVehicle = await vehicleModel.getDataVehicleAsync(id);
+                if (resultDataVehicle.length > 0) {
+                    if (errValidation == null) {
+                        vehicleModel.updateDataVehicle(id, data, (results) => {
+                            if (results.affectedRows > 0) {
+                                dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: data };
+                                return showApi.showSuccess(dataJson);
+                            } else {
+                                dataJson = {...dataJson, message: 'Data Vehicle failed to update.', status: 500 };
+                                return showApi.showError(dataJson);
+                            }
+                        });
+                    } else {
+                        try {
+                            const checkSameName = await vehicleModel.getDataVehicleNameAsync(data.name, id);
+                            errValidation = {...errValidation, name: "Name has already used" };
+                        } catch (error) {
+                            dataJson = {...dataJson, message: 'Vehicle error', status: 500, error: error };
+                            return showApi.showError(dataJson);
+                        }
+
+                        if (error) {
+                            errValidation = {...errValidation, photo: error.message };
+                        }
+                        dataJson = {...dataJson, message: 'DataVehicle not valid.', status: 400, error: errValidation };
+                        return showApi.showError(dataJson);
+                    }
+                }
+            } catch (error) {
+                dataJson = {...dataJson, message: 'Vehicle error', status: 500, error: error };
+                return showApi.showError(dataJson);
+            }
+        } else {
+            dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+            return showApi.showError(dataJson);
+        }
+
+    });
+
+};
+
 
 const updatePatchVehicle = (req, res) => {
     const { id } = req.params;
@@ -274,4 +337,4 @@ const deleteVehicle = (req, res) => {
 
 };
 
-module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, insertVehicleUpload, updateVehicle, updatePatchVehicle, deleteVehicle };
+module.exports = { getVehicles, getVehicle, getDataVehiclesByCategory, insertVehicle, insertVehicleAsync, updateVehicle, updateVehicleAsync, updatePatchVehicle, deleteVehicle };

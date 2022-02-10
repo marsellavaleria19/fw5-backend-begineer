@@ -37,6 +37,27 @@ exports.getDataUserEmail = (email, id, cb) => {
     }
 };
 
+exports.getDataUserEmailAsync = (email, id) => new Promise((resolve, reject) => {
+    if (id == null) {
+        db.query('select * from users where email=?', [email, id], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    } else {
+        db.query('select * from users where email=? and id!=?', [email, id], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    }
+});
+
+exports.getDataUserByEmailAsync = (email) => new Promise((resolve, reject) => {
+    db.query('select * from users where email=?', [email], (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+    });
+});
+
 exports.insertDataUser = (data, cb) => {
     db.query('insert into users set ?', [data], (err, res) => {
         if (err) throw err;
