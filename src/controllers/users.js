@@ -182,6 +182,63 @@ const updateUser = (request, response) => {
 
 };
 
+
+const updateUserAsync = async(request, response) => {
+    const { id } = request.params;
+    let dataJson = { response: response, message: '' };
+    if (id !== ' ') {
+        const data = {
+            id: parseInt(id),
+            fullName: request.body.fullName,
+            nickName: request.body.nickName,
+            gender: request.body.gender,
+            photo: request.body.photo,
+            address: request.body.address,
+            birthDate: request.body.birthDate,
+            mobileNumber: request.body.mobileNumber,
+            email: request.body.email,
+            password: request.body.password
+        };
+
+        const resultDataUser = await userModel.getDataUserAsync(id);
+        var errValidation = validation.validationDataUser(data);
+        if (resultDataUser.length > 0) {
+            if (errValidation == null) {
+                var resultDataUserEmail = await userModel.getDataUserEmailAsync(data.email, id);
+                if (resultDataUserEmail.length == 0) {
+                    const hashPassword = await argon.hash(data.password);
+                    data.password = hashPassword;
+                    userModel.updateDataUser(id, data, (results) => {
+                        if (results.affectedRows > 0) {
+                            dataJson = {...dataJson, message: 'Data user updated successfully.', result: data };
+                            return showApi.showSuccess(dataJson);
+                        } else {
+                            dataJson = {...dataJson, message: 'Data user failed to update.', status: 500 };
+                            return showApi.showError(dataJson);
+                        }
+                    });
+                } else {
+                    dataJson = {...dataJson, message: 'Email has already used.', status: 400 };
+                    return showApi.showError(dataJson);
+                }
+
+            } else {
+                dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: validation.validationDataUser(data) };
+                return showApi.showError(dataJson);
+            }
+        } else {
+            dataJson = {...dataJson, message: 'Data user not found.', status: 404 };
+            return showApi.showError(dataJson);
+        }
+
+
+    } else {
+        dataJson = {...dataJson, message: 'id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
+
+};
+
 const updatePatchUser = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -213,6 +270,7 @@ const updatePatchUser = (request, response) => {
     }
 };
 
+
 const deleteUser = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -239,4 +297,4 @@ const deleteUser = (request, response) => {
     }
 };
 
-module.exports = { getUsers, getUser, insertUser, insertUserAsync, updateUser, updatePatchUser, deleteUser };
+module.exports = { getUsers, getUser, insertUser, insertUserAsync, updateUser, updateUserAsync, updatePatchUser, deleteUser };

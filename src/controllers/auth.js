@@ -6,12 +6,13 @@ const { APP_SECRET } = process.env;
 
 exports.login = async(req, res) => {
     const { email, password } = req.body;
-    const result = await userModel.getDataUserByEmailAsync(email);
-    if (result.length === 1) {
+    const result = await userModel.getDataUserEmailAsync(email, null);
+    // console.log(result);
+    if (result.length == 1) {
         const { password: hashPassword } = result[0];
         const checkPassword = await argon.verify(hashPassword, password);
         if (checkPassword) {
-            const data = result[0];
+            const data = { id: result[0].id };
             const token = jwt.sign(data, APP_SECRET);
             return showApi.showResponse(res, "Login Success!", { token });
         } else {
