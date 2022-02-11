@@ -46,7 +46,7 @@ exports.getDataUserEmail = (email, id, cb) => {
 
 exports.getDataUserEmailAsync = (email, id) => new Promise((resolve, reject) => {
     if (id == null) {
-        db.query('select * from users where email=?', [email, id], (err, res) => {
+        db.query('select * from users where email=?', [email], (err, res) => {
             if (err) reject(err);
             resolve(res);
         });
@@ -65,12 +65,26 @@ exports.insertDataUser = (data, cb) => {
     });
 };
 
+exports.insertDataUserAsync = (data) => new Promise((resolve, reject) => {
+    db.query('insert into users set ?', [data], (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+    });
+});
+
 exports.updateDataUser = (id, data, cb) => {
     db.query('update users set ? where id = ?', [data, id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
 };
+
+exports.updateDataUserAsync = (id, data) => new Promise((resolve, reject) => {
+    db.query('update users set ? where id = ?', [data, id], (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+    });
+});
 
 exports.deleteDataUser = (id, cb) => {
     db.query('delete from users where id=?', [id], (err, res) => {
