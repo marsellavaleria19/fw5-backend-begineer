@@ -1,3 +1,5 @@
+const userModel = require('../models/users');
+
 exports.validationDataVehicles = (data) => {
     var result = null;
     if (data.name == null || data.name == '') {
@@ -137,5 +139,61 @@ exports.validationPagination = (pagination) => {
     } else if (limit == 0) {
         result = {...result, limit: 'Limit must be grather than 0.' };
     }
+    return result;
+};
+
+exports.validationRegister = async(data) => {
+    var result = null;
+
+    if (!data.email || data.email == '') {
+        result = { email: 'Email must be filled.' };
+    } else {
+        const resultEmail = await userModel.getDataUserEmailAsync(data.email, null);
+        console.log(resultEmail.length);
+        if (resultEmail.length > 0) {
+            result = { email: "Email has already used." };
+        }
+    }
+
+    if (!data.fullName || data.fullName == '') {
+        result = {...result, fullName: 'fullname must be filled.' };
+    }
+    if (!data.username || data.username == '') {
+        result = {...result, username: 'username must be filled.' };
+    }
+
+    if (!data.password || data.password == '') {
+        result = {...result, password: 'Password must be filled.' };
+    }
+    return result;
+};
+
+exports.validationForgotPassword = async(data) => {
+    var result = null;
+    if (!data.code || data.code == "") {
+        if (!data.email || data.email == "") {
+            result = { email: 'Email must be filled.' };
+        } else {
+            const resultEmail = await userModel.getDataUserEmailAsync(data.email, null);
+            console.log(resultEmail.length);
+            if (resultEmail.length == 0) {
+                result = { email: "If you registered, reset password code will sended to your email" };
+            }
+        }
+    } else {
+        if (data.email) {
+            if (!data.password || data.password == '') {
+                result = {...result, password: "Pasword must be filled!" };
+            }
+            if (!data.confirmPassword || data.confirmPassword == '') {
+                result = {...result, confirmPassword: "ConfirmPasword must be filled!" };
+            }
+        } else {
+            result = {...result, code: 'You have to provide Confirmation Code' };
+        }
+
+    }
+
+
     return result;
 };
