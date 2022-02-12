@@ -1,10 +1,12 @@
 const userModel = require('../models/users');
+const forgotPasswordModel = require('../models/forgotPassword');
 const argon = require('argon2');
 const jwt = require('jsonwebtoken');
 const showApi = require('../helpers/showApi');
 const validationDataUser = require('../helpers/validation');
-const { APP_SECRET } = process.env;
+const { APP_SECRET, APP_EMAIL } = process.env;
 const verifyUser = require("../helpers/auth");
+const mail = require('../helpers/mail');
 
 const login = async(req, res) => {
     try {
@@ -67,4 +69,62 @@ const register = async(req, res) => {
     }
 };
 
-module.exports = { login, register };
+const forgotPassword = async(req, res) => {
+    const { email, code, password, confirmPassword } = req.body;
+    const data = { email, code, password, confirmPassword };
+    var errValidation = await validationDataUser.validationForgotPassword(data);
+    if (!data.code) {
+        if (errValidation == null) {
+            const getDataUser = await userModel.getDataUserEmailAsync(email);
+            let randomCode = Math.round(Math.random() * (999999 - 100000) - 100000);
+            if (randomCode < 0) {
+                randomCode = (randomCode * -1);
+            }
+            const reset = await forgotPasswordModel.insertForgotPassword(getDataUser[0].id, randomCode);
+            if (reset.affectedRows >= 1) {
+                await mail.sendMail({
+                    from: APP_EMAIL,
+                    to: email,
+                    subject: 'Reset Your Password | Backend Beginner',
+                    text: String(randomCode),
+                    html: `<b>${randomCode}</b>`
+                });
+                return showApi.showResponse(res, 'Forgot Password request has been sent to your email!');
+            } else {
+                return showApi.showResponse(res, 'Unexpected Error', null, 500);
+            }
+        } else {
+            return showApi.showResponse(res, 'Data not valid!', errValidation, 400);
+        }
+    } else {
+        if (data.email) {
+            if (errValidation == null) {
+                const resultDataForgotPassword = await forgotPasswordModel.getForgotPassword(data.code);
+                const user = await userModel.getDataUserAsync(resultDataForgotPassword[0].user_id);
+                if (data.password == data.confirmPassword) {
+                    const hashPassword = await argon.hash(data.password);
+                    data.password = hashPassword;
+                    const update = await userModel.updateDataUserAsync(user[0].id, { password: data.password });
+                    if (update.affectedRows > 0) {
+                        const updateForgotPassword = await forgotPasswordModel.updateForgotPassword({ isExpired: 1 }, resultDataForgotPassword[0].id);
+                        console.log(updateForgotPassword.affectedRows);
+                        if (updateForgotPassword.affectedRows > 0) {
+                            return showApi.showResponse(res, 'Password has been reset!');
+                        } else {
+                            return showApi.showResponse(res, 'Unexpected Error Update data forgot password', null, 500);
+                        }
+                    } else {
+                        return showApi.showResponse(res, 'Unexpected Error Update Data User', null, 500);
+                    }
+                } else {
+                    return showApi.showResponse(res, 'Confirm password not same as password', null, 400);
+                }
+            } else {
+                return showApi.showResponse(res, 'Data not valid!', errValidation, 400);
+            }
+        }
+    }
+
+};
+
+module.exports = { login, register, forgotPassword };

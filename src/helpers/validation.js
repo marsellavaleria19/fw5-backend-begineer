@@ -1,3 +1,4 @@
+const forgotPasswordModel = require('../models/forgotPassword');
 const userModel = require('../models/users');
 
 exports.validationDataVehicles = (data) => {
@@ -170,30 +171,41 @@ exports.validationRegister = async(data) => {
 
 exports.validationForgotPassword = async(data) => {
     var result = null;
-    if (!data.code || data.code == "") {
+    if ((!data.code || data.code == '') && (!data.password || data.password == '') && (!data.confirmPassword || data.confirmPassword == '')) {
         if (!data.email || data.email == "") {
             result = { email: 'Email must be filled.' };
         } else {
-            const resultEmail = await userModel.getDataUserEmailAsync(data.email, null);
-            console.log(resultEmail.length);
-            if (resultEmail.length == 0) {
-                result = { email: "If you registered, reset password code will sended to your email" };
+            const user = await userModel.getDataUserEmailAsync(data.email);
+            if (user.length == 0) {
+                result = result = { email: 'Email not found.' };
             }
         }
     } else {
-        if (data.email) {
-            if (!data.password || data.password == '') {
-                result = {...result, password: "Pasword must be filled!" };
-            }
-            if (!data.confirmPassword || data.confirmPassword == '') {
-                result = {...result, confirmPassword: "ConfirmPasword must be filled!" };
+        if (data.code) {
+            const resultForgotPassword = await forgotPasswordModel.getForgotPassword(data.code);
+            if (resultForgotPassword.length === 1) {
+                if (resultForgotPassword[0].isExpired) {
+                    result = {...result, code: 'Expired code' };
+                }
+                const user = await userModel.getDataUserAsync(resultForgotPassword[0].user_id);
+                if (user[0].email == data.email) {
+                    if (!data.password || data.password == "") {
+                        result = {...result, password: 'Password must be filled.' };
+                    }
+                    if (!data.confirmPassword || data.confirmPassword == "") {
+                        result = {...result, confirmPassword: 'Confirm Password must be filled.' };
+                    }
+                } else {
+                    result = {...result, email: "Email not found!" };
+                }
+
+            } else {
+                result = { code: "Code not match." };
             }
         } else {
-            result = {...result, code: 'You have to provide Confirmation Code' };
+            result = { code: "Code must be filled." };
         }
-
     }
-
 
     return result;
 };
