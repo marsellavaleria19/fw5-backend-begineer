@@ -9,28 +9,33 @@ const verifyUser = require("../helpers/auth");
 const mail = require('../helpers/mail');
 
 const login = async(req, res) => {
-    try {
-        const { email, password } = req.body;
+    let dataJson = { response: res, message: '' };
+    const { email, password } = req.body;
+    const dataLogin = { email, password };
+    var errValidation = await validationDataUser.validationLogin(dataLogin);
+    if (errValidation == null) {
         const result = await userModel.getDataUserEmailAsync(email, null);
-        // console.log(result);
-        if (result.length == 1) {
+        if (result.length > 0) {
             const { password: hashPassword } = result[0];
             const checkPassword = await argon.verify(hashPassword, password);
 
             if (checkPassword) {
-                // const data = result[0];
                 const data = { id: result[0].id };
                 const token = jwt.sign(data, APP_SECRET);
-                return showApi.showResponse(res, "Login Success!", { token });
+                dataJson = {...dataJson, message: "Login Success!", result: { token } };
+                return showApi.showSuccess(dataJson);
             } else {
-                return showApi.showResponse(res, "Wrong email or password!", null, 400);
+                dataJson = {...dataJson, message: "Wrong email or password", status: 400 };
+                return showApi.showError(dataJson);
             }
 
         } else {
-            return showApi.showResponse(res, "Wrong email and password!", null, 400);
+            dataJson = {...dataJson, message: "Wrong email or password", status: 400 };
+            return showApi.showError(dataJson);
         }
-    } catch (err) {
-        return showApi.showResponse(res, err.message, null, 400);
+    } else {
+        dataJson = {...dataJson, message: "Data not valid", status: 400, error: errValidation };
+        return showApi.showError(dataJson);
     }
 
 };
@@ -38,7 +43,7 @@ const login = async(req, res) => {
 const register = async(req, res) => {
     const { fullName, username, email, password } = req.body;
     const data = { fullName, username, email, password };
-    // console.log(data);
+    let dataJson = { response: res, message: '' };
     var errValidation = await validationDataUser.validationRegister(data);
     req.status = "Register";
     if (errValidation == null) {
@@ -52,20 +57,25 @@ const register = async(req, res) => {
                 const updateVerifyUser = await userModel.updateDataUserAsync(resultRegister.insertId, { isVerified: 1 });
                 try {
                     if (updateVerifyUser.affectedRows > 0) {
-                        return showApi.showResponse(res, "Registration Success!", { token });
+                        dataJson = {...dataJson, message: "Registration Success", result: { token } };
+                        return showApi.showSuccess(dataJson);
                     } else {
-                        return showApi.showResponse(res, "Registration failed!", null, 500);
+                        dataJson = {...dataJson, message: "Registration Failed", status: 500 };
+                        return showApi.showError(dataJson);
                     }
                 } catch (err) {
-                    return showApi.showResponse(res, err.message, null, 500);
+                    dataJson = {...dataJson, message: err.message, status: 500 };
+                    return showApi.showError(dataJson);
                 }
 
             } else {
-                return showApi.showResponse(res, "Data user verify!", null);
+                dataJson = {...dataJson, message: "Data user not verify", status: 500 };
+                return showApi.showError(dataJson);
             }
         }
     } else {
-        return showApi.showResponse(res, "Data Register not valid.", errValidation, 400);
+        dataJson = {...dataJson, message: "Data Register not valid.", status: 400, error: errValidation };
+        return showApi.showError(dataJson);
     }
 };
 
@@ -73,6 +83,7 @@ const forgotPassword = async(req, res) => {
     const { email, code, password, confirmPassword } = req.body;
     const data = { email, code, password, confirmPassword };
     var errValidation = await validationDataUser.validationForgotPassword(data);
+    let dataJson = { response: res, message: '' };
     if (!data.code) {
         if (errValidation == null) {
             const getDataUser = await userModel.getDataUserEmailAsync(email);
@@ -89,12 +100,15 @@ const forgotPassword = async(req, res) => {
                     text: String(randomCode),
                     html: `<b>${randomCode}</b>`
                 });
-                return showApi.showResponse(res, 'Forgot Password request has been sent to your email!');
+                dataJson = {...dataJson, message: "Forgot Password has been sent to your email!" };
+                return showApi.showSuccess(dataJson);
             } else {
-                return showApi.showResponse(res, 'Unexpected Error', null, 500);
+                dataJson = {...dataJson, message: "Unexpected Error.", status: 500 };
+                return showApi.showError(dataJson);
             }
         } else {
-            return showApi.showResponse(res, 'Data not valid!', errValidation, 400);
+            dataJson = {...dataJson, message: "Data not valid.", status: 400, error: errValidation };
+            return showApi.showError(dataJson);
         }
     } else {
         if (data.email) {
@@ -107,20 +121,24 @@ const forgotPassword = async(req, res) => {
                     const update = await userModel.updateDataUserAsync(user[0].id, { password: data.password });
                     if (update.affectedRows > 0) {
                         const updateForgotPassword = await forgotPasswordModel.updateForgotPassword({ isExpired: 1 }, resultDataForgotPassword[0].id);
-                        console.log(updateForgotPassword.affectedRows);
                         if (updateForgotPassword.affectedRows > 0) {
-                            return showApi.showResponse(res, 'Password has been reset!');
+                            dataJson = {...dataJson, message: "Password has been reset!" };
+                            return showApi.showSuccess(dataJson);
                         } else {
-                            return showApi.showResponse(res, 'Unexpected Error Update data forgot password', null, 500);
+                            dataJson = {...dataJson, message: 'Unexpected Error Update data forgot password', status: 500 };
+                            return showApi.showError(dataJson);
                         }
                     } else {
-                        return showApi.showResponse(res, 'Unexpected Error Update Data User', null, 500);
+                        dataJson = {...dataJson, message: 'Unexpected Error Update Data User', status: 500 };
+                        return showApi.showError(dataJson);
                     }
                 } else {
-                    return showApi.showResponse(res, 'Confirm password not same as password', null, 400);
+                    dataJson = {...dataJson, message: 'Confirm password not same as password', status: 500 };
+                    return showApi.showError(dataJson);
                 }
             } else {
-                return showApi.showResponse(res, 'Data not valid!', errValidation, 400);
+                dataJson = {...dataJson, message: 'Data not valid!', status: 400, error: errValidation };
+                return showApi.showError(dataJson);
             }
         }
     }
