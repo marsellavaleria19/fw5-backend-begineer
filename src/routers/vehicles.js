@@ -1,5 +1,6 @@
 const vehicles = require('express').Router();
 
+
 const {
     getVehicles,
     getVehicle,
@@ -8,8 +9,10 @@ const {
     insertVehicleAsync,
     // updateVehicle,
     updateVehicleAsync,
-    updatePatchVehicle,
-    deleteVehicle
+    // updatePatchVehicle,
+    updatePatchVehicleAsync,
+    // deleteVehicle,
+    deleteVehicleAsync
 } = require('../controllers/vehicles');
 
 vehicles.get('/', getVehicles);
@@ -19,6 +22,8 @@ vehicles.get('/:id', getVehicle);
 vehicles.post('/', insertVehicleAsync);
 // vehicles.put('/:id', updateVehicle);
 vehicles.put('/:id', updateVehicleAsync);
-vehicles.patch('/:id', updatePatchVehicle);
-vehicles.delete('/:id', deleteVehicle);
+// vehicles.patch('/:id', updatePatchVehicle);
+vehicles.patch('/:id', updatePatchVehicleAsync);
+// vehicles.delete('/:id', deleteVehicle);
+vehicles.delete('/:id', deleteVehicleAsync);
 module.exports = vehicles;

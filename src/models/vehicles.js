@@ -66,12 +66,20 @@ exports.getDataVehicleNameAsync = (name, id) => new Promise((resolve, reject) =>
     });
 });
 
+exports.insertDataVehicleAsync = (data) => new Promise((resolve, reject) => {
+    db.query('insert into vehicles set ?', [data], (error, results) => {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
+
 exports.insertDataVehicle = (data, cb) => {
     db.query('insert into vehicles set ?', [data], (error, results) => {
         if (error) throw error;
         cb(results);
     });
 };
+
 
 exports.updateDataVehicle = (id, data, cb) => {
     db.query('update vehicles set ? where id = ?', [data, id], (error, results) => {
@@ -80,9 +88,23 @@ exports.updateDataVehicle = (id, data, cb) => {
     });
 };
 
+exports.updateDataVehicleAsync = (id, data) => new Promise((resolve, reject) => {
+    db.query('update vehicles set ? where id = ?', [data, id], (error, results) => {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
+
 exports.deleteDataVehicle = (id, cb) => {
     db.query('delete from vehicles where id =?', [id], (error, results) => {
         if (error) throw error;
         cb(results);
     });
 };
+
+exports.deleteDataVehicleAsync = (id) => new Promise((resolve, reject) => {
+    db.query('delete from vehicles where id =?', [id], (error, results) => {
+        if (error) reject(error);
+        resolve(results);
+    });
+});

@@ -1,8 +1,8 @@
 exports.showSuccess = (data) => {
+    var result = data.result == null ? { message: data.message } : { message: data.message, results: data.result };
     return data.response.json({
         success: true,
-        message: data.message,
-        results: data.result
+        ...result
     });
 };
 

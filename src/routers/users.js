@@ -7,8 +7,10 @@ const {
     insertUserAsync,
     // updateUser,
     updateUserAsync,
-    updatePatchUser,
-    deleteUser
+    // updatePatchUser,
+    updatePatchUserAsync,
+    // deleteUser
+    deleteUserAsync
 } = require('../controllers/users');
 
 users.get('/', getUsers);
@@ -17,6 +19,8 @@ users.get('/:id', getUser);
 users.post('/', insertUserAsync);
 // users.put('/:id', updateUser);
 users.put('/:id', updateUserAsync);
-users.patch('/:id', updatePatchUser);
-users.delete('/:id', deleteUser);
+// users.patch('/:id', updatePatchUser);
+users.patch('/:id', updatePatchUserAsync);
+// users.delete('/:id', deleteUser);
+users.delete('/:id', deleteUserAsync);
 module.exports = users;

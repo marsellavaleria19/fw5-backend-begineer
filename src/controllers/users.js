@@ -1,7 +1,12 @@
+/* eslint-disable no-unused-vars */
 const userModel = require('../models/users');
 const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 const argon = require('argon2');
+const auth = require('../helpers/auth');
+const upload = require('../helpers/upload').single('photo');
+const fs = require('fs');
+const { APP_URL } = process.env;
 
 const getUsers = (request, response) => {
     let dataJson = { response: response, message: '' };
@@ -88,43 +93,45 @@ const insertUser = (request, response) => {
 };
 
 const insertUserAsync = async(request, response) => {
-    const data = {
-        fullName: request.body.fullName,
-        nickName: request.body.nickName,
-        gender: request.body.gender,
-        photo: request.body.photo,
-        address: request.body.address,
-        birthDate: request.body.birthDate,
-        mobileNumber: request.body.mobileNumber,
-        email: request.body.email,
-        password: request.body.password
-    };
-
-    let dataJson = { response: response, message: '' };
-    var errValidation = validation.validationDataUser(data);
-    if (errValidation == null) {
-        const checkUserEmail = await userModel.getDataUserEmailAsync(data.email, null);
-        if (checkUserEmail.length == 0) {
-            const hashPassword = await argon.hash(data.password);
-            data.password = hashPassword;
-            userModel.insertDataUser(data, (results) => {
-                if (results.affectedRows > 0) {
-                    dataJson = {...dataJson, message: 'Data user created successfully.', result: data };
+    upload(request, response, (errorUpload) => {
+        auth.verifyUser(request, response, async(error) => {
+            const data = {
+                fullName: request.body.fullName,
+                nickName: request.body.nickName,
+                gender: request.body.gender,
+                address: request.body.address,
+                birthDate: request.body.birthDate,
+                mobileNumber: request.body.mobileNumber,
+                email: request.body.email,
+                username: request.body.username,
+                password: request.body.password
+            };
+            var errValidation = await validation.validationDataUser(data);
+            if (request.file) {
+                data.photo = request.file.path;
+            }
+            if (errorUpload) {
+                errValidation = {...errValidation, photo: errorUpload.message };
+            }
+            let dataJson = { response: response, message: '' };
+            if (errValidation == null) {
+                const hashPassword = await argon.hash(data.password);
+                data.password = hashPassword;
+                const insert = await userModel.insertDataUserAsync(data);
+                if (insert.affectedRows > 0) {
+                    const result = await userModel.getDataUserAsync(insert.insertId);
+                    dataJson = {...dataJson, message: 'Data user created successfully.', result: result };
                     return showApi.showSuccess(dataJson);
                 } else {
                     dataJson = {...dataJson, message: 'Data user failed to create.', status: 500 };
                     return showApi.showError(dataJson);
                 }
-            });
-        } else {
-            dataJson = {...dataJson, message: 'Email has already used.', status: 400 };
-            return showApi.showError(dataJson);
-        }
-
-    } else {
-        dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: validation.validationDataUser(data) };
-        return showApi.showError(dataJson);
-    }
+            } else {
+                dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: errValidation };
+                return showApi.showError(dataJson);
+            }
+        });
+    });
 };
 
 const updateUser = (request, response) => {
@@ -184,59 +191,74 @@ const updateUser = (request, response) => {
 
 
 const updateUserAsync = async(request, response) => {
-    const { id } = request.params;
-    let dataJson = { response: response, message: '' };
-    if (id !== ' ') {
-        const data = {
-            id: parseInt(id),
-            fullName: request.body.fullName,
-            nickName: request.body.nickName,
-            gender: request.body.gender,
-            photo: request.body.photo,
-            address: request.body.address,
-            birthDate: request.body.birthDate,
-            mobileNumber: request.body.mobileNumber,
-            email: request.body.email,
-            password: request.body.password
-        };
+    upload(request, response, (errorUpload) => {
+        auth.verifyUser(request, response, async(error) => {
+            const { id } = request.params;
+            let dataJson = { response: response, message: '' };
+            if (id !== ' ') {
+                if (!isNaN(id)) {
+                    const data = {
+                        id: parseInt(id),
+                        fullName: request.body.fullName,
+                        nickName: request.body.nickName,
+                        gender: request.body.gender,
+                        photo: request.body.photo,
+                        address: request.body.address,
+                        birthDate: request.body.birthDate,
+                        mobileNumber: request.body.mobileNumber,
+                        email: request.body.email,
+                        username: request.body.username,
+                        password: request.body.password
+                    };
+                    var errValidation = await validation.validationDataUser(data);
+                    if (request.file) {
+                        data.photo = request.file.path;
+                    }
+                    if (error) {
+                        errValidation = {...errValidation, photo: errorUpload.message };
+                    }
+                    const resultDataUser = await userModel.getDataUserAsync(id);
+                    if (resultDataUser.length > 0) {
+                        if (errValidation == null) {
 
-        const resultDataUser = await userModel.getDataUserAsync(id);
-        var errValidation = validation.validationDataUser(data);
-        if (resultDataUser.length > 0) {
-            if (errValidation == null) {
-                var resultDataUserEmail = await userModel.getDataUserEmailAsync(data.email, id);
-                if (resultDataUserEmail.length == 0) {
-                    const hashPassword = await argon.hash(data.password);
-                    data.password = hashPassword;
-                    userModel.updateDataUser(id, data, (results) => {
-                        if (results.affectedRows > 0) {
-                            dataJson = {...dataJson, message: 'Data user updated successfully.', result: data };
-                            return showApi.showSuccess(dataJson);
+                            const hashPassword = await argon.hash(data.password);
+                            data.password = hashPassword;
+                            const update = await userModel.updateDataUserAsync(id, data);
+                            if (update.affectedRows > 0) {
+                                const result = await userModel.getDataUserAsync(id);
+                                if (result.length > 0) {
+                                    result.map((value) => {
+                                        if (value.photo !== null) {
+                                            value.photo = `${APP_URL}/${value.photo}`;
+                                        }
+                                        return value;
+                                    });
+                                    dataJson = {...dataJson, message: 'Data user updated successfully.', result: result };
+                                    return showApi.showSuccess(dataJson);
+                                }
+                            } else {
+                                dataJson = {...dataJson, message: 'Data user failed to update.', status: 500 };
+                                return showApi.showError(dataJson);
+                            }
                         } else {
-                            dataJson = {...dataJson, message: 'Data user failed to update.', status: 500 };
+                            dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: errValidation };
                             return showApi.showError(dataJson);
                         }
-                    });
+                    } else {
+                        dataJson = {...dataJson, message: 'Data user not found.', status: 404 };
+                        return showApi.showError(dataJson);
+                    }
                 } else {
-                    dataJson = {...dataJson, message: 'Email has already used.', status: 400 };
+                    dataJson = {...dataJson, message: 'id must be a number.', status: 400 };
                     return showApi.showError(dataJson);
                 }
 
             } else {
-                dataJson = {...dataJson, message: 'Data user was not valid.', status: 400, error: validation.validationDataUser(data) };
+                dataJson = {...dataJson, message: 'id must be filled.', status: 400 };
                 return showApi.showError(dataJson);
             }
-        } else {
-            dataJson = {...dataJson, message: 'Data user not found.', status: 404 };
-            return showApi.showError(dataJson);
-        }
-
-
-    } else {
-        dataJson = {...dataJson, message: 'id must be filled.', status: 400 };
-        return showApi.showError(dataJson);
-    }
-
+        });
+    });
 };
 
 const updatePatchUser = (request, response) => {
@@ -270,6 +292,65 @@ const updatePatchUser = (request, response) => {
     }
 };
 
+const updatePatchUserAsync = (request, response) => {
+    upload(request, response, (errorUpload) => {
+        auth.verifyUser(request, response, async(error) => {
+            const { id } = request.params;
+            let dataJson = { response: response, message: '' };
+            if (id) {
+                if (!isNaN(id)) {
+                    const dataUser = await userModel.getDataUserAsync(id);
+                    if (dataUser.length > 0) {
+                        var data = {};
+                        var filled = ['fullName', 'nickName', 'gender', 'photo', 'address', 'birthDate', 'mobileNumber', 'email', 'username', 'password'];
+                        filled.forEach((value) => {
+                            if (request.body[value]) {
+                                if (request.file) {
+                                    data['photo'] = request.file.path;
+                                }
+                                data[value] = request.body[value];
+                            }
+                        });
+                        try {
+                            const update = await userModel.updateDataUserAsync(id, data);
+                            if (update.affectedRows > 0) {
+                                const result = await userModel.getDataUserAsync(id);
+                                if (result.length > 0) {
+                                    result.map((value) => {
+                                        if (value.photo !== null) {
+                                            value.photo = `${APP_URL}/${value.photo}`;
+                                        }
+                                        return value;
+                                    });
+                                    dataJson = {...dataJson, message: 'Data user updated successfully.', result: result };
+                                    return showApi.showSuccess(dataJson);
+                                }
+                            } else {
+                                dataJson = {...dataJson, message: 'Data User failed to update.', status: 500 };
+                                return showApi.showError(dataJson);
+                            }
+                        } catch (err) {
+                            dataJson = {...dataJson, message: 'Data User failed to update.', status: 500, error: err.message };
+                            return showApi.showError(dataJson);
+                        }
+
+                    } else {
+                        dataJson = {...dataJson, message: 'Data User not found.', status: 400 };
+                        return showApi.showError(dataJson);
+                    }
+                } else {
+                    dataJson = {...dataJson, message: 'Id must be a number.', status: 400 };
+                    return showApi.showError(dataJson);
+                }
+            } else {
+                dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+                return showApi.showError(dataJson);
+            }
+
+        });
+    });
+};
+
 
 const deleteUser = (request, response) => {
     const { id } = request.params;
@@ -297,4 +378,49 @@ const deleteUser = (request, response) => {
     }
 };
 
-module.exports = { getUsers, getUser, insertUser, insertUserAsync, updateUser, updateUserAsync, updatePatchUser, deleteUser };
+const deleteUserAsync = async(req, res) => {
+    upload(req, res, async(errorUpload) => {
+        auth.verifyUser(req, res, async(error) => {
+            const { id } = req.params;
+            let dataJson = { response: res, message: '' };
+            if (id !== ' ') {
+                if (!isNaN(id)) {
+                    const resultDataUser = await userModel.getDataUserAsync(id);
+                    if (resultDataUser.length > 0) {
+                        fs.rm(resultDataUser[0].photo, {}, function(err) {
+                            if (err) {
+                                return res.status(500).json({
+                                    success: false,
+                                    message: 'File not found'
+                                });
+                            }
+
+                        });
+                        try {
+                            const deleteUser = await userModel.deleteDataUserAsync(id);
+                            if (deleteUser.affectedRows > 0) {
+                                dataJson = {...dataJson, message: 'Data user deleted successfully' };
+                                return showApi.showSuccess(dataJson);
+                            }
+                        } catch (error) {
+                            dataJson = {...dataJson, message: error.message, status: 400 };
+                            return showApi.showError(dataJson);
+                        }
+                    } else {
+                        dataJson = {...dataJson, message: "Data user not found.", status: 404 };
+                        return showApi.showError(dataJson);
+                    }
+                } else {
+                    dataJson = {...dataJson, message: "Id must be a number.", status: 400 };
+                    return showApi.showError(dataJson);
+                }
+            } else {
+                dataJson = {...dataJson, message: "Id must be filled.", status: 400 };
+                return showApi.showError(dataJson);
+            }
+        });
+    });
+
+};
+
+module.exports = { getUsers, getUser, insertUser, insertUserAsync, updateUser, updateUserAsync, updatePatchUser, updatePatchUserAsync, deleteUser, deleteUserAsync };

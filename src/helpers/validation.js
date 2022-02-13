@@ -1,10 +1,16 @@
 const forgotPasswordModel = require('../models/forgotPassword');
 const userModel = require('../models/users');
+const vehicleModel = require('../models/vehicles');
 
-exports.validationDataVehicles = (data) => {
+exports.validationDataVehicles = async(data) => {
     var result = null;
     if (data.name == null || data.name == '') {
         result = { name: 'Name must be filled' };
+    } else {
+        const resultDataVehicleByName = await vehicleModel.getDataVehicleNameAsync(data.name);
+        if (resultDataVehicleByName.length > 0) {
+            result = { name: 'Name has already used.' };
+        }
     }
     if (data.category_id == null || data.category_id == '') {
         result = {...result, category_id: 'Id category must be filled.' };
@@ -34,9 +40,9 @@ exports.validationDataVehicles = (data) => {
     return result;
 };
 
-exports.validationDataUser = (data) => {
+exports.validationDataUser = async(data) => {
     var result = null;
-    const { fullName, nickName, gender, photo, address, birthDate, mobileNumber, email, password } = data;
+    const { fullName, nickName, gender, address, birthDate, mobileNumber, email, username, password } = data;
     if (fullName == null || fullName == '') {
         result = { fullName: 'Fullname must be filled' };
     }
@@ -45,9 +51,6 @@ exports.validationDataUser = (data) => {
     }
     if (gender == null || gender == '') {
         result = {...result, gender: 'Gender must be filled' };
-    }
-    if (photo == null || photo == '') {
-        result = {...result, photo: 'Photo must be filled.' };
     }
     if (address == null || address == '') {
         result = {...result, address: 'Address must be filled.' };
@@ -60,6 +63,19 @@ exports.validationDataUser = (data) => {
     }
     if (email == null || email == '') {
         result = {...result, email: 'email must be filled' };
+    } else {
+        const checkUserEmail = await userModel.getDataUserEmailAsync(email, null);
+        if (checkUserEmail.length > 0) {
+            result = {...result, email: 'email has already used.' };
+        }
+    }
+    if (username == null || username == '') {
+        result = {...result, username: 'username must be filled' };
+    } else {
+        const checkUserUsername = await userModel.getDataUserUsernameAsync(username, null);
+        if (checkUserUsername.length > 0) {
+            result = {...result, username: 'username has already used.' };
+        }
     }
     if (password == null || password == '') {
         result = {...result, password: 'Password must be filled' };
@@ -139,6 +155,18 @@ exports.validationPagination = (pagination) => {
         result = {...result, limit: 'Limit must be a number.' };
     } else if (limit == 0) {
         result = {...result, limit: 'Limit must be grather than 0.' };
+    }
+    return result;
+};
+
+exports.validationLogin = async(data) => {
+    var result = null;
+
+    if (!data.email || data.email == '') {
+        result = { email: 'Email must be filled.' };
+    }
+    if (!data.password || data.password == '') {
+        result = {...result, password: 'Password must be filled.' };
     }
     return result;
 };

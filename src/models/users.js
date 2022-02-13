@@ -58,6 +58,21 @@ exports.getDataUserEmailAsync = (email, id) => new Promise((resolve, reject) => 
     }
 });
 
+exports.getDataUserUsernameAsync = (username, id) => new Promise((resolve, reject) => {
+    if (id == null) {
+        db.query('select * from users where username=?', [username], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    } else {
+        db.query('select * from users where username=? and id!=?', [username, id], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    }
+});
+
+
 exports.insertDataUser = (data, cb) => {
     db.query('insert into users set ?', [data], (err, res) => {
         if (err) throw err;
@@ -92,3 +107,10 @@ exports.deleteDataUser = (id, cb) => {
         cb(res);
     });
 };
+
+exports.deleteDataUserAsync = (id) => new Promise((resolve, reject) => {
+    db.query('delete from users where id=?', [id], (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+    });
+});
