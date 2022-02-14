@@ -133,7 +133,7 @@ const insertVehicleAsync = async(request, response) => {
             if (request.file) {
                 data.photo = request.file.path;
             }
-            if (error) {
+            if (errorUpload) {
                 errValidation = {...errValidation, photo: errorUpload.message };
             }
 
