@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const userModel = require('../models/users');
 const forgotPasswordModel = require('../models/forgotPassword');
 const argon = require('argon2');
@@ -52,12 +53,11 @@ const register = async(req, res) => {
         const resultRegister = await userModel.insertDataUserAsync(data);
         if (resultRegister.affectedRows > 0) {
             const data = { id: resultRegister.insertId };
-            const token = jwt.sign(data, APP_SECRET);
             if (verifyUser.verifyUser(req, res, null)) {
                 const updateVerifyUser = await userModel.updateDataUserAsync(resultRegister.insertId, { isVerified: 1 });
                 try {
                     if (updateVerifyUser.affectedRows > 0) {
-                        dataJson = {...dataJson, message: "Registration Success", result: { token } };
+                        dataJson = {...dataJson, message: "Registration Success" };
                         return showApi.showSuccess(dataJson);
                     } else {
                         dataJson = {...dataJson, message: "Registration Failed", status: 500 };

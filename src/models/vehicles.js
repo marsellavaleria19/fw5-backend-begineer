@@ -1,7 +1,8 @@
 const db = require('../helpers/database');
+const { APP_URL } = process.env;
 
 exports.getDataVehicles = (data, cb) => {
-    db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
+    db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
     join categories c on v.category_id = c.id 
       where v.name like '%${data.search}%' or c.name like '%${data.search}%' 
       order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
@@ -39,7 +40,7 @@ join categories c on v.category_id = c.id
 };
 
 exports.getDataVehicle = (id, cb) => {
-    db.query('select v.id,v.name,v.category_id,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?', [id], (err, res) => {
+    db.query(`select v.id,v.name,v.category_id,c.name category,${APP_URL}v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?`, [id], (err, res) => {
         if (err) throw err;
         cb(res);
     });

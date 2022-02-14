@@ -3,7 +3,6 @@ const vehicleModel = require('../models/vehicles');
 const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 const upload = require('../helpers/upload').single('photo');
-const { APP_URL } = process.env;
 const fs = require('fs');
 const auth = require('../helpers/auth');
 
@@ -23,12 +22,6 @@ const getVehicles = (req, res) => {
             if (results.length > 0) {
                 vehicleModel.countDataVehicles(data, (count) => {
                     const { total } = count[0];
-                    results.map((value) => {
-                        if (value.photo !== null) {
-                            value.photo = `${APP_URL}/${value.photo}`;
-                        }
-                        return value;
-                    });
                     pagination = {...pagination, total: total, route: 'vehicles' };
                     dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
                     return showApi.showSuccessWithPagination(dataJson, pagination);
@@ -142,12 +135,6 @@ const insertVehicleAsync = async(request, response) => {
                     const insertVehicle = await vehicleModel.insertDataVehicleAsync(data);
                     if (insertVehicle.affectedRows > 0) {
                         const result = await vehicleModel.getDataVehicleAsync(insertVehicle.insertId);
-                        result.map((value) => {
-                            if (value.photo !== null) {
-                                value.photo = `${APP_URL}/${value.photo}`;
-                            }
-                            return value;
-                        });
                         dataJson = {...dataJson, message: 'Data Vehicle created successfully.', result: result };
                         return showApi.showSuccess(dataJson);
                     }
@@ -247,14 +234,9 @@ const updateVehicleAsync = (req, res) => {
                         if (update.affectedRows > 0) {
                             const result = await vehicleModel.getDataVehicleAsync(id);
                             if (result.length > 0) {
-                                result.map((value) => {
-                                    if (value.photo !== null) {
-                                        value.photo = `${APP_URL}/${value.photo}`;
-                                    }
-                                    return value;
-                                });
+                                dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: result };
                             }
-                            dataJson = {...dataJson, message: 'Data Vehicle updated successfully.', result: data };
+
                             return showApi.showSuccess(dataJson);
                         } else {
                             dataJson = {...dataJson, message: 'Data Vehicle failed to update.', status: 500 };

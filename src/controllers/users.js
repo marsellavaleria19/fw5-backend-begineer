@@ -6,7 +6,7 @@ const argon = require('argon2');
 const auth = require('../helpers/auth');
 const upload = require('../helpers/upload').single('photo');
 const fs = require('fs');
-const { APP_URL } = process.env;
+
 
 const getUsers = (request, response) => {
     let dataJson = { response: response, message: '' };
@@ -227,12 +227,6 @@ const updateUserAsync = async(request, response) => {
                             if (update.affectedRows > 0) {
                                 const result = await userModel.getDataUserAsync(id);
                                 if (result.length > 0) {
-                                    result.map((value) => {
-                                        if (value.photo !== null) {
-                                            value.photo = `${APP_URL}/${value.photo}`;
-                                        }
-                                        return value;
-                                    });
                                     dataJson = {...dataJson, message: 'Data user updated successfully.', result: result };
                                     return showApi.showSuccess(dataJson);
                                 }
@@ -316,12 +310,6 @@ const updatePatchUserAsync = (request, response) => {
                             if (update.affectedRows > 0) {
                                 const result = await userModel.getDataUserAsync(id);
                                 if (result.length > 0) {
-                                    result.map((value) => {
-                                        if (value.photo !== null) {
-                                            value.photo = `${APP_URL}/${value.photo}`;
-                                        }
-                                        return value;
-                                    });
                                     dataJson = {...dataJson, message: 'Data user updated successfully.', result: result };
                                     return showApi.showSuccess(dataJson);
                                 }
