@@ -89,52 +89,57 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "fullName",
-									"value": "Elma Waston",
+									"value": "abababab",
 									"type": "text"
 								},
 								{
 									"key": "nickName",
-									"value": "Elma",
+									"value": "bbbbb",
 									"type": "text"
 								},
 								{
 									"key": "gender",
-									"value": "female",
-									"type": "text"
-								},
-								{
-									"key": "photo",
-									"value": "3.jpg",
+									"value": "Femaile",
 									"type": "text"
 								},
 								{
 									"key": "address",
-									"value": "Sudirman Street no.87 Block B",
+									"value": "vvvvv",
 									"type": "text"
 								},
 								{
 									"key": "birthDate",
-									"value": "2001-10-10",
+									"value": "2022/09/08",
 									"type": "text"
 								},
 								{
 									"key": "mobileNumber",
-									"value": "(+62)898765",
+									"value": "dsddsds",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "elma@gmail.com",
+									"value": "aaaabbb@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "xxxxx",
 									"type": "text"
 								},
 								{
 									"key": "password",
 									"value": "123",
 									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Pictures/sertifikat laravue.JPG"
 								}
 							]
 						},
@@ -156,52 +161,57 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "fullName",
-									"value": "Bella Swanstiger",
+									"value": "Delyn Mayer",
 									"type": "text"
 								},
 								{
 									"key": "nickName",
-									"value": "Bella",
+									"value": "Delin",
 									"type": "text"
 								},
 								{
 									"key": "gender",
-									"value": "female",
-									"type": "text"
-								},
-								{
-									"key": "photo",
-									"value": "1.jpg",
+									"value": "Male",
 									"type": "text"
 								},
 								{
 									"key": "address",
-									"value": "Sudirman Street no 88",
+									"value": "Jl. ABC no 10",
 									"type": "text"
 								},
 								{
 									"key": "birthDate",
-									"value": "1999-09-09",
+									"value": "2001/09/18",
 									"type": "text"
 								},
 								{
 									"key": "mobileNumber",
-									"value": "089993838383",
+									"value": "0902930239",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "bella09@gmail.com",
+									"value": "delin@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "delin_18",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "456",
+									"value": "123",
 									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Pictures/Psikotes Marsella.PNG"
 								}
 							]
 						},
@@ -217,7 +227,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "2"
+									"value": "17"
 								}
 							]
 						}
@@ -230,25 +240,22 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "fullName",
-									"value": "Bianca Waston",
-									"type": "text"
+									"value": "",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "nickName",
-									"value": "Bianca",
-									"type": "text"
+									"value": "",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "gender",
-									"value": "Female",
-									"type": "text"
-								},
-								{
-									"key": "photo",
 									"value": "",
 									"type": "text",
 									"disabled": true
@@ -261,8 +268,9 @@
 								},
 								{
 									"key": "birthDate",
-									"value": "1995-09-08",
-									"type": "text"
+									"value": "",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "mobileNumber",
@@ -272,15 +280,24 @@
 								},
 								{
 									"key": "email",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "deniall@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "danial08",
+									"type": "text"
 								},
 								{
 									"key": "password",
 									"value": "",
 									"type": "text",
 									"disabled": true
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Pictures/leetcode1.JPG"
 								}
 							]
 						},
@@ -296,7 +313,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5"
+									"value": "17"
 								}
 							]
 						}
@@ -661,14 +678,6 @@
 								}
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "ADD VEHICLE UPLOAD",
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}
@@ -1220,12 +1229,12 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "elma@gmail.com",
+									"value": "dogsegies@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "123",
+									"value": "789",
 									"type": "text"
 								}
 							]
@@ -1238,6 +1247,92 @@
 							"path": [
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "REGISTER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullName",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "billy@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FORGOT PASSWORD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "dogsegies@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/forgotpassword",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"forgotpassword"
 							]
 						}
 					},
