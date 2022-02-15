@@ -1,6 +1,7 @@
 const forgotPasswordModel = require('../models/forgotPassword');
 const userModel = require('../models/users');
 const vehicleModel = require('../models/vehicles');
+const emailVerificationModel = require('../models/emailVerification');
 
 exports.validationDataVehicles = async(data) => {
     var result = null;
@@ -196,6 +197,38 @@ exports.validationRegister = async(data) => {
     }
     return result;
 };
+
+exports.validationEmailVerification = async(data) => {
+    var result = null;
+
+    if (!data.email || data.email == '') {
+        result = { email: 'Email must be filled.' };
+    } else {
+        const resultEmail = await userModel.getDataUserEmailAsync(data.email, null);
+        if (resultEmail.length == 0) {
+            result = { email: "Email not found." };
+        }
+    }
+
+    if (!data.code || data.code == '') {
+        result = {...result, code: 'code must be filled.' };
+    } else {
+        const verifyUser = await emailVerificationModel.getEmailVerificationByCode(data.code);
+        if (verifyUser.length == 0) {
+            result = {...result, code: 'Code not found.' };
+        } else {
+            if (verifyUser[0].isExpired) {
+                result = {...result, code: 'Expired code' };
+            }
+        }
+    }
+
+    if (!data.password || data.password == '') {
+        result = {...result, password: 'Password must be filled.' };
+    }
+    return result;
+};
+
 
 exports.validationForgotPassword = async(data) => {
     var result = null;

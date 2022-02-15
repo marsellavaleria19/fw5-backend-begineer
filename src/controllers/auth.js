@@ -4,16 +4,17 @@ const forgotPasswordModel = require('../models/forgotPassword');
 const argon = require('argon2');
 const jwt = require('jsonwebtoken');
 const showApi = require('../helpers/showApi');
-const validationDataUser = require('../helpers/validation');
+const validation = require('../helpers/validation');
 const { APP_SECRET, APP_EMAIL } = process.env;
 const verifyUser = require("../helpers/auth");
 const mail = require('../helpers/mail');
+const emailVerificationModel = require('../models/emailVerification');
 
 const login = async(req, res) => {
     let dataJson = { response: res, message: '' };
     const { email, password } = req.body;
     const dataLogin = { email, password };
-    var errValidation = await validationDataUser.validationLogin(dataLogin);
+    var errValidation = await validation.validationLogin(dataLogin);
     if (errValidation == null) {
         const result = await userModel.getDataUserEmailAsync(email, null);
         if (result.length > 0) {
@@ -21,10 +22,16 @@ const login = async(req, res) => {
             const checkPassword = await argon.verify(hashPassword, password);
 
             if (checkPassword) {
-                const data = { id: result[0].id };
-                const token = jwt.sign(data, APP_SECRET);
-                dataJson = {...dataJson, message: "Login Success!", result: { token } };
-                return showApi.showSuccess(dataJson);
+                if (result[0].isVerified == 1) {
+                    const data = { id: result[0].id };
+                    const token = jwt.sign(data, APP_SECRET);
+                    dataJson = {...dataJson, message: "Login Success!", result: { token } };
+                    return showApi.showSuccess(dataJson);
+                } else {
+                    dataJson = {...dataJson, message: "User not authorized!", status: 404 };
+                    return showApi.showError(dataJson);
+                }
+
             } else {
                 dataJson = {...dataJson, message: "Wrong email or password", status: 400 };
                 return showApi.showError(dataJson);
@@ -45,33 +52,39 @@ const register = async(req, res) => {
     const { fullName, username, email, password } = req.body;
     const data = { fullName, username, email, password };
     let dataJson = { response: res, message: '' };
-    var errValidation = await validationDataUser.validationRegister(data);
-    req.status = "Register";
+    var errValidation = await validation.validationRegister(data);
     if (errValidation == null) {
         const hashPassword = await argon.hash(data.password);
         data.password = hashPassword;
-        const resultRegister = await userModel.insertDataUserAsync(data);
-        if (resultRegister.affectedRows > 0) {
-            const data = { id: resultRegister.insertId };
-            if (verifyUser.verifyUser(req, res, null)) {
-                const updateVerifyUser = await userModel.updateDataUserAsync(resultRegister.insertId, { isVerified: 1 });
-                try {
-                    if (updateVerifyUser.affectedRows > 0) {
-                        dataJson = {...dataJson, message: "Registration Success" };
-                        return showApi.showSuccess(dataJson);
-                    } else {
-                        dataJson = {...dataJson, message: "Registration Failed", status: 500 };
-                        return showApi.showError(dataJson);
-                    }
-                } catch (err) {
-                    dataJson = {...dataJson, message: err.message, status: 500 };
-                    return showApi.showError(dataJson);
+        try {
+            const resultRegister = await userModel.insertDataUserAsync(data);
+            if (resultRegister.affectedRows > 0) {
+                let randomCode = Math.round(Math.random() * (9999999 - 100000) - 100000);
+                if (randomCode < 0) {
+                    randomCode = (randomCode * -1);
                 }
-
+                const reset = await emailVerificationModel.insertEmailVerification(resultRegister.insertId, randomCode);
+                if (reset.affectedRows >= 1) {
+                    await mail.sendMail({
+                        from: APP_EMAIL,
+                        to: email,
+                        subject: 'Email Verification',
+                        text: String(randomCode),
+                        html: `This is your email verification code : <b>${randomCode}</b>`
+                    });
+                    dataJson = {...dataJson, message: "Email Verification has been sent to your email!" };
+                    return showApi.showSuccess(dataJson);
+                } else {
+                    dataJson = {...dataJson, message: "Email Verification failed to send." };
+                    return showApi.showSuccess(dataJson);
+                }
             } else {
-                dataJson = {...dataJson, message: "Data user not verify", status: 500 };
-                return showApi.showError(dataJson);
+                dataJson = {...dataJson, message: "Registration failed to create!" };
+                return showApi.showSuccess(dataJson);
             }
+        } catch (error) {
+            dataJson = {...dataJson, message: error.message };
+            return showApi.showSuccess(dataJson);
         }
     } else {
         dataJson = {...dataJson, message: "Data Register not valid.", status: 400, error: errValidation };
@@ -79,10 +92,42 @@ const register = async(req, res) => {
     }
 };
 
+const emailVerification = async(req, res) => {
+    const { email, code, password } = req.body;
+    const data = { email, code, password };
+    var errValidation = await validation.validationEmailVerification(data);
+    let dataJson = { response: res, message: '' };
+    if (errValidation == null) {
+        const user = await userModel.getDataUserEmailAsync(data.email, null);
+        const { password: hashPassword } = user[0];
+        const checkPassword = await argon.verify(hashPassword, password);
+        if (checkPassword) {
+            const getEmailVerification = await emailVerificationModel.getEmailVerificationByCode(code);
+            const updateUser = await userModel.updateDataUserAsync(getEmailVerification[0].user_id, { isVerified: 1 });
+            if (updateUser.affectedRows > 0) {
+                const updateExpired = await emailVerificationModel.updateEmailVerification({ isExpired: 1 }, getEmailVerification[0].id);
+                if (updateExpired.affectedRows > 0) {
+                    dataJson = {...dataJson, message: "Email has been verified!" };
+                    return showApi.showSuccess(dataJson);
+                } else {
+                    dataJson = {...dataJson, message: "Email Verification failed to verify!", status: 500 };
+                    return showApi.showSuccess(dataJson);
+                }
+            } else {
+                dataJson = {...dataJson, message: "User failed to update!", status: 500 };
+                return showApi.showSuccess(dataJson);
+            }
+        }
+    } else {
+        dataJson = {...dataJson, message: "Data not valid!", status: 400, error: errValidation };
+        return showApi.showError(dataJson);
+    }
+};
+
 const forgotPassword = async(req, res) => {
     const { email, code, password, confirmPassword } = req.body;
     const data = { email, code, password, confirmPassword };
-    var errValidation = await validationDataUser.validationForgotPassword(data);
+    var errValidation = await validation.validationForgotPassword(data);
     let dataJson = { response: res, message: '' };
     if (!data.code) {
         if (errValidation == null) {
@@ -145,4 +190,4 @@ const forgotPassword = async(req, res) => {
 
 };
 
-module.exports = { login, register, forgotPassword };
+module.exports = { login, register, forgotPassword, emailVerification };

@@ -11,9 +11,9 @@ exports.verifyUser = (req, res, next) => {
                 const payload = jwt.verify(token, APP_SECRET);
                 req.user = payload;
                 if (jwt.verify(token, APP_SECRET)) {
-                    return req.status !== "Register" ? next() : true;
+                    return next();
                 } else {
-                    return req.status !== "Register" ? showApi.showResponse(res, 'User not verified!', null, 403) : false;
+                    return showApi.showResponse(res, 'User not verified!', null, 403);
                 }
             } catch (err) {
                 return showApi.showResponse(res, 'User not verified!', null, 403);
