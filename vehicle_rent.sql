@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2022 at 02:04 AM
+-- Generation Time: Feb 23, 2022 at 03:21 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -46,6 +46,28 @@ INSERT INTO `categories` (`id`, `name`, `createdAt`, `updatedAt`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `email_verification`
+--
+
+CREATE TABLE `email_verification` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `isExpired` tinyint(4) NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `email_verification`
+--
+
+INSERT INTO `email_verification` (`id`, `user_id`, `code`, `isExpired`, `createdAt`, `updatedAt`) VALUES
+(1, 24, '8200796', 1, '2022-02-14 22:57:03', '2022-02-15 09:24:35');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `forgot_password`
 --
 
@@ -64,7 +86,8 @@ CREATE TABLE `forgot_password` (
 
 INSERT INTO `forgot_password` (`id`, `user_id`, `code`, `isExpired`, `createdAt`, `updatedAt`) VALUES
 (11, 16, 12003, 1, '2022-02-12 11:04:14', '2022-02-12 11:05:03'),
-(12, 16, 671739, 0, '2022-02-12 11:05:37', NULL);
+(12, 16, 671739, 0, '2022-02-12 11:05:37', NULL),
+(13, 20, 479075, 1, '2022-02-14 15:43:30', '2022-02-14 15:44:50');
 
 -- --------------------------------------------------------
 
@@ -187,16 +210,19 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fullName`, `nickName`, `gender`, `photo`, `address`, `birthDate`, `mobileNumber`, `email`, `username`, `password`, `isVerified`, `createdAt`, `updatedAt`) VALUES
-(1, 'Adam Smith', 'Adam', 'Male', '3.jpg', 'Iskandar Street no.67 Block A Near Bus Stop', '2001-10-02', '(+62)8123456', 'adam02@gmail.com', '', '3456', 0, '2022-02-02 16:28:34', NULL),
+(1, 'Adam Smith', 'Adam', 'Male', '3.jpg', 'Iskandar Street no.67 Block A Near Bus Stop', '2001-10-02', '(+62)8123456', 'adam02@gmail.com', '', '3456', 1, '2022-02-02 16:28:34', '2022-02-15 09:22:51'),
 (2, 'Bella Swanstiger', 'Bella', 'Female', '1.jpg', 'Sudirman Street no 88', '1999-09-09', '089993838383', 'bella09@gmail.com', '', '456', 0, '2022-02-02 16:34:02', '2022-02-02 16:35:18'),
 (3, 'Charlie Bonstain', 'Charlie', 'Male', '3.jpg', 'Iskandar Street no.67 Block A Near Bus Stop', '2001-10-02', '(+62)8123456', 'charlie02@gmail.com', '', '123', 0, '2022-02-02 16:35:28', NULL),
 (4, 'Chika Wild', 'Chika', 'Female', '3.jpg', 'Sudirman Street no.87 Block B', '2001-10-02', '(+62)898765', 'chika02@gmail.com', '', '123', 0, '2022-02-03 23:32:31', NULL),
 (5, 'Bianca Waston', 'Bianca', 'Female', '3.jpg', 'Sudirman Street no.87 Block B', '1995-09-08', '(+62)898765', 'candy10@gmail.com', '', '123', 0, '2022-02-03 23:40:50', '2022-02-08 23:08:21'),
-(6, 'Elma Watson', 'Elma', 'Female', '1.jpg', 'Sudirman Street no 88', '1999-09-09', '089993838383', 'elma@gmail.com', '', '$argon2i$v=19$m=4096,t=3,p=1$zQFOXCaQFHOWimIxe1asjA$pLJysy2/amTY9uLr0QYWBfbEE8XQ8YIoLsX7RRAwzYI', 0, '2022-02-10 17:12:35', '2022-02-10 17:51:41'),
+(6, 'Delyn Mayer', 'Delin', 'Male', 'uploads\\Psikotes Marsella.PNG', 'Jl. ABC no 10', '2001-09-18', '0902930239', 'delin@gmail.com', 'delin_18', '$argon2i$v=19$m=4096,t=3,p=1$3rKwmsb2mJFKG8gbd0KAlw$V6yRzJD4GVaoQ3P94lU/2nw4W0Aab700BTAV4jdp+os', 0, '2022-02-10 17:12:35', '2022-02-14 15:43:11'),
 (14, 'Billy Van Hotman', NULL, NULL, '', NULL, NULL, NULL, 'billy@gmail.com', 'billy_vh', '$argon2i$v=19$m=4096,t=3,p=1$6EooizMdJuJyoyujy8djIA$OzWjuLYwRR/Q4WbSrkrHoF0Kz4OfiwfedaXN59P9bIE', 1, '2022-02-11 15:27:42', '2022-02-11 15:27:42'),
 (16, 'guest1', NULL, NULL, '', NULL, NULL, NULL, 'dogsegies@gmail.com', 'guest01', '$argon2i$v=19$m=4096,t=3,p=1$xuFk7wIv+MIh3yl6fdLZBg$eFCKFGaqQyVgPLvsjfaNPlT/7DRqX6Tx6aKGYQernpI', 1, '2022-02-11 23:41:58', '2022-02-12 11:05:03'),
 (18, 'ajsaksjkasj', NULL, NULL, '', NULL, NULL, NULL, 'zzzzxxx@gmail.com', 'vvvvv', '$argon2i$v=19$m=4096,t=3,p=1$4bVu/sI3YREJE2VuP1RmYQ$HNVzn0nHij5zV0LISCGiiVILXbm6f2+NfWgIBUsEKeI', 1, '2022-02-12 17:37:40', '2022-02-12 17:37:40'),
-(19, 'ccccc', NULL, NULL, '', NULL, NULL, NULL, 'ccc.dddd@gmail.com', 'dddd', '$argon2i$v=19$m=4096,t=3,p=1$eBkmvoe9PFRyaGaXLG0jAw$Fi4xHbSq8PAQxvOmFrT74tW03ORZ0aI71+rU3PaqmnU', 1, '2022-02-12 21:55:27', '2022-02-12 21:55:27');
+(19, 'ccccc', NULL, NULL, '', NULL, NULL, NULL, 'ccc.dddd@gmail.com', 'dddd', '$argon2i$v=19$m=4096,t=3,p=1$eBkmvoe9PFRyaGaXLG0jAw$Fi4xHbSq8PAQxvOmFrT74tW03ORZ0aI71+rU3PaqmnU', 1, '2022-02-12 21:55:27', '2022-02-12 21:55:27'),
+(20, 'LEWAB', NULL, NULL, '', NULL, NULL, NULL, 'lewab43008@diolang.com', 'lewab43008', '$argon2i$v=19$m=4096,t=3,p=1$QJSv45gSmNgzG1FJbiYTEQ$dEUNVnbY0Cy1gjooIGPdrjV0xvlnHrtcZ6YCgcnvPII', 1, '2022-02-14 15:41:14', '2022-02-14 15:44:50'),
+(21, 'abababab', 'bbbbb', '', 'uploads\\popup detail produk.JPG', 'vvvvv', '2022-09-08', 'dsddsds', 'aaaabbb@gmail.com', 'xxxxx', '$argon2i$v=19$m=4096,t=3,p=1$oaFBOuMQ/lRjs+MxROHr4Q$5p9VLMeuVJJ/xiT4hi3FZI27ex/aejaSTEKpSJR7Y+w', 0, '2022-02-14 15:48:34', NULL),
+(24, 'vosov', NULL, NULL, '', NULL, NULL, NULL, 'vosov61582@diolang.com', 'vosov61582', '$argon2i$v=19$m=4096,t=3,p=1$j+hXqTixDfhaepXRAz44sQ$KhnZJmLztseaeoOiZTqs4QpgVmmJ+N0asSnQFfJUiLw', 1, '2022-02-14 22:57:03', '2022-02-15 09:24:35');
 
 -- --------------------------------------------------------
 
@@ -222,41 +248,35 @@ CREATE TABLE `vehicles` (
 --
 
 INSERT INTO `vehicles` (`id`, `name`, `category_id`, `photo`, `location`, `price`, `qty`, `isAvailable`, `createdAt`, `updatedAt`) VALUES
-(1, 'Toyota Avanza', 2, '1.jpg', 'Jakarta', '1000000.0000', 3, 1, '2022-01-02 15:21:12', NULL),
-(2, 'Honda Beat', 3, '4.jpg', 'Jakarta', '2000000.0000', 4, 1, '2022-02-02 15:27:41', NULL),
-(3, 'Honda Scoppy', 3, '3.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-02 15:41:00', NULL),
-(4, 'Honda Brio', 2, '3.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-02 23:11:46', NULL),
-(5, 'Honda BR-V', 2, '3.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-02 23:12:02', NULL),
-(6, 'Honda HRV', 2, '4.jpg', 'Jakarta', '2000000.0000', 4, 1, '2022-02-02 23:12:20', NULL),
-(7, 'Toyota Alphard', 2, '1.jpg', 'Jakarta', '1000000.0000', 3, 1, '2022-02-03 11:43:23', NULL),
-(8, 'Toyota Agya', 2, '1.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-03 13:39:36', NULL),
-(9, 'Toyota Calya', 2, '1.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-03 23:18:33', NULL),
-(12, 'Honda City', 2, '1.jpg', 'Medan', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(13, 'Honda Accord', 2, '1.jpg', 'Medan', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(14, 'Honda City Hatchback', 2, '1.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(15, 'Honda Civic', 2, '1.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(16, 'Honda Jazz', 2, '1.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(17, 'Honda Mobilio', 2, '1.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(18, 'Honda Odyssey', 2, '1.jpg', 'Semarang', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(19, 'Honda WR-V', 2, '1.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
-(20, 'Toyota C-HR', 2, '11.jpg', 'Jakarta', '200000.0000', 4, 1, '2022-02-05 23:08:56', NULL),
-(21, 'Toyota Calya', 2, '10.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:08:56', NULL),
-(22, 'Toyota Camry', 2, '8.jpg', 'Bandung', '200000.0000', 5, 1, '2022-02-05 23:08:56', NULL),
-(23, 'Toyota Corolla Altis', 2, '5.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:08:56', NULL),
-(24, 'Toyota Fortuner', 2, '6.jpg', 'Bandung', '100000.0000', 4, 1, '2022-02-05 23:08:57', NULL),
-(25, 'Toyota HiAce', 2, '5.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:08:57', NULL),
-(26, 'Honda Vario', 3, '13.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:16:03', NULL),
-(27, 'Honda Genio', 3, '16.jpg', 'Bali', '150000.0000', 5, 1, '2022-02-05 23:16:03', NULL),
-(28, 'Yamaha XMax', 3, '15.jpg', 'Bandung', '100000.0000', 4, 1, '2022-02-05 23:16:03', NULL),
-(29, 'Yamaha Fazzio', 3, '14.jpg', 'Yogyakarta', '150000.0000', 9, 1, '2022-02-05 23:16:03', NULL),
-(30, 'aaaa', 1, '4.jpg', 'Kalimantan', '2000000.0000', 8, 1, '2022-02-05 23:16:03', NULL),
-(31, NULL, NULL, NULL, 'Kalimantan', NULL, 5, NULL, '2022-02-05 23:25:42', NULL),
-(32, NULL, NULL, NULL, 'Bali', NULL, 5, NULL, '2022-02-05 23:25:42', NULL),
-(33, NULL, NULL, NULL, 'Bali', NULL, 5, NULL, '2022-02-05 23:25:42', NULL),
-(34, NULL, NULL, NULL, 'Kalimantan', NULL, 5, NULL, '2022-02-05 23:25:42', NULL),
-(35, NULL, NULL, NULL, 'Kalimantan', NULL, 5, NULL, '2022-02-05 23:25:42', NULL),
-(36, 'Polygon', 1, 'uploads\\202010061621341000.jpg', 'Bandung', '100000.0000', 5, 1, '2022-02-09 17:07:20', NULL),
-(39, 'Cannondale', 1, 'uploads\\202010061621341001.jpg', 'Bandung', '100000.0000', 5, 1, '2022-02-09 22:57:54', NULL);
+(1, 'Toyota Avanza', 2, 'uploads/toyota-avanza.jpg', 'Bandung', '100000.0000', 3, 1, '2022-01-02 15:21:12', NULL),
+(2, 'Honda Beat', 3, 'uploads/honda-beat.png', 'Jakarta', '2000000.0000', 4, 1, '2022-02-02 15:27:41', NULL),
+(3, 'Honda Scoppy', 3, 'uploads/honda-scoppy.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-02 15:41:00', NULL),
+(4, 'Honda Brio', 2, 'uploads/honda-brio.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-02 23:11:46', NULL),
+(5, 'Honda BR-V', 2, 'uploads/Honda-BR-V.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-02 23:12:02', NULL),
+(6, 'Honda HRV', 2, 'uploads/Honda-HRV.jpg', 'Jakarta', '2000000.0000', 4, 1, '2022-02-02 23:12:20', NULL),
+(7, 'Toyota Alphard', 2, 'uploads/toyota-alphard.jpg', 'Jakarta', '1000000.0000', 3, 1, '2022-02-03 11:43:23', NULL),
+(8, 'Toyota Agya', 2, 'uploads/toyota-agya.jpeg', 'Bandung', '1000000.0000', 3, 1, '2022-02-03 13:39:36', NULL),
+(9, 'Toyota Calya', 2, 'uploads/toyota-calya.jpg', 'Bandung', '1000000.0000', 3, 1, '2022-02-03 23:18:33', NULL),
+(12, 'Honda City', 2, 'uploads/honda-city.jpeg', 'Medan', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(13, 'Honda Accord', 2, 'uploads/honda-accord.jpg', 'Medan', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(15, 'Honda Civic', 2, 'uploads/honda-civic.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(16, 'Honda Jazz', 2, 'uploads/honda-jazz.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(17, 'Honda Mobilio', 2, 'uploads/honda-mobilio.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(18, 'Honda Odyssey', 2, 'uploads/honda-oddysey.png', 'Semarang', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(19, 'Honda WR-V', 2, 'uploads/honda-wrv.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:03:36', NULL),
+(20, 'Toyota C-HR', 2, 'uploads/Toyota-chr.jpg', 'Jakarta', '200000.0000', 4, 1, '2022-02-05 23:08:56', NULL),
+(22, 'Toyota Camry', 2, 'uploads/toyota-camry.jpg', 'Bandung', '200000.0000', 5, 1, '2022-02-05 23:08:56', NULL),
+(23, 'Toyota Corolla Altis', 2, 'uploads/toyota-corolla-altis.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:08:56', NULL),
+(24, 'Toyota Fortuner', 2, 'uploads/toyota-fortuner.jpeg', 'Bandung', '100000.0000', 4, 1, '2022-02-05 23:08:57', NULL),
+(25, 'Toyota HiAce', 2, 'uploads/toyota-hiace.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:08:57', NULL),
+(26, 'Honda Vario', 3, 'uploads/honda-vario.jpg', 'Yogyakarta', '100000.0000', 4, 1, '2022-02-05 23:16:03', NULL),
+(27, 'Honda Genio', 3, 'uploads/honda-genio.jpg', 'Bali', '150000.0000', 5, 1, '2022-02-05 23:16:03', NULL),
+(28, 'Yamaha XMax', 3, 'uploads/yamaha-xmax.jpg', 'Bandung', '100000.0000', 4, 1, '2022-02-05 23:16:03', NULL),
+(29, 'Yamaha Fazzio', 3, 'uploads/yamaha-fazzio.jpeg', 'Yogyakarta', '150000.0000', 9, 1, '2022-02-05 23:16:03', NULL),
+(50, 'Fixie', 1, 'uploads/bike1.png', 'Yogyakarta', '100000.0000', 5, 1, '2022-02-23 21:18:06', NULL),
+(51, 'Sport Bike', 1, 'uploads/bike2.png', 'Kalimantan', '100000.0000', 5, 1, '2022-02-23 21:19:04', NULL),
+(52, 'Onthel', 1, 'uploads/bike3.png', 'Malang', '100000.0000', 5, 1, '2022-02-23 21:19:54', NULL),
+(53, 'Fixie Gray', 1, 'uploads/bike4.png', 'Yogyakarta', '100000.0000', 5, 1, '2022-02-23 21:20:29', NULL);
 
 --
 -- Indexes for dumped tables
@@ -266,6 +286,12 @@ INSERT INTO `vehicles` (`id`, `name`, `category_id`, `photo`, `location`, `price
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `email_verification`
+--
+ALTER TABLE `email_verification`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -313,10 +339,16 @@ ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `email_verification`
+--
+ALTER TABLE `email_verification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `forgot_password`
 --
 ALTER TABLE `forgot_password`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `histories`
@@ -334,13 +366,13 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Constraints for dumped tables
