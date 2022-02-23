@@ -1,7 +1,8 @@
 const db = require('../helpers/database');
+const { APP_URL } = process.env;
 
 exports.getDataPopularVehicle = (data, month, cb) => {
-    db.query(`select v.id, v.name,v.location,count(*) as total 
+    db.query(`select v.id,v.name,concat('${APP_URL}/',v.photo) as photo,v.location,count(*) as total 
     from histories h join vehicles v on h.vehicle_id = v.id 
     where month(h.createdAt)=? 
     group by h.vehicle_id having concat(name,location) like '%${data.search}%'
