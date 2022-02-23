@@ -124,7 +124,8 @@ const insertVehicleAsync = async(request, response) => {
 
             var errValidation = await validation.validationDataVehicles(data);
             if (request.file) {
-                data.photo = request.file.path;
+                var photoTemp = request.file.path;
+                data.photo = photoTemp.replace("\\", "/");
             }
             if (errorUpload) {
                 errValidation = {...errValidation, photo: errorUpload.message };
@@ -221,7 +222,8 @@ const updateVehicleAsync = (req, res) => {
 
                 var errValidation = await validation.validationDataVehicles(data);
                 if (req.file) {
-                    data.photo = req.file.path;
+                    var photoTemp = req.file.path;
+                    data.photo = photoTemp.replace("\\", "/");
                 }
                 if (error) {
                     errValidation = {...errValidation, photo: errorUpload.message };
@@ -299,12 +301,14 @@ const updatePatchVehicleAsync = (req, res) => {
                     if (dataVehicle.length > 0) {
                         var data = {};
                         var filled = ['name', 'category_id', 'location', 'price', 'qty', 'isAvailable'];
+
                         filled.forEach((value) => {
                             if (req.body[value]) {
-                                if (req.file) {
-                                    data['photo'] = req.file.path;
-                                }
                                 data[value] = req.body[value];
+                            }
+                            if (req.file) {
+                                var photoTemp = req.file.path;
+                                data["photo"] = photoTemp.replace("\\", "/");
                             }
                         });
                         try {

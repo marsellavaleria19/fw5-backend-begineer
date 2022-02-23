@@ -40,7 +40,7 @@ join categories c on v.category_id = c.id
 };
 
 exports.getDataVehicle = (id, cb) => {
-    db.query(`select v.id,v.name,v.category_id,c.name category,${APP_URL}v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?`, [id], (err, res) => {
+    db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?`, [id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
@@ -90,10 +90,11 @@ exports.updateDataVehicle = (id, data, cb) => {
 };
 
 exports.updateDataVehicleAsync = (id, data) => new Promise((resolve, reject) => {
-    db.query('update vehicles set ? where id = ?', [data, id], (error, results) => {
+    var query = db.query('update vehicles set ? where id = ?', [data, id], (error, results) => {
         if (error) reject(error);
         resolve(results);
     });
+    console.log(query.sql);
 });
 
 exports.deleteDataVehicle = (id, cb) => {
