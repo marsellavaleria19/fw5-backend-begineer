@@ -7,4 +7,10 @@ route.use('/profile', require('./profile'));
 route.use('/popular', require('./popularVehicle'));
 route.use('/categories', require('./categories'));
 route.use('/status', require('./status'));
+route.get('/', (req, res) => {
+    return res.json({
+        success: true,
+        message: 'Backend is running well!'
+    });
+});
 module.exports = route;
