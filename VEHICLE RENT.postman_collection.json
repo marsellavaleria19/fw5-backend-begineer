@@ -421,7 +421,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "1"
 								}
 							]
 						}
@@ -481,7 +481,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "aaaaaa",
+									"value": "Fixie Gray",
 									"type": "text"
 								},
 								{
@@ -491,7 +491,7 @@
 								},
 								{
 									"key": "location",
-									"value": "Jakarta",
+									"value": "Yogyakarta",
 									"type": "text"
 								},
 								{
@@ -512,7 +512,7 @@
 								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/SELLA/Pictures/202010061621341003.jpg"
+									"src": "/C:/Users/SELLA/Documents/Fazztrack/fw5-react-frontend-tugas/src/assets/images/bike4.png"
 								}
 							]
 						},
@@ -598,8 +598,8 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "name",
 									"value": "",
@@ -613,14 +613,8 @@
 									"disabled": true
 								},
 								{
-									"key": "photo",
-									"value": "",
-									"type": "text",
-									"disabled": true
-								},
-								{
 									"key": "location",
-									"value": "Kalimantan",
+									"value": "",
 									"type": "text",
 									"disabled": true
 								},
@@ -632,9 +626,20 @@
 								},
 								{
 									"key": "qty",
-									"value": "8",
+									"value": "",
 									"type": "text",
 									"disabled": true
+								},
+								{
+									"key": "isAvailable",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Downloads/yamaha-fazzio.jpeg"
 								}
 							]
 						},
@@ -650,7 +655,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "30"
+									"value": "29"
 								}
 							]
 						}
@@ -1229,12 +1234,12 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "dogsegies@gmail.com",
+									"value": "vosov61582@diolang.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "789",
+									"value": "123",
 									"type": "text"
 								}
 							]
@@ -1290,6 +1295,44 @@
 							"path": [
 								"auth",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EMAIL VERIFY",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "vosov61582@diolang.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "8200796",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/emailverification",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"emailverification"
 							]
 						}
 					},
