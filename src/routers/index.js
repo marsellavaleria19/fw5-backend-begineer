@@ -7,6 +7,7 @@ route.use('/profile', require('./profile'));
 route.use('/popular', require('./popularVehicle'));
 route.use('/categories', require('./categories'));
 route.use('/status', require('./status'));
+route.use('/search', require('./search'));
 route.get('/', (req, res) => {
     return res.json({
         success: true,

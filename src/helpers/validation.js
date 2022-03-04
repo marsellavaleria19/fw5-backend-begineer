@@ -2,6 +2,7 @@ const forgotPasswordModel = require('../models/forgotPassword');
 const userModel = require('../models/users');
 const vehicleModel = require('../models/vehicles');
 const emailVerificationModel = require('../models/emailVerification');
+const statusModel = require('../models/status');
 
 exports.validationDataVehicles = async(data) => {
     var result = null;
@@ -91,28 +92,44 @@ exports.validationDataHistories = async(data) => {
         result = { user_id: 'Id user must be filled' };
     } else if (isNaN(parseInt(user_id))) {
         result = { user_id: 'Id user must be a number' };
+    } else {
+        const resultUserId = await userModel.getDataUserAsync(data.user_id);
+        if (resultUserId.length == 0) {
+            result = { user_id: 'User id doesn\'t exist' };
+        }
     }
 
     if (vehicle_id == null || vehicle_id == '') {
         result = {...result, vehicle_id: 'Id vehicle must be filled.' };
     } else if (isNaN(parseInt(vehicle_id))) {
         result = {...result, vehicle_id: 'Id vehicle must be a number' };
+    } else {
+        const resultVehicleId = await vehicleModel.getDataVehicleAsync(data.vehicle_id);
+        if (resultVehicleId.length == 0) {
+            result = {...result, vehicle_id: 'Vehicle id doesn\'t exist' };
+        }
     }
+
     if (rentStartDate == null || rentStartDate == '') {
         result = {...result, rentStartDate: 'Start rent date must be filled' };
     }
     if (rentEndDate == null || rentEndDate == '') {
-        result = {...result, photo: 'End rent date must be filled.' };
+        result = {...result, rentEndDate: 'End rent date must be filled.' };
     }
     if (prepayment == null || prepayment == '') {
         result = {...result, prepayment: 'Prepayment must be filled.' };
     } else if (isNaN(parseInt(prepayment))) {
         result = {...result, prepayment: 'Prepayment must be a number.' };
-    } else if (parseInt(prepayment) == 0) {
+    } else if (parseInt(prepayment) < 0) {
         result = {...result, prepayment: 'Prepayment must be gather than 0.' };
     }
     if (status_id == null || status_id == '') {
         result = {...result, status: 'Status must be filled' };
+    } else {
+        const resultStatusId = await statusModel.getDataStatusAsync(data.status_id);
+        if (resultStatusId.length == 0) {
+            result = {...result, status_id: 'Status id doesn\'t exist' };
+        }
     }
 
     return result;

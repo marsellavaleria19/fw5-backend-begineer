@@ -7,22 +7,28 @@ const fs = require('fs');
 const auth = require('../helpers/auth');
 
 const getVehicles = (req, res) => {
-    let { search, page, limit, sort, order } = req.query;
+    let { search, location, page, limit, sort, order } = req.query;
     sort = sort || 'v.createdAt';
     search = search || '';
     page = ((page != null && page !== '') ? parseInt(page) : 1);
-    limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 10);
     order = order || 'desc';
     let pagination = { page, limit };
     let dataJson = { response: res, message: '' };
     if (validation.validationPagination(pagination) == null) {
         const offset = (page - 1) * limit;
-        let data = { search, limit, offset, sort, order };
+        let data = { search, location, limit, offset, sort, order };
         vehicleModel.getDataVehicles(data, results => {
             if (results.length > 0) {
                 vehicleModel.countDataVehicles(data, (count) => {
                     const { total } = count[0];
-                    pagination = {...pagination, total: total, route: 'vehicles' };
+                    var route = "";
+                    if (search == '') {
+                        route = `vehicles?limit=${limit}`;
+                    } else {
+                        route = `vehicles?search=${search}&limit=${limit}`;
+                    }
+                    pagination = {...pagination, total: total, route: route };
                     dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
                     return showApi.showSuccessWithPagination(dataJson, pagination);
                 });
@@ -40,18 +46,19 @@ const getVehicles = (req, res) => {
 };
 
 const getDataVehiclesByCategory = (req, res) => {
-    let { page, limit } = req.query;
-    page = parseInt(page) || 1;
-    limit = parseInt(limit) || 5;
+    let { search, page, limit, sort, order } = req.query;
+    page = ((page != null && page !== '') ? parseInt(page) : 1);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 10);
     const offset = (page - 1) * limit;
-    const data = { limit, offset };
+    const data = { search, limit, offset, sort, order };
     const { id } = req.params;
+    order = order || 'desc';
+    let pagination = { page, limit };
     let dataJson = { response: res, message: '' };
-    let pagination = { total: 0, limit: limit, page: page };
     vehicleModel.getDataVehiclesByCategory(data, id, (results) => {
         vehicleModel.countDataVehiclesByCategory(id, (count) => {
             const { total } = count[0];
-            pagination = {...pagination, total: total };
+            pagination = {...pagination, total: total, route: `vehicles/category/${id}?limit=${limit}` };
             dataJson = {...dataJson, message: 'List Data Vehicles by category.', result: results, pagination };
             return showApi.showSuccessWithPagination(dataJson, pagination);
         });

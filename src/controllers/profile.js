@@ -1,7 +1,7 @@
 const profileModel = require('../models/profile');
 
 const getProfile = (request, response) => {
-    const { id } = request.params;
+    const { id } = request.user;
     profileModel.getDataProfile(id, (result) => {
         if (result.length > 0) {
             return response.json({

@@ -38,6 +38,36 @@ const getHistories = (request, response) => {
 
 };
 
+const getHistoriesAsync = async(request, response) => {
+    let { search, page, limit, sort, order, month } = request.query;
+    sort = sort || 'h.createdAt';
+    search = search || '';
+    page = ((page != null && page !== '') ? parseInt(page) : 1);
+    limit = ((limit != null && limit !== '') ? parseInt(limit) : 5);
+    order = order || 'desc';
+    let pagination = { page, limit };
+    let dataJson = { response: response, message: '' };
+    if (validation.validationPagination(pagination) == null) {
+        const offset = (page - 1) * limit;
+        let data = { search, limit, offset, sort, order };
+        let result = await historyModel.getDataHistories(data);
+        if (result.length > 0) {
+            var count = await historyModel.countDataHistories(data);
+            const { total } = count[0];
+            pagination = {...pagination, total: total, route: 'histories' };
+            dataJson = {...dataJson, message: 'List Data Histories.', result: result, pagination };
+            return showApi.showSuccessWithPagination(dataJson, pagination);
+        } else {
+            dataJson = {...dataJson, message: 'Data History not found.', status: 404 };
+            return showApi.showError(dataJson);
+        }
+    } else {
+        dataJson = {...dataJson, message: 'Pagination not valid.', status: 400, error: validation.validationPagination(pagination) };
+        return showApi.showError(dataJson);
+    }
+
+};
+
 const getHistory = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -114,43 +144,25 @@ const insertHistoryAsync = async(request, response) => {
         rentStartDate: request.body.startRentDate,
         rentEndDate: request.body.endRentDate,
         prepayment: request.body.prepayment,
-        status_id: request.body.status
+        status_id: request.body.status,
+        qty: request.body.qty
     };
 
     let dataJson = { response: response, message: '' };
     var error = await validation.validationDataHistories(data);
     if (error == null) {
-        historyModel.insertDataHistory(data, (result) => {
-            if (result.affectedRows > 0) {
-                historyModel.getDataHistory(result.insertId, (dataResult) => {
-                    dataJson = {...dataJson, message: 'Data History created successfully', result: dataResult };
-                    return showApi.showSuccess(dataJson);
-                });
+        var result = await historyModel.insertDataHistoryAsync(data);
+        if (result.affectedRows > 0) {
+            historyModel.getDataHistory(result.insertId, (dataResult) => {
+                dataJson = {...dataJson, message: 'Data History created successfully', result: dataResult[0] };
+                return showApi.showSuccess(dataJson);
+            });
 
-            } else {
-                dataJson = {...dataJson, message: 'Data History failed to create.', status: 500 };
-                return showApi.showError(dataJson);
-            }
-        });
+        } else {
+            dataJson = {...dataJson, message: 'Data History failed to create.', status: 500 };
+            return showApi.showError(dataJson);
+        }
     } else {
-        if (data.user_id !== null && data.user_id !== '' && !isNaN(data.user_id)) {
-            const resultUserId = await historyModel.getDataHistoryByIdUserAsync(data.user_id);
-            if (resultUserId.length == 0) {
-                error = {...error, user_id: 'User id doesn\'t exist' };
-            }
-        }
-        if (data.vehicle_id !== null && data.vehicle_id !== '' && !isNaN(data.vehicle_id)) {
-            const resultVehicleId = await historyModel.getDataHistoryByIdVehicleAsync(data.vehicle_id);
-            if (resultVehicleId.length == 0) {
-                error = {...error, vehicle_id: 'Vehicle id doesn\'t exist' };
-            }
-        }
-        if (data.status_id !== null && data.status_id !== '' && !isNaN(data.status_id)) {
-            const resultStatusId = await historyModel.getDataHistoryByIdStatusAsync(data.vehicle_id);
-            if (resultStatusId.length == 0) {
-                error = {...error, status_id: 'Status id doesn\'t exist' };
-            }
-        }
         dataJson = {...dataJson, message: 'Data History not valid.', status: 400, error: error };
         return showApi.showError(dataJson);
     }
@@ -233,24 +245,6 @@ const updateHistoryAsync = async(request, response) => {
                             }
                         });
                     } else {
-                        if (data.user_id !== null && data.user_id !== '' && !isNaN(data.user_id)) {
-                            const resultUserId = await historyModel.getDataHistoryByIdUserAsync(data.user_id);
-                            if (resultUserId.length == 0) {
-                                error = {...error, user_id: 'User id doesn\'t exist' };
-                            }
-                        }
-                        if (data.vehicle_id !== null && data.vehicle_id !== '' && !isNaN(data.vehicle_id)) {
-                            const resultVehicleId = await historyModel.getDataHistoryByIdVehicleAsync(data.vehicle_id);
-                            if (resultVehicleId.length == 0) {
-                                error = {...error, vehicle_id: 'Vehicle id doesn\'t exist' };
-                            }
-                        }
-                        if (data.status_id !== null && data.status_id !== '' && !isNaN(data.status_id)) {
-                            const resultStatusId = await historyModel.getDataHistoryByIdStatusAsync(data.status_id);
-                            if (resultStatusId.length == 0) {
-                                error = {...error, status_id: 'Status id doesn\'t exist' };
-                            }
-                        }
                         dataJson = {...dataJson, message: 'Data History is not valid.', status: 400, error: error };
                         return showApi.showError(dataJson);
                     }

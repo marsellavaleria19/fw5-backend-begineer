@@ -1,5 +1,6 @@
 const vehicles = require('express').Router();
-
+const cors = require('cors');
+const { verifyUser } = require('../helpers/auth');
 
 const {
     getVehicles,
@@ -15,15 +16,15 @@ const {
     deleteVehicleAsync
 } = require('../controllers/vehicles');
 
-vehicles.get('/', getVehicles);
-vehicles.get('/category/:id', getDataVehiclesByCategory);
-vehicles.get('/:id', getVehicle);
+vehicles.get('/', cors(), getVehicles);
+vehicles.get('/category/:id', cors(), getDataVehiclesByCategory);
+vehicles.get('/:id', cors(), getVehicle);
 // vehicles.post('/', upload.single('photo'), insertVehicle);
-vehicles.post('/', insertVehicleAsync);
+vehicles.post('/', verifyUser, insertVehicleAsync);
 // vehicles.put('/:id', updateVehicle);
-vehicles.put('/:id', updateVehicleAsync);
+vehicles.put('/:id', verifyUser, updateVehicleAsync);
 // vehicles.patch('/:id', updatePatchVehicle);
-vehicles.patch('/:id', updatePatchVehicleAsync);
+vehicles.patch('/:id', verifyUser, updatePatchVehicleAsync);
 // vehicles.delete('/:id', deleteVehicle);
-vehicles.delete('/:id', deleteVehicleAsync);
+vehicles.delete('/:id', verifyUser, deleteVehicleAsync);
 module.exports = vehicles;

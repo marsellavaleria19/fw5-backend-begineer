@@ -2,17 +2,18 @@ const db = require('../helpers/database');
 const { APP_URL } = process.env;
 
 exports.getDataVehicles = (data, cb) => {
-    db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
+    const query = db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
     join categories c on v.category_id = c.id 
-      where v.name like '%${data.search}%' or c.name like '%${data.search}%' 
+      where v.name like '%${data.search}%'
       order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
         if (error) throw error;
         cb(results);
     });
+    console.log(query.sql);
 };
 
 exports.getDataVehiclesByCategory = (data, id, cb) => {
-    db.query(`select v.id,v.name,c.name category from vehicles v 
+    db.query(`select v.id,v.name,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location from vehicles v 
   join categories c on v.category_id = c.id 
     where v.category_id = ? 
     order by v.createdAt desc LIMIT ${data.limit} OFFSET ${data.offset}`, [id], function(error, results) {
@@ -24,14 +25,14 @@ exports.getDataVehiclesByCategory = (data, id, cb) => {
 exports.countDataVehicles = (data, cb) => {
     db.query(`select count(*) as total from vehicles v 
   join categories c on v.category_id = c.id 
-    where v.name like '%${data.search}%' or c.name like '%${data.search}%'`, function(error, results) {
+    where v.name like '%${data.search}%'`, function(error, results) {
         if (error) throw error;
         cb(results);
     });
 };
 
 exports.countDataVehiclesByCategory = (id, cb) => {
-    db.query(`select count(*) from vehicles v 
+    db.query(`select count(*) as total from vehicles v 
 join categories c on v.category_id = c.id 
   where v.category_id = ?`, [id], function(error, results) {
         if (error) throw error;

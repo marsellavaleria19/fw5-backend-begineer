@@ -8,7 +8,7 @@ exports.showSuccess = (data) => {
 
 const getPagination = (pagination) => {
     const last = Math.ceil(pagination.total / pagination.limit);
-    const url = `http://localhost:5000/${pagination.route}?page=`;
+    const url = `http://localhost:5000/${pagination.route}&page=`;
     return {
         prev: pagination.page > 1 ? `${url}${pagination.page-1}` : null,
         next: pagination.page < last ? `${url}${pagination.page+1}` : null,

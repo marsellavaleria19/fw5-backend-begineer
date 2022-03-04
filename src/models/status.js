@@ -24,6 +24,14 @@ exports.getDataStatus = (id, cb) => {
     });
 };
 
+exports.getDataStatusAsync = (id) => new Promise((resolve, reject) => {
+    db.query('select id,status from status where id=?', [id], (error, result) => {
+        if (error) reject(error);
+        resolve(result);
+    });
+});
+
+
 exports.getDataStatusByStatus = (status, id, cb) => {
     db.query('select * from status where status=?' + (id !== null ? 'and id!=?' : ''), [status, id], (err, res) => {
         if (err) throw err;
