@@ -1,11 +1,13 @@
 const express = require('express');
-
+const cors = require('cors');
 
 // use it before all route definitions
 
 require('dotenv').config();
 var app = express();
+
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use(require('./src/routers'));
 const { PORT, APP_PORT } = process.env;
