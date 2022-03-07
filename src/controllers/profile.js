@@ -7,7 +7,7 @@ const getProfile = (request, response) => {
             return response.json({
                 success: true,
                 message: `Profile id ${id}`,
-                results: result
+                results: result[0]
             });
         } else {
             return response.status(404).json({
