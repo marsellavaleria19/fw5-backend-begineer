@@ -3,6 +3,7 @@ const historyModel = require('../models/histories');
 const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 const { request } = require('express');
+const moment = require('moment');
 // const { pagination } = require('../helpers/pagination');
 
 const getHistories = (request, response) => {
@@ -19,6 +20,11 @@ const getHistories = (request, response) => {
         let data = { search, limit, offset, sort, order };
         historyModel.getDataHistories(data, (result) => {
             if (result.length > 0) {
+                result.map((item) => {
+                    item.rentStartDate = moment(item.rentStartDate).format('DD MMM YYYY');
+                    item.rentEndDate = moment(item.rentEndDate).format('DD MMM YYYY');
+                    return item;
+                });
                 historyModel.countDataHistories(data, (count) => {
                     const { total } = count[0];
                     pagination = {...pagination, total: total, route: 'histories' };
@@ -52,6 +58,7 @@ const getHistoriesAsync = async(request, response) => {
         let data = { search, limit, offset, sort, order };
         let result = await historyModel.getDataHistories(data);
         if (result.length > 0) {
+
             var count = await historyModel.countDataHistories(data);
             const { total } = count[0];
             pagination = {...pagination, total: total, route: 'histories' };
@@ -75,6 +82,11 @@ const getHistory = (request, response) => {
         if (!isNaN(id)) {
             historyModel.getDataHistory(id, (result) => {
                 if (result.length > 0) {
+                    result.map((item) => {
+                        item.rentStartDate = moment(item.rentStartDate).format('DD MMM YYYY');
+                        item.rentEndDate = moment(item.rentEndDate).format('DD MMM YYYY');
+                        return item;
+                    });
                     dataJson = {...dataJson, message: 'Detail Data History.', result: result[0] };
                     return showApi.showSuccess(dataJson);
                 } else {
@@ -228,7 +240,8 @@ const updateHistoryAsync = async(request, response) => {
                 rentStartDate: request.body.startRentDate,
                 rentEndDate: request.body.endRentDate,
                 prepayment: request.body.prepayment,
-                status_id: request.body.status
+                status_id: request.body.status,
+                payment_id: request.body.payment_id
             };
 
             var error = await validation.validationDataHistories(data);
@@ -237,7 +250,7 @@ const updateHistoryAsync = async(request, response) => {
                     if (error == null) {
                         historyModel.updateDataHistory(id, data, (result) => {
                             if (result.affectedRows > 0) {
-                                dataJson = {...dataJson, message: 'Data History updated successfully.', result: resultDataHistory };
+                                dataJson = {...dataJson, message: 'Data History updated successfully.', result: resultDataHistory[0] };
                                 return showApi.showSuccess(dataJson);
                             } else {
                                 dataJson = {...dataJson, message: 'Data History failed to update.', status: 500 };
@@ -293,6 +306,45 @@ const updatePatchHistory = (req, res) => {
     }
 };
 
+const updatePatchHistoryAsync = async(req, res) => {
+    const { id } = req.params;
+    let dataJson = { response: res, message: '' };
+    if (id !== ' ') {
+        if (!isNaN(id)) {
+            console.log(req.body);
+            const dataHistory = await historyModel.getDataHistoryAsync(id);
+            if (dataHistory.length > 0) {
+                var data = {};
+                var filled = ['user_id', 'vehicle_id', 'rentStartDate', 'rentEndDate', 'prepayment', 'status_id', 'payment_id'];
+
+                filled.forEach((value) => {
+                    if (req.body[value]) {
+                        data[value] = req.body[value];
+                    }
+                });
+                const update = await historyModel.updateDataHistoryAsync(id, data);
+                if (update.affectedRows > 0) {
+                    const result = await historyModel.getDataHistoryAsync(id);
+                    dataJson = {...dataJson, message: 'Data History updated successfully.', result: result[0] };
+                    return showApi.showSuccess(dataJson);
+                } else {
+                    dataJson = {...dataJson, message: 'Data History failed to update.', status: 500 };
+                    return showApi.showError(dataJson);
+                }
+            } else {
+                dataJson = {...dataJson, message: 'Data History not found.', status: 400 };
+                return showApi.showError(dataJson);
+            }
+        } else {
+            dataJson = {...dataJson, message: 'Data History must be a number.', status: 400 };
+            return showApi.showError(dataJson);
+        }
+    } else {
+        dataJson = {...dataJson, message: 'Id must be filled.', status: 400 };
+        return showApi.showError(dataJson);
+    }
+};
+
 const deleteHistory = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -326,4 +378,4 @@ const deleteHistory = (request, response) => {
 
 };
 
-module.exports = { getHistories, getHistory, insertHistory, insertHistoryAsync, updateHistory, updateHistoryAsync, updatePatchHistory, deleteHistory };
+module.exports = { getHistories, getHistory, insertHistory, insertHistoryAsync, updateHistory, updateHistoryAsync, updatePatchHistory, updatePatchHistoryAsync, deleteHistory };
