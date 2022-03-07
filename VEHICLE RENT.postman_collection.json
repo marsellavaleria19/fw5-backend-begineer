@@ -446,11 +446,16 @@
 							"query": [
 								{
 									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
 									"value": null,
 									"disabled": true
 								},
 								{
-									"key": "limit",
+									"key": "order",
 									"value": null,
 									"disabled": true
 								}
@@ -924,6 +929,11 @@
 									"value": "",
 									"type": "text",
 									"disabled": true
+								},
+								{
+									"key": "payment_id",
+									"value": "",
+									"type": "text"
 								}
 							]
 						},
@@ -1413,9 +1423,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}} /popular",
+					"raw": "{{baseURL}}/popular",
 					"host": [
-						"{{baseURL}} "
+						"{{baseURL}}"
 					],
 					"path": [
 						"popular"
@@ -1437,11 +1447,6 @@
 							"disabled": true
 						},
 						{
-							"key": "limit",
-							"value": "2",
-							"disabled": true
-						},
-						{
 							"key": "sort",
 							"value": "total",
 							"disabled": true
@@ -1449,6 +1454,59 @@
 						{
 							"key": "order",
 							"value": "desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SEARCH",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/search?category_id=1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "payment_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "date",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "category_id",
+							"value": "1"
+						},
+						{
+							"key": "page",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "order",
+							"value": null,
 							"disabled": true
 						}
 					]
