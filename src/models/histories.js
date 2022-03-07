@@ -1,7 +1,9 @@
 const db = require('../helpers/database');
 
+const { APP_URL } = process.env;
+
 exports.getDataHistories = (data, cb) => {
-    db.query(`select h.id,u.fullName,v.name as brand,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status 
+    db.query(`select h.id,h.user_id,u.fullName,u.mobileNumber,v.name as brand,v.price,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id join categories c on v.category_id = c.id 
     join status s on h.status_id = s.id 
@@ -14,7 +16,7 @@ exports.getDataHistories = (data, cb) => {
 
 
 exports.getDataHistoriesAsync = (data) => new Promise((resolve, reject) => {
-    db.query(`select h.id,u.fullName,v.name as brand,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status 
+    db.query(`select h.id,h.user_id,u.fullName,v.name as brand,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status 
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id join categories c on v.category_id = c.id 
     join status s on h.status_id = s.id 
@@ -50,7 +52,7 @@ exports.countDataHistoriesAsync = (data) => new Promise((resolve, reject) => {
 });
 
 exports.getDataHistory = (id, cb) => {
-    db.query(`select h.id,u.fullName,v.name as brand,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status 
+    db.query(`select h.id,h.user_id,u.fullName,u.mobileNumber,v.name as brand,v.price,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id
@@ -60,6 +62,18 @@ exports.getDataHistory = (id, cb) => {
         cb(result);
     });
 };
+
+exports.getDataHistoryAsync = (id) => new Promise((resolve, reject) => {
+    db.query(`select h.id,h.user_id,u.fullName,u.mobileNumber,v.name as brand,v.price,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate) as day,v.price*h.qty*DATEDIFF(h.rentEndDate,h.rentStartDate) as totalPayment
+    from histories h join users u on h.user_id = u.id 
+    join vehicles v on h.vehicle_id = v.id 
+    join categories c on v.category_id = c.id
+    join status s on h.status_id = s.id 
+    where h.id=?`, [id], (error, result) => {
+        if (error) reject(error);
+        resolve(result);
+    });
+});
 
 exports.getDataHistoryByIdUserAsync = (idUser) => new Promise((resolve, reject) => {
     db.query(`select * from histories where user_id=?`, [idUser], (error, results) => {
