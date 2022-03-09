@@ -2,9 +2,20 @@ const db = require('../helpers/database');
 const { APP_URL } = process.env;
 
 exports.getDataVehicles = (data, cb) => {
-    const query = db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
+    var filled = ["month", "location", "type", "payment_id", "category_id"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            if (item == "month") {
+                resultFillter += ` and MONTH(v.createdAt)=${data.filter[item]}`;
+            } else {
+                resultFillter += ` and ${item}='${data.filter[item]}'`;
+            }
+        }
+    });
+    const query = db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
     join categories c on v.category_id = c.id 
-      where v.name like '%${data.search}%'
+      where v.name like '%${data.search}%' ${resultFillter}
       order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
         if (error) throw error;
         cb(results);
@@ -65,6 +76,16 @@ exports.getDataVehicleNameAsync = (name, id) => new Promise((resolve, reject) =>
     db.query('select * from vehicles where name=?' + (id !== null ? 'and id!=?' : ''), [name, id], (err, res) => {
         if (err) reject(err);
         resolve(res);
+    });
+});
+
+exports.getDataVehicleMonthAsync = (data) => new Promise((resolve, reject) => {
+    db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v 
+  join categories c on v.category_id = c.id 
+    where MONTH(v.createdAt) = ${data.month}
+    order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
+        if (error) reject(error);
+        resolve(results);
     });
 });
 
