@@ -7,7 +7,8 @@ const fs = require('fs');
 const auth = require('../helpers/auth');
 
 const getVehicles = (req, res) => {
-    let { search, location, page, limit, sort, order } = req.query;
+    let { search, month, location, page, limit, sort, order } = req.query;
+    console.log(month);
     sort = sort || 'v.createdAt';
     search = search || '';
     page = ((page != null && page !== '') ? parseInt(page) : 1);
@@ -15,20 +16,36 @@ const getVehicles = (req, res) => {
     order = order || 'desc';
     let pagination = { page, limit };
     let dataJson = { response: res, message: '' };
+    var filledFilter = ["location", "month", "category_id", "payment_id"];
+    var searchParam = "";
+    var filter = {};
+    var route = ``;
+    if (search == '') {
+        route = `vehicles`;
+    } else {
+        route = `vehicles?search=${search}`;
+    }
+    filledFilter.forEach((item) => {
+        if (req.query[item]) {
+            filter[item] = req.query[item];
+            if (searchParam == "") {
+                searchParam += `${item}=${filter[item]}`;
+            } else {
+                searchParam += `&${item}=${filter[item]}`;
+            }
+        }
+    });
+    route += searchParam;
+
+
     if (validation.validationPagination(pagination) == null) {
         const offset = (page - 1) * limit;
-        let data = { search, location, limit, offset, sort, order };
+        let data = { search, filter, limit, offset, sort, order };
         vehicleModel.getDataVehicles(data, results => {
             if (results.length > 0) {
                 vehicleModel.countDataVehicles(data, (count) => {
                     const { total } = count[0];
-                    var route = "";
-                    if (search == '') {
-                        route = `vehicles?limit=${limit}`;
-                    } else {
-                        route = `vehicles?search=${search}&limit=${limit}`;
-                    }
-                    pagination = {...pagination, total: total, route: route };
+                    pagination = {...pagination, total: total, route: `${route}&limit=${limit}` };
                     dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
                     return showApi.showSuccessWithPagination(dataJson, pagination);
                 });
@@ -44,6 +61,38 @@ const getVehicles = (req, res) => {
     }
 
 };
+
+// const getVehiclesByMonth = async(req, res) => {
+//     let { month, page, limit, sort, order } = req.query;
+//     sort = sort || 'v.createdAt';
+//     month = month || new Date().getMonth();
+//     page = ((page != null && page !== '') ? parseInt(page) : 1);
+//     limit = ((limit != null && limit !== '') ? parseInt(limit) : 10);
+//     order = order || 'desc';
+//     let pagination = { page, limit };
+//     let dataJson = { response: res, message: '' };
+//     if (validation.validationPagination(pagination) == null) {
+//         const offset = (page - 1) * limit;
+//         let data = { month, limit, offset, sort, order };
+//         var results = await vehicleModel.getDataVehicles(data);
+//         if (results.length > 0) {
+//             vehicleModel.countDataVehicles(data, (count) => {
+//                 const { total } = count[0];
+//                 var route = `vehicles?month=${month}&limit=${limit}`;
+//                 pagination = {...pagination, total: total, route: route };
+//                 dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
+//                 return showApi.showSuccessWithPagination(dataJson, pagination);
+//             });
+//         } else {
+//             dataJson = {...dataJson, message: 'Data Vehicle not found', status: 404 };
+//             return showApi.showError(dataJson);
+//         }
+//     } else {
+//         dataJson = {...dataJson, message: 'Pagination not valid', status: 400, error: validation.validationPagination(pagination) };
+//         return showApi.showError(dataJson);
+//     }
+
+// };
 
 const getDataVehiclesByCategory = (req, res) => {
     let { search, page, limit, sort, order } = req.query;
