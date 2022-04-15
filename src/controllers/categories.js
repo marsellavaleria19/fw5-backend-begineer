@@ -2,6 +2,8 @@
 const categoryModel = require('../models/categories');
 const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
+const validator = require('validator');
+const pagination = require('../helpers/pagination');
 
 const getCategories = (request, response) => {
     let dataJson = { response: response, message: '' };
@@ -36,6 +38,41 @@ const getCategories = (request, response) => {
 
 };
 
+
+const getCategoriesAsync = async(request, response) => {
+    try{
+        let { search, page, limit, sort, order } = request.query;
+        search = search || '';
+        page = ((page != null && page !== '') ? page : '1');
+        limit = ((limit != null && limit !== '') ? limit : '5');
+        let dataPages = { page, limit };
+        let requirement = {page:'number',limit:'number'};
+        let validate = validation.validation(dataPages,requirement);
+        if (Object.keys(validate).length== 0) {
+            dataPages.route = "categories";
+            dataPages.page = parseInt(dataPages.page);
+            dataPages.limit = parseInt(dataPages.limit);
+            dataPages = pagination.pagination(null,dataPages,null,sort,order);
+            let data = {search,dataPages};
+            const results = await categoryModel.getDataCategoriesAsync(data);
+            if (results.length > 0) {
+                const totalListCategory = await categoryModel.countDataCategoriesAsync(data);
+                const { total } = totalListCategory[0];
+                dataPages = {...dataPages, total: total};
+                return showApi.showResponse(response,"List Data Category",results,dataPages);
+            } else {
+                return showApi.showResponse(response,"Data Category not found",null,null,null,404);
+            }
+      
+        } else {
+            return showApi.showResponse(response,"Pagination was not valid",null,null,validate,400);
+        }
+    }catch(error){
+        return showApi.showResponse(response,error.message,null,null,null,500);
+    }
+  
+};
+
 const getCategory = (request, response) => {
     const { id } = request.params;
     let dataJson = {
@@ -53,8 +90,25 @@ const getCategory = (request, response) => {
     });
 };
 
+const getCategoryAsync = async(request, response) => {
+    try{
+        const { id } = request.params;
+        const result = await categoryModel.getDataCategoryAsync(id);
+        if (result.length > 0) {
+        // dataJson = {...dataJson, message: 'Detail data category.', result: result[0] };
+            return showApi.showResponse(response,"Detail data category.",result[0]);
+        } else {
+            return showApi.showResponse(response,"Data category not found. ",null,null,null,404);
+        }
+    }catch(error){
+        return showApi.showResponse(response,error.message,null,null,null,500);
+    }
+    
+};
+
 const insertCategory = (request, response) => {
     const name = request.body.name;
+    console.log(name);
     let dataJson = {
         response: response,
         message: ''
@@ -81,6 +135,37 @@ const insertCategory = (request, response) => {
         dataJson = {...dataJson, message: 'Data category not valid.', status: 400, error: validation.validationName(name) };
         return showApi.showError(dataJson);
     }
+};
+
+const insertCategoryAsync = async(request, response) => {
+    try{
+        const name = request.body.name;
+        const data = {name:name};
+        const requirement = {name:'required'};
+
+        const validate = validation.validation(data,requirement);
+        if(Object.keys(validate).length == 0){
+            const resultDataCategory = await categoryModel.getDataCategoriesByNameAsync(name,null);
+            if(resultDataCategory.length > 0){
+                validate.name = "Name has already used.";
+            }
+        }
+
+        if (Object.keys(validate).length == 0) {
+            const insert = await categoryModel.insertDataCategoryAsync(name);
+            if (insert.affectedRows > 0) {
+                const results =  await categoryModel.getDataCategoryAsync(insert.insertId);
+                return showApi.showResponse(response,"Data category created successfully",results[0]);
+            } else {
+                return showApi.showResponse(response,"Data category failed to create.",null,null,null,500);
+            }
+        } else {
+            return showApi.showResponse(response,"Data category not valid!",null,null,validate,400);
+        }
+    }catch(err){
+        return showApi.showResponse(response,err.message,null,null,null,500);
+    }
+    
 };
 
 const updateCategory = (request, response) => {
@@ -127,6 +212,51 @@ const updateCategory = (request, response) => {
 
 };
 
+const updateCategoryAsync = async(request, response) => {
+    try{
+        const { id } = request.params;
+        if (!validator.isEmpty(id)) {
+            const data = {
+                name: request.body.name
+            };
+            const requirement = {
+                name : 'required'
+            };
+
+            let validate = validation.validation(data,requirement);
+            if(Object.keys(validate).length == 0){
+                const categoryName = await categoryModel.getDataCategoriesByNameAsync(data.name,id);
+                if(categoryName.length>0){
+                    validate.name = "Name has already used.";
+                }
+            }
+
+            const resultDataCategory = await categoryModel.getDataCategoryAsync(id);
+            if (resultDataCategory.length > 0) {
+                if(Object.keys(validate).length == 0){
+                    const update = await categoryModel.updateDataCategoryAsync(id, data.name);
+                    if (update.affectedRows > 0) {
+                        const result = await categoryModel.getDataCategoryAsync(id);
+                        return showApi.showResponse(response,"Data category updated successfully",result[0]);
+                    } else {
+                        return showApi.showResponse(response,"Data category failed to update",null,null,null,500);
+                    }
+                }else{
+                    return showApi.showResponse(response,"Data category not valid",null,null,validate,400);
+                }
+            }else{
+                return showApi.showResponse(response,"Data category not found",null,null,null,404);
+            }    
+        } else {
+            return showApi.showResponse(response,"Id must be filled",null,null,null,400);
+        }
+    }
+    catch(error){
+        return showApi.showResponse(response,error.message,null,null,null,500);
+    }
+    
+};
+
 const deleteCategory = (request, response) => {
     const { id } = request.params;
     let dataJson = { response: response, message: '' };
@@ -154,4 +284,27 @@ const deleteCategory = (request, response) => {
 
 };
 
-module.exports = { getCategories, getCategory, insertCategory, updateCategory, deleteCategory };
+const deleteCategoryAsync = async(request, response) => {
+    try{
+        const { id } = request.params;
+        if (!validator.isEmpty(id)) {
+            const resultDataCategory = await categoryModel.getDataCategoryAsync(id);
+            if (resultDataCategory.length > 0) {
+                const result = await categoryModel.deleteDataCategoryAsync(id);
+                if (result.affectedRows > 0) {
+                    return showApi.showResponse(response,'Data category deleted successfully.');
+                } else {
+                    return showApi.showResponse(response,'Data category faliled to delete',null,null,null,500);
+                }
+            } else {
+                return showApi.showResponse(response,"Data category not found",null,null,null,404);
+            }
+        } else {
+            return showApi.showResponse(response,"Id must be filled",null,null,null,400);
+        }
+    }catch(error){
+        return showApi.showResponse(response,error.message,null,null,null,500);
+    }
+};
+
+module.exports = { getCategories,getCategoriesAsync, getCategory,getCategoryAsync, insertCategory, insertCategoryAsync, updateCategory,updateCategoryAsync, deleteCategory,deleteCategoryAsync };
