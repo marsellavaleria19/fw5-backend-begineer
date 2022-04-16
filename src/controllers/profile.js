@@ -1,22 +1,19 @@
-const profileModel = require('../models/profile');
+const showApi = require('../helpers/showApi');
+const userModel = require('../models/users');
 
-const getProfile = (request, response) => {
-    const { id } = request.user;
-    profileModel.getDataProfile(id, (result) => {
-        if (result.length > 0) {
-            return response.json({
-                success: true,
-                message: `Profile id ${id}`,
-                results: result[0]
-            });
+const getProfile = async(request, response) => {
+    try{
+        const { id } = request.user;
+        const dataProfile = await userModel.getDataUserAsync(id);
+        if (dataProfile.length > 0) {
+            return showApi.showResponse(response,"Detail Profile",dataProfile[0]);
         } else {
-            return response.status(404).json({
-                success: false,
-                message: 'Data not found.',
-            });
+            return showApi.showResponse(response,"Data Profile not found",null,null,null,404);
         }
-
-    });
+    }catch(error){
+        return showApi.showResponse(response,error.message,null,null,null,500);
+    }
+   
 };
 
 module.exports = getProfile;
