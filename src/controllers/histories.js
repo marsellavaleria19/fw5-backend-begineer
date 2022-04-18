@@ -80,7 +80,7 @@ const getHistoriesAsync = async(request, response) => {
         limit = ((limit != null && limit !== '') ? limit : '5');
         let dataPages = { page, limit };
         let requirement = {page:'number',limit:'number'};
-        var filledFilter = ["category_id", "payment_id","status_id","date"];
+        var filledFilter = ["search","category_id", "payment_id","status_id","date"];
         let validate = validation.validation(dataPages,requirement);
   
         if (Object.keys(validate).length == 0) {
@@ -214,34 +214,6 @@ const insertHistory = (request, response) => {
 };
 
 
-const addCheckHistory = async(data,validate)=>{
-    var result = {}; 
-    if(Object.keys(data).length > 0){
-        if(!validate.vehicle_id && data.vehicle_id){
-            const dataVehicle = await vehicleModel.getDataVehicleAsync(data.vehicle_id);
-            if(dataVehicle.length == 0){
-                result.vehicle_id = "data vehicle not found";
-            }
-        }
-    
-        if(!validate.user_id && data.user_id){
-            const dataUser = await userModel.getDataUserAsync(data.user_id);
-            if(dataUser.length == 0){
-                result.user_id = "data user not found";
-            }
-        }
- 
-        if(!validate.status_id && data.status_id){
-            const dataStatus = await statusModel.getDataStatusAsync(data.status_id);
-            console.log(dataStatus);
-            if(dataStatus.length == 0){
-                result.status_id = "data status not found";
-            }
-        }
-    }
-    return result;
-};
-
 const addCheckRentDate = (data)=>{
     var result = {};
     if(Object.keys(data).length > 0){
@@ -275,31 +247,25 @@ const insertHistoryAsync = async(request, response) => {
         };
 
         const requirement = {
-            user_id: 'required|number',
-            vehicle_id: 'required|number',
+            user_id: 'required|number|checkUser',
+            vehicle_id: 'required|number|checkVehicle',
             rentStartDate: 'required|date',
             rentEndDate: 'required|date',
             prepayment: 'required|number',
-            status_id: 'required|number',
+            status_id: 'required|number|checkStatus',
             qty: 'required|number|grather0',
             idCard : 'required|number',
             fullname : 'required',
             mobilePhone : 'required|phone',
             emailAddress : 'required|email',
             location : 'required',
-            payment_id : 'required|number'
+            payment_id : 'required|number|checkPayment'
         };
 
-        var validate = validation.validation(data,requirement);
+        var validate = await validation.validation(data,requirement);
         if(Object.keys(validate).length==0){
             validate = validation.validation(data,requirement);
-            if(Object.keys(validate).length == 0){
-                validate = {...validate,...addCheckRentDate(data)};
-                validate = {...validate,...await addCheckHistory(data,validate)};
-            }else{
-                validate = {...validate,...addCheckRentDate(data)};
-                validate = {...validate,...await addCheckHistory(data,validate)};
-            }
+            validate = {...validate,...addCheckRentDate(data)};
         }
 
         if (Object.keys(validate).length == 0) {
@@ -385,7 +351,7 @@ const updateHistoryAsync = async(request, response) => {
             id : 'required|number'
         };
 
-        const validateId = validation.validation(dataId,requirement);
+        const validateId = await validation.validation(dataId,requirement);
 
         if (Object.keys(validateId).length == 0) {
             var validate = {};
@@ -406,28 +372,26 @@ const updateHistoryAsync = async(request, response) => {
             };
 
             const requirement = {
-                user_id: 'required|number',
-                vehicle_id: 'required|number',
+                user_id: 'required|number|checkUser',
+                vehicle_id: 'required|number|checkVehicle',
                 rentStartDate: 'required|date',
                 rentEndDate: 'required|date',
                 prepayment: 'required|number',
-                status_id: 'required|number',
+                status_id: 'required|number|checkStatus',
                 qty: 'required|number|grather0',
                 idCard : 'required|number',
                 fullname : 'required',
                 mobilePhone : 'required|phone',
                 emailAddress : 'required|email',
                 location : 'required',
-                payment_id : 'required|number'
+                payment_id : 'required|number|checkPayment'
             };
 
-            validate = validation.validation(data,requirement);
+            validate = await validation.validation(data,requirement);
             if(Object.keys(validate).length == 0){
                 validate = {...validate,...addCheckRentDate(data)};
-                validate = {...validate,...await addCheckHistory(data,validate)};
             }else{
                 validate = {...validate,...addCheckRentDate(data)};
-                validate = {...validate,...await addCheckHistory(data,validate)};
             }
            
 
@@ -436,7 +400,8 @@ const updateHistoryAsync = async(request, response) => {
                 if (Object.keys(validate).length == 0) {
                     const update = await historyModel.updateDataHistoryAsync(id,data);
                     if (update.affectedRows > 0) {
-                        return showApi.showResponse(response,'Data history updated successfully.',dataHistory[0]);
+                        const result = await historyModel.getDataHistoryAsync(id);
+                        return showApi.showResponse(response,'Data history updated successfully.',result[0]);
                     } else {
                         return showApi.showResponse(response,"Data history failed to update",null,null,null,500);
                     }
@@ -495,7 +460,7 @@ const updatePatchHistoryAsync = async(req, res) => {
             id : 'required|number'
         };
 
-        const validateId = validation.validation(dataId,requirement);
+        const validateId = await validation.validation(dataId,requirement);
         if (Object.keys(validateId).length==0) {
             const dataHistory = await historyModel.getDataHistoryAsync(id);
             if (dataHistory.length > 0) {
@@ -514,17 +479,33 @@ const updatePatchHistoryAsync = async(req, res) => {
                         if(value=="rentStartDate" || value=="rentEndDate"){
                             requirement[value] = 'date';
                         }
+                        if(value=="status_id"){
+                            requirement[value] = 'number|checkStatus';
+                        }
+                        if(value=="status_id"){
+                            requirement[value] = 'number|checkStatus';
+                        }
+                        if(value=="user_id"){
+                            requirement[value] = 'number|checkUser';
+                        }
+                        if(value=="vehicle_id"){
+                            requirement[value] = 'number|checkVehicle';
+                        }
+                        if(value=="mobilePhone"){
+                            requirement[value] = 'phone';
+                        }
+                        if(value=="emailAddress"){
+                            requirement[value] = 'email';
+                        }
                         data[value] = req.body[value];
                     }
                 });
                 if(Object.keys(data).length > 0 && Object.keys(requirement).length > 0){
-                    var validate = validation.validation(data,requirement);
+                    var validate = await validation.validation(data,requirement);
                     if(Object.keys(validate).length==0){
                         validate = {...validate,...addCheckRentDate(data)};
-                        validate = {...validate,...await addCheckHistory(data,validate)};
                     }else{
                         validate = {...validate,...addCheckRentDate(data)};
-                        validate = {...validate,...await addCheckHistory(data,validate)};
                     }
                 }   
                 if(Object.keys(validate).length==0){
@@ -596,7 +577,7 @@ const deleteHistoryAsync = async(request, response) => {
             id : 'required|number'
         };
 
-        const validateId = validation.validation(dataId,requirement);
+        const validateId = await validation.validation(dataId,requirement);
         if (Object.keys(validateId).length == 0) {
             const dataHistory = await historyModel.getDataHistoryAsync(id);
             if (dataHistory.length > 0) {
