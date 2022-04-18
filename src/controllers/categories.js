@@ -47,7 +47,7 @@ const getCategoriesAsync = async(request, response) => {
         limit = ((limit != null && limit !== '') ? limit : '5');
         let dataPages = { page, limit };
         let requirement = {page:'number',limit:'number'};
-        let validate = validation.validation(dataPages,requirement);
+        let validate = await validation.validation(dataPages,requirement);
         if (Object.keys(validate).length== 0) {
             dataPages.route = "categories";
             dataPages.page = parseInt(dataPages.page);
@@ -93,13 +93,27 @@ const getCategory = (request, response) => {
 const getCategoryAsync = async(request, response) => {
     try{
         const { id } = request.params;
-        const result = await categoryModel.getDataCategoryAsync(id);
-        if (result.length > 0) {
-        // dataJson = {...dataJson, message: 'Detail data category.', result: result[0] };
-            return showApi.showResponse(response,"Detail data category.",result[0]);
-        } else {
-            return showApi.showResponse(response,"Data category not found. ",null,null,null,404);
+        const data = {
+            id : id
+        };
+
+        const requirement = {
+            id : 'required|number'
+        };
+
+        const validate = await validation.validation(data,requirement);
+        if(Object.keys(validate).length ==0){
+            const result = await categoryModel.getDataCategoryAsync(id);
+            if (result.length > 0) {
+                // dataJson = {...dataJson, message: 'Detail data category.', result: result[0] };
+                return showApi.showResponse(response,"Detail data category.",result[0]);
+            } else {
+                return showApi.showResponse(response,"Data category not found. ",null,null,null,404);
+            }
+        }else{
+            return showApi.showResponse(response,"Id was not valid",null,null,validate,400);
         }
+      
     }catch(error){
         return showApi.showResponse(response,error.message,null,null,null,500);
     }
@@ -137,19 +151,27 @@ const insertCategory = (request, response) => {
     }
 };
 
+const addCheckCategoryName = async(data,validate,id=null)=>{
+    var result = {}; 
+    if(Object.keys(data).length > 0){
+        if(!validate.name && data.name){
+            const dataCategory = await categoryModel.getDataCategoriesByNameAsync(data.name,id);
+            if(dataCategory.length > 0){
+                result.name = "name has already used.";
+            }
+        }
+    }
+    return result;
+};
+
 const insertCategoryAsync = async(request, response) => {
     try{
         const name = request.body.name;
         const data = {name:name};
         const requirement = {name:'required'};
 
-        const validate = validation.validation(data,requirement);
-        if(Object.keys(validate).length == 0){
-            const resultDataCategory = await categoryModel.getDataCategoriesByNameAsync(name,null);
-            if(resultDataCategory.length > 0){
-                validate.name = "Name has already used.";
-            }
-        }
+        var validate = await validation.validation(data,requirement);
+        validate = {...validate,...await addCheckCategoryName(data,validate)};
 
         if (Object.keys(validate).length == 0) {
             const insert = await categoryModel.insertDataCategoryAsync(name);
@@ -164,8 +186,7 @@ const insertCategoryAsync = async(request, response) => {
         }
     }catch(err){
         return showApi.showResponse(response,err.message,null,null,null,500);
-    }
-    
+    } 
 };
 
 const updateCategory = (request, response) => {
@@ -215,7 +236,15 @@ const updateCategory = (request, response) => {
 const updateCategoryAsync = async(request, response) => {
     try{
         const { id } = request.params;
-        if (!validator.isEmpty(id)) {
+        const dataId = {
+            id : id
+        };
+
+        const requirement = {
+            id : 'required|number'
+        };
+        const validateId = await validation.validation(dataId,requirement);
+        if (Object.keys(validateId).length == 0) {
             const data = {
                 name: request.body.name
             };
@@ -223,13 +252,8 @@ const updateCategoryAsync = async(request, response) => {
                 name : 'required'
             };
 
-            let validate = validation.validation(data,requirement);
-            if(Object.keys(validate).length == 0){
-                const categoryName = await categoryModel.getDataCategoriesByNameAsync(data.name,id);
-                if(categoryName.length>0){
-                    validate.name = "Name has already used.";
-                }
-            }
+            let validate = await validation.validation(data,requirement);
+            validate ={...validate,...await addCheckCategoryName(data,validate,id)};
 
             const resultDataCategory = await categoryModel.getDataCategoryAsync(id);
             if (resultDataCategory.length > 0) {
@@ -248,7 +272,7 @@ const updateCategoryAsync = async(request, response) => {
                 return showApi.showResponse(response,"Data category not found",null,null,null,404);
             }    
         } else {
-            return showApi.showResponse(response,"Id must be filled",null,null,null,400);
+            return showApi.showResponse(response,"Id must be filled",null,null,validateId,400);
         }
     }
     catch(error){
@@ -287,7 +311,16 @@ const deleteCategory = (request, response) => {
 const deleteCategoryAsync = async(request, response) => {
     try{
         const { id } = request.params;
-        if (!validator.isEmpty(id)) {
+        const dataId = {
+            id : id
+        };
+
+        const requirement = {
+            id : 'required|number'
+        };
+
+        const validateId = await validation.validation(dataId,requirement);
+        if (Object.keys(validateId).length==0) {
             const resultDataCategory = await categoryModel.getDataCategoryAsync(id);
             if (resultDataCategory.length > 0) {
                 const result = await categoryModel.deleteDataCategoryAsync(id);
@@ -300,7 +333,7 @@ const deleteCategoryAsync = async(request, response) => {
                 return showApi.showResponse(response,"Data category not found",null,null,null,404);
             }
         } else {
-            return showApi.showResponse(response,"Id must be filled",null,null,null,400);
+            return showApi.showResponse(response,"Id not validate",null,null,validateId,400);
         }
     }catch(error){
         return showApi.showResponse(response,error.message,null,null,null,500);
