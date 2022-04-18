@@ -124,7 +124,7 @@ const updatePaymentType = async(request, response) => {
                 location : 'required'
             };
 
-            let validate = validation.validation(data,requirement);
+            let validate = await validation.validation(data,requirement);
             validate ={...validate,...await addCheckPaymentTypeName(data,validate,id)};
 
             const resultDataLocatiom = await paymentTypeModel.getDataPaymentType(id);
@@ -184,5 +184,6 @@ const deletePaymentType = async(request, response) => {
         return showApi.showResponse(response,error.message,null,null,null,500);
     }
 };
+
 
 module.exports = {getPaymentTypes,getPaymentType,insertPaymentType,updatePaymentType,deletePaymentType};
