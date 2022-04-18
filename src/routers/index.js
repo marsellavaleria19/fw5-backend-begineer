@@ -6,6 +6,7 @@ route.use('/histories', require('./histories'));
 route.use('/profile', require('./profile'));
 route.use('/popular', require('./popularVehicle'));
 route.use('/categories', require('./categories'));
+route.use('/payment-types', require('./paymentType'));
 route.use('/status', require('./status'));
 route.use('/locations', require('./location'));
 route.use('/search', require('./search'));
