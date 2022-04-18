@@ -1,11 +1,26 @@
 const status = require('express').Router();
-const { verifyUser } = require('../helpers/auth');
+const { verifyAdmin } = require('../helpers/auth');
 
-const { getAllStatus, getStatus, insertStatus, updateStatus, deleteStatus } = require('../controllers/status');
-status.get('/', getAllStatus);
-status.get('/:id', getStatus);
-status.post('/', verifyUser, insertStatus);
-status.put('/:id', verifyUser, updateStatus);
-status.delete('/:id', verifyUser, deleteStatus);
+const { 
+    // getAllStatus,
+    getAllStatusAsync, 
+    // getStatus,
+    getStatusAsync, 
+    // insertStatus,
+    insertStatusAsync, 
+    // updateStatus,
+    updateStatusAsync, 
+    // deleteStatus,
+    deleteStatusAsync } = require('../controllers/status');
+// status.get('/', getAllStatus);
+status.get('/', getAllStatusAsync);
+// status.get('/:id', getStatus);
+status.get('/:id', getStatusAsync);
+// status.post('/', verifyAdmin, insertStatus);
+status.post('/', verifyAdmin, insertStatusAsync);
+// status.put('/:id', verifyAdmin, updateStatus);
+status.put('/:id', verifyAdmin, updateStatusAsync);
+// status.delete('/:id', verifyAdmin, deleteStatus);
+status.delete('/:id', verifyAdmin, deleteStatusAsync);
 
 module.exports = status;
