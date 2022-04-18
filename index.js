@@ -11,15 +11,15 @@ app.use(cors());
 
 app.use(require('./src/routers'));
 const { PORT, APP_PORT } = process.env;
-app.use(function(req, res, next) {
+// app.use(function(req, res, next) {
 
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//     res.setHeader('Access-Control-Allow-Credentials', true);
 
-    next();
-});
+//     next();
+// });
 
 app.use('/uploads', express.static('uploads'));
 
