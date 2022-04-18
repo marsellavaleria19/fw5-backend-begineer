@@ -1,11 +1,14 @@
 const vehicles = require('express').Router();
-const cors = require('cors');
-const { verifyUser } = require('../helpers/auth');
+const { verifyAdmin } = require('../helpers/auth');
 
 const {
-    getVehicles,
-    getVehicle,
-    getDataVehiclesByCategory,
+    //  getVehicles,
+    getVehiclesAsync,
+    getVehicleAsync,
+    //  getVehicle,
+    getDataVehiclesByCategoryAsync,
+    getPopularVehicle,
+    //  getDataVehiclesByCategory,
     // insertVehicle,
     insertVehicleAsync,
     // updateVehicle,
@@ -16,15 +19,20 @@ const {
     deleteVehicleAsync
 } = require('../controllers/vehicles');
 
-vehicles.get('/', cors(), getVehicles);
-vehicles.get('/category/:id', cors(), getDataVehiclesByCategory);
-vehicles.get('/:id', cors(), getVehicle);
+vehicles.get('/', getVehiclesAsync);
+// vehicles.get('/', cors(), getVehicles);
+vehicles.get('/popular', getPopularVehicle);
+vehicles.get('/category/:id',getDataVehiclesByCategoryAsync);
+// vehicles.get('/category/:id', cors(), getDataVehiclesByCategory);
+vehicles.get('/:id', getVehicleAsync);
+
+// vehicles.get('/:id', cors(), getVehicle);
 // vehicles.post('/', upload.single('photo'), insertVehicle);
-vehicles.post('/', verifyUser, insertVehicleAsync);
+vehicles.post('/', verifyAdmin, insertVehicleAsync);
 // vehicles.put('/:id', updateVehicle);
-vehicles.put('/:id', verifyUser, updateVehicleAsync);
+vehicles.put('/:id', verifyAdmin, updateVehicleAsync);
 // vehicles.patch('/:id', updatePatchVehicle);
-vehicles.patch('/:id', verifyUser, updatePatchVehicleAsync);
+vehicles.patch('/:id', verifyAdmin, updatePatchVehicleAsync);
 // vehicles.delete('/:id', deleteVehicle);
-vehicles.delete('/:id', verifyUser, deleteVehicleAsync);
+vehicles.delete('/:id', verifyAdmin, deleteVehicleAsync);
 module.exports = vehicles;
