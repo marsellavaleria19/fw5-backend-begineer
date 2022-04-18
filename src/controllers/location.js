@@ -50,7 +50,7 @@ const getLocation = async(request, response) => {
             id : 'required|number'
         };
 
-        const validate = validation.validation(data,requirement);
+        const validate = await validation.validation(data,requirement);
         if(Object.keys(validate).length ==0){
             const result = await locationModel.getDataLocationAsync(id);
             if (result.length > 0) {
@@ -125,7 +125,7 @@ const updateLocation = async(request, response) => {
                 location : 'required'
             };
 
-            let validate = validation.validation(data,requirement);
+            let validate = await validation.validation(data,requirement);
             validate ={...validate,...await addCheckLocationName(data,validate,id)};
 
             const resultDataLocatiom = await locationModel.getDataLocationAsync(id);
