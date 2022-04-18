@@ -8,6 +8,25 @@ exports.getDataUsers = (data, cb) => {
     });
 };
 
+exports.getDataUsersAsync = (data) => new Promise((resolve,reject)=>{
+    var filled = ["role","gender","isVerified","birthDate"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            resultFillter += ` and ${item}='${data.filter[item]}'`;
+        }
+    });
+
+    const query = db.query(`select *  from users 
+    where fullName like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
+   ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
+   LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+    console.log(query.sql);
+});
+
 exports.countDataUsers = (data, cb) => {
     db.query(`select count(*) as total  from users 
     where concat(fullName,nickName,gender,address,birthDate,mobileNumber,email) like '%${data.search}%'`, function(error, results) {
@@ -15,6 +34,21 @@ exports.countDataUsers = (data, cb) => {
         cb(results);
     });
 };
+
+exports.countDataUsersAsync = (data) => new Promise((resolve,reject)=>{
+    var filled = ["role","gender","isVerified","birthDate"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            resultFillter += ` and ${item}='${data.filter[item]}'`;
+        }
+    });
+    db.query(`select count(*) as total  from users 
+    where fullName like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}`, function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
 
 exports.getDataUser = (id, cb) => {
     db.query('select * from users where id=?', [id], (err, res) => {
