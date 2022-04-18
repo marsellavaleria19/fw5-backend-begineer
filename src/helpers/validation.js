@@ -1,8 +1,125 @@
 const forgotPasswordModel = require('../models/forgotPassword');
 const userModel = require('../models/users');
 const vehicleModel = require('../models/vehicles');
+const categoryModel = require('../models/categories');
+const locationModel = require('../models/location');
 const emailVerificationModel = require('../models/emailVerification');
 const statusModel = require('../models/status');
+const paymentModel = require('../models/paymentTypes');
+const validator = require('validator');
+
+exports.validation = async(data,requirement) =>{
+    var result = {};
+    var validate = null;
+    for(var key in data){
+        if(requirement[key]){
+            if (requirement[key].toString().includes('|')) {
+                var split = requirement[key].split('|');
+                for (let index = 0; index < split.length; index++) {
+                    validate = await validateRequirement(split[index],data[key],key);
+                    result = {...result,...validate};  
+                }
+            }else{
+                validate = await validateRequirement(requirement[key],data[key],key); 
+                result = {...result,...validate};
+            }
+        }
+    }
+       
+    return result;
+};
+
+const validateRequirement = async(type,data,key)=>{
+    var result = {};
+    if (type == 'required') {
+        if (validator.isEmpty(data)) {
+            result[key] = `${key} must be filled`;
+        }
+    }
+    if(!validator.isEmpty(data)){
+        if (type == 'number') {
+            if (!validator.isNumeric(data)) {
+                result[key] = `${key} must be a number`;
+            }
+        }
+        if (type == 'date') {
+            if (!validator.isDate(data)) {
+                result[key] = `${key} must be a format date`;
+            }
+        }
+        if(type=='phone'){
+            if(!validator.isMobilePhone(data)){
+                result[key] = `${key} must be a phone number's format`;
+            }
+        }
+        if(type=='email'){
+            if(!validator.isEmail(data)){
+                result[key] = `${key} must be a email's format`;
+            }
+        }
+        if(type=='grather0'){
+            if(validator.isNumeric(data)){
+                if(parseInt(data)<=0){
+                    result[key] = `${key} must be a grather than 0`;
+                }
+            }
+        }
+        if(validator.isNumeric(data)){
+            if(type=="checkCategory"){
+                const category = await categoryModel.getDataCategoryAsync(data);
+                if(category.length == 0){
+                    result[key] = `${key} not found`;
+                }
+            }
+            if(type=="checkLocation"){
+                const location = await locationModel.getDataLocationAsync(data);
+                if(location.length == 0){
+                    result[key] = `${key} not found`;
+                }
+            }
+            if(type=="checkVehicle"){
+                const dataVehicle = await vehicleModel.getDataVehicleAsync(data);
+                if(dataVehicle.length == 0){
+                    result[key] = `${key} not found`;
+                }
+            }
+            if(type=="checkUser"){
+                const dataUser = await userModel.getDataUserAsync(data);
+                if(dataUser.length == 0){
+                    result[key] = `${key} not found`;
+                }
+            }
+
+            if(type=="checkStatus"){
+                const dataStatus = await statusModel.getDataStatusAsync(data);
+                if(dataStatus.length == 0){
+                    result[key] = `${key} not found`;
+                }
+            }
+
+            if(type=="checkPayment"){
+                const dataPayment = await paymentModel.getDataPaymentType(data); 
+                if(dataPayment.length == 0){
+                    result[key] = `${key} not found`;
+                }
+            }
+        }
+
+      
+        if(type=="checkGender"){
+            if(data!="Male" && data!="Female"){
+                result[key] = `${key} must be Male or Female.`;
+            }
+        }
+
+        if(type=="checkRole"){
+            if(data!=="admin" && data!=="customer"){
+                result[key] = `${key} must be admin or customer`;
+            }
+        }
+    }
+    return result;
+};
 
 exports.validationDataVehicles = async(data) => {
     var result = null;
@@ -120,9 +237,10 @@ exports.validationDataHistories = async(data) => {
         result = {...result, prepayment: 'Prepayment must be filled.' };
     } else if (isNaN(parseInt(prepayment))) {
         result = {...result, prepayment: 'Prepayment must be a number.' };
-    } else if (parseInt(prepayment) < 0) {
-        result = {...result, prepayment: 'Prepayment must be gather than 0.' };
-    }
+    } 
+    // else if (parseInt(prepayment) < 0) {
+    //     result = {...result, prepayment: 'Prepayment must be gather than 0.' };
+    // }
     if (status_id == null || status_id == '') {
         result = {...result, status: 'Status must be filled' };
     } else {
@@ -218,31 +336,64 @@ exports.validationRegister = async(data) => {
 exports.validationEmailVerification = async(data) => {
     var result = null;
 
-    if (!data.email || data.email == '') {
-        result = { email: 'Email must be filled.' };
-    } else {
-        const resultEmail = await userModel.getDataUserEmailAsync(data.email, null);
-        if (resultEmail.length == 0) {
-            result = { email: "Email not found." };
-        }
-    }
-
-    if (!data.code || data.code == '') {
-        result = {...result, code: 'code must be filled.' };
-    } else {
-        const verifyUser = await emailVerificationModel.getEmailVerificationByCode(data.code);
-        if (verifyUser.length == 0) {
-            result = {...result, code: 'Code not found.' };
+    if ((!data.code || data.code == '') && (!data.password || data.password == '')) {
+        if (!data.email || data.email == "") {
+            result = { email: 'Email must be filled.' };
         } else {
-            if (verifyUser[0].isExpired) {
-                result = {...result, code: 'Expired code' };
+            const user = await userModel.getDataUserEmailAsync(data.email);
+            if (user.length == 0) {
+                result = result = { email: 'Email not found.' };
             }
         }
+    } else {
+        if (data.code) {
+            const resultVerifyUser = await emailVerificationModel.getEmailVerificationByCode(data.code);
+            if (resultVerifyUser.length === 1) {
+                if (resultVerifyUser[0].isExpired) {
+                    result = {...result, code: 'Expired code' };
+                }
+                const user = await userModel.getDataUserAsync(resultVerifyUser[0].user_id);
+                if (user[0].email == data.email) {
+                    if (!data.password || data.password == "") {
+                        result = {...result, password: 'Password must be filled.' };
+                    }
+                } else {
+                    result = {...result, email: "Email not found!" };
+                }
+
+            } else {
+                result = { code: "Code not match." };
+            }
+        } else {
+            result = { code: "Code must be filled." };
+        }
     }
 
-    if (!data.password || data.password == '') {
-        result = {...result, password: 'Password must be filled.' };
-    }
+    // if (!data.email || data.email == '') {
+    //     result = { email: 'Email must be filled.' };
+    // } else {
+    //     const resultEmail = await userModel.getDataUserEmailAsync(data.email, null);
+    //     if (resultEmail.length == 0) {
+    //         result = { email: "Email not found." };
+    //     }
+    // }
+
+    // if (!data.code || data.code == '') {
+    //     result = {...result, code: 'code must be filled.' };
+    // } else {
+    //     const verifyUser = await emailVerificationModel.getEmailVerificationByCode(data.code);
+    //     if (verifyUser.length == 0) {
+    //         result = {...result, code: 'Code not found.' };
+    //     } else {
+    //         if (verifyUser[0].isExpired) {
+    //             result = {...result, code: 'Expired code' };
+    //         }
+    //     }
+    // }
+
+    // if (!data.password || data.password == '') {
+    //     result = {...result, password: 'Password must be filled.' };
+    // }
     return result;
 };
 
