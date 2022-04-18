@@ -1,5 +1,5 @@
 const db = require('../helpers/database');
-const { APP_URL } = process.env;
+const { APP_URL} = process.env;
 
 exports.getDataVehicles = (data, cb) => {
     var filled = ["month", "location", "type", "payment_id", "category_id"];
@@ -13,7 +13,7 @@ exports.getDataVehicles = (data, cb) => {
             }
         }
     });
-    const query = db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
+    const query = db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
     join categories c on v.category_id = c.id 
       where v.name like '%${data.search}%' ${resultFillter}
       order by ${data.sort} ${data.order} LIMIT ${data.limit} OFFSET ${data.offset}`, function(error, results) {
@@ -23,8 +23,28 @@ exports.getDataVehicles = (data, cb) => {
     console.log(query.sql);
 };
 
+exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
+    var filled = [ "location_id","category_id","isAvailable"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            resultFillter += ` and ${item}='${data.filter[item]}'`;
+        }
+    });
+    const query = db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,l.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
+   join categories c on v.category_id = c.id 
+   right join locations l on v.location_id = l.id
+   where v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
+   ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
+   LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+    console.log(query.sql);
+});
+
 exports.getDataVehiclesByCategory = (data, id, cb) => {
-    db.query(`select v.id,v.name,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location from vehicles v 
+    db.query(`select v.id,v.name,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.description,v.description,v.rate,v.isAvailable from vehicles v 
   join categories c on v.category_id = c.id 
     where v.category_id = ? 
     order by v.createdAt desc LIMIT ${data.limit} OFFSET ${data.offset}`, [id], function(error, results) {
@@ -32,6 +52,26 @@ exports.getDataVehiclesByCategory = (data, id, cb) => {
         cb(results);
     });
 };
+
+
+exports.getDataVehiclesByCategoryAsync = (data, id) => new Promise((resolve,reject)=>{
+    var filled = [ "location_id","isAvailable"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            resultFillter += ` and ${item}='${data.filter[item]}'`;
+        }
+    });
+    db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,l.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
+    join categories c on v.category_id = c.id 
+    right join locations l on v.location_id = l.id
+   where v.category_id = ? and v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
+   ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
+   LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, [id], function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
 
 exports.countDataVehicles = (data, cb) => {
     db.query(`select count(*) as total from vehicles v 
@@ -42,6 +82,32 @@ exports.countDataVehicles = (data, cb) => {
     });
 };
 
+exports.countAllDataVehiclesAsync = () => new Promise((resolve,reject)=>{
+    db.query(`select count(*) as total from vehicles v 
+ join categories c on v.category_id = c.id`, function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
+
+exports.countDataVehiclesAsync = (data) => new Promise((resolve,reject)=> {
+    var filled = [ "location_id","category_id","isAvailable"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            resultFillter += ` and ${item}='${data.filter[item]}'`;
+        }
+    });
+    const query =  db.query(`select count(*) as total from vehicles v 
+ join categories c on v.category_id = c.id 
+ right join locations l on v.location_id = l.id
+ where v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}`, function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+    console.log(query.sql);
+});
+
 exports.countDataVehiclesByCategory = (id, cb) => {
     db.query(`select count(*) as total from vehicles v 
 join categories c on v.category_id = c.id 
@@ -51,8 +117,25 @@ join categories c on v.category_id = c.id
     });
 };
 
+
+exports.countDataVehiclesByCategoryAsync = (data,id) => new Promise((resolve,reject)=>{
+    var filled = [ "location_id","category_id","isAvailable"];
+    var resultFillter = "";
+    filled.forEach((item) => {
+        if (data.filter[item]) {
+            resultFillter += ` and ${item}='${data.filter[item]}'`;
+        }
+    });
+    db.query(`select count(*) as total from vehicles v 
+join categories c on v.category_id = c.id 
+where v.category_id = ? and v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}`, [id], function(error, results) {
+        if (error) reject(error);
+        resolve(results);
+    });
+});
+
 exports.getDataVehicle = (id, cb) => {
-    db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?`, [id], (err, res) => {
+    db.query(`select v.id,v.name,v.category_id,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.price,v.qty,v.isAvailable,v.rate from vehicles v join categories c on v.category_id = c.id WHERE v.id=?`, [id], (err, res) => {
         if (err) throw err;
         cb(res);
     });
