@@ -340,10 +340,14 @@ exports.validationEmailVerification = async(data) => {
         if (!data.email || data.email == "") {
             result = { email: 'Email must be filled.' };
         } else {
-            const user = await userModel.getDataUserEmailAsync(data.email);
-            if (user.length == 0) {
-                result = result = { email: 'Email not found.' };
-            }
+            if(!validator.isEmail(data.email)){
+                result = { email: "Email must be a email's format." };
+            }else{
+                const user = await userModel.getDataUserEmailAsync(data.email);
+                if (user.length == 0) {
+                    result = result = { email: 'Email not found.' };
+                }
+            } 
         }
     } else {
         if (data.code) {
@@ -404,9 +408,13 @@ exports.validationForgotPassword = async(data) => {
         if (!data.email || data.email == "") {
             result = { email: 'Email must be filled.' };
         } else {
-            const user = await userModel.getDataUserEmailAsync(data.email);
-            if (user.length == 0) {
-                result = result = { email: 'Email not found.' };
+            if(!validator.isEmail(data.email)){
+                result = { email: "Email must be a email's format." };
+            }else{
+                const user = await userModel.getDataUserEmailAsync(data.email);
+                if (user.length == 0) {
+                    result = result = { email: 'Email not found.' };
+                }
             }
         }
     } else {
