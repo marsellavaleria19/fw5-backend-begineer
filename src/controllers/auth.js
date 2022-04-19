@@ -29,10 +29,12 @@ const login = async(req, res) => {
                 if (checkPassword) {
                     // if (result[0].isVerified == 1) {
                     const data = { id: result[0].id,role:result[0].role };
-                    const accessToken = jwt.sign(data, APP_SECRET,{expiresIn:TOKEN_EXPIRED});
-                    const refreshToken = jwt.sign({email:result[0].email}, APP_REFRESH_SECRET,{expiresIn:TOKEN_REFRESH_EXPIRED});
+                    const token = jwt.sign(data, APP_SECRET);
+                    //   const accessToken = jwt.sign(data, APP_SECRET,{expiresIn:TOKEN_EXPIRED});
+                    //   const refreshToken = jwt.sign({email:result[0].email}, APP_REFRESH_SECRET,{expiresIn:TOKEN_REFRESH_EXPIRED});
                     //  dataJson = {...dataJson, message: "Login Success!", result: { token } };
-                    return showApi.showResponse(res,"Login success!",{token:accessToken,refreshToken});
+                    //   return showApi.showResponse(res,"Login success!",{token:accessToken,refreshToken});
+                    return showApi.showResponse(res,"Login success!",{token});
                     // } else {
                     //     dataJson = {...dataJson, message: "User not authorized!", status: 404 };
                     //     return showApi.showError(dataJson);
