@@ -168,7 +168,7 @@ const insertUser = (request, response) => {
     }
 };
 
-const addCheckUser = async(data,validate,id)=>{
+const addCheckUser = async(data,validate,id=null)=>{
     var result = {}; 
     if(Object.keys(data).length > 0){
         if(!validate.email && data.email){
