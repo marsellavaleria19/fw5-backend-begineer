@@ -2,7 +2,7 @@ const db = require('../helpers/database');
 
 exports.getDataPaymentTypes = (data) => new Promise((resolve,reject)=>{
     db.query(`select id,payment from payment_types
- where payment like '%${data.search!==null ? '' : data.seach}%'
+ where payment like '%${data.search!==null ? data.search : ''}%'
  ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''} 
  LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset} `, (error, result) => {
         if (error) reject(error);
@@ -12,7 +12,7 @@ exports.getDataPaymentTypes = (data) => new Promise((resolve,reject)=>{
 
 exports.countDataPaymentTypes = (data) => new Promise((resolve,reject)=>{
     db.query(`select count(*) as total from payment_types 
-where payment like '%${data.search}%'`, function(error, results) {
+where payment like '%${data.search !==null ? data.search : ''}%'`, function(error, results) {
         if (error) reject(error);
         resolve(results);
     });

@@ -2,7 +2,7 @@ const db = require('../helpers/database');
 
 exports.getDataLocations = (data) => new Promise((resolve,reject)=>{
     db.query(`select id,location from locations
-  where location like '%${data.search!==null ? '' : data.seach}%'
+  where location like '%${data.search!==null ? data.search:''}%'
   ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''} 
   LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset} `, (error, result) => {
         if (error) reject(error);
@@ -12,7 +12,7 @@ exports.getDataLocations = (data) => new Promise((resolve,reject)=>{
 
 exports.countDataLocations = (data) => new Promise((resolve,reject)=>{
     db.query(`select count(*) as total from locations 
-where location like '%${data.search}%'`, function(error, results) {
+where location like '%${data.search!==null ? data.search : ''}%'`, function(error, results) {
         if (error) reject(error);
         resolve(results);
     });
