@@ -192,7 +192,7 @@ const insertUserAsync = async(request, response) => {
     try{
         request.fileUpload = "user";
         upload(request, response, (errorUpload) => {
-            auth.verifyUser(request, response, async(error) => {
+            auth.verifyAdmin(request, response, async(error) => {
                 const data = {
                     fullName: request.body.fullName,
                     nickName: request.body.nickName,
@@ -315,7 +315,7 @@ const updateUser = (request, response) => {
 const updateUserAsync = async(request, response) => {
     try{
         upload(request, response, (errorUpload) => {
-            auth.verifyUser(request, response, async(error) => {
+            auth.verifyAll(request, response, async(error) => {
                 const { id } = request.params;
                 const data = {
                     id : id
@@ -427,7 +427,7 @@ const updatePatchUser = (request, response) => {
 const updatePatchUserAsync = (request, response) => {
     try{
         upload(request, response, (errorUpload) => {
-            auth.verifyUser(request, response, async(error) => {
+            auth.verifyAll(request, response, async(error) => {
                 const { id } = request.params;
                 const dataId = {
                     id : id
@@ -534,7 +534,7 @@ const deleteUser = (request, response) => {
 const deleteUserAsync = async(req, res) => {
     try{
         upload(req, res, async(errorUpload) => {
-            auth.verifyUser(req, res, async(error) => {
+            auth.verifyAdmin(req, res, async(error) => {
                 const { id } = req.params;
                 const dataId = {
                     id : id

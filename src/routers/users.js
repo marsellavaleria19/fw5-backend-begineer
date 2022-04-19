@@ -1,5 +1,4 @@
 const users = require('express').Router();
-const {verifyAll,verifyAdmin} = require('../helpers/auth');
 
 const {
     //  getUsers,
@@ -21,11 +20,11 @@ users.get('/', getUsersAsync);
 // users.get('/:id', getUser);
 users.get('/:id', getUserAsync);
 // users.post('/', insertUser);
-users.post('/',verifyAdmin, insertUserAsync);
+users.post('/', insertUserAsync);
 // users.put('/:id', updateUser);
-users.put('/:id',verifyAll, updateUserAsync);
+users.put('/:id',updateUserAsync);
 // users.patch('/:id', updatePatchUser);
-users.patch('/:id',verifyAll, updatePatchUserAsync);
+users.patch('/:id',updatePatchUserAsync);
 // users.delete('/:id', deleteUser);
-users.delete('/:id',verifyAdmin, deleteUserAsync);
+users.delete('/:id',deleteUserAsync);
 module.exports = users;
