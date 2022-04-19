@@ -32,10 +32,7 @@ exports.verifyUser = (req, res, next) => {
 };
 
 exports.verifyRefresh = (email,token)=>{
-    console.log("masuk!!");
     try{
-        console.log("masuk token!!");
-        console.log(token);
         console.log(jwt.verify(token,APP_REFRESH_SECRET));
         const payload = jwt.verify(token,APP_REFRESH_SECRET);
         console.log(payload);
