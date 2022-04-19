@@ -32,8 +32,6 @@ const login = async(req, res) => {
                     const token = jwt.sign(data, APP_SECRET);
                     //   const accessToken = jwt.sign(data, APP_SECRET,{expiresIn:TOKEN_EXPIRED});
                     //   const refreshToken = jwt.sign({email:result[0].email}, APP_REFRESH_SECRET,{expiresIn:TOKEN_REFRESH_EXPIRED});
-                    //  dataJson = {...dataJson, message: "Login Success!", result: { token } };
-                    //   return showApi.showResponse(res,"Login success!",{token:accessToken,refreshToken});
                     return showApi.showResponse(res,"Login success!",{token});
                     // } else {
                     //     dataJson = {...dataJson, message: "User not authorized!", status: 404 };
@@ -41,16 +39,13 @@ const login = async(req, res) => {
                     // }
   
                 } else {
-                    //  dataJson = {...dataJson, message: "Wrong email or password", status: 400 };
                     return showApi.showResponse(res,"Wrong email or password.",null,null,null,400);
                 }
   
             } else {
-                // dataJson = {...dataJson, message: "Wrong email or password", status: 400 };
                 return showApi.showResponse(res,"Wrong email or password.",null,null,null,400);
             }
         } else {
-            //   dataJson = {...dataJson, message: "Data not valid", status: 400, error: errValidation };
             return showApi.showResponse(res,"Data not valid",null,null,validate,400);
         }  
     }catch(error){
@@ -131,11 +126,9 @@ const register = async(req, res) => {
                 //     return showApi.showSuccess(dataJson);
                 // }
             } else {
-                //  dataJson = {...dataJson, message: "Registration failed to create!" };
                 return showApi.showResponse(res,"Registration failed to create.",null,null,null,500);
             }
         } else {
-            //   dataJson = {...dataJson, message: "Data Register not valid.", status: 400, error: errValidation };
             return showApi.showResponse(res,"Data register not valid.",null,null,validate,400);
         }
     }catch(error){
@@ -168,7 +161,7 @@ const emailVerification = async(req, res) => {
                     return showApi.showResponse(res,"Email verification failed to send.",null,null,null,500);
                 }
             }else{
-                return showApi.showResponse(res,"Data register not valid.",null,null,null,400);
+                return showApi.showResponse(res,"Data register not valid.",null,null,errValidation,400);
             }
         }else{
             if(data.email){
