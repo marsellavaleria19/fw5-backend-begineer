@@ -121,7 +121,7 @@ const updatePaymentType = async(request, response) => {
                 payment: request.body.payment
             };
             const requirement = {
-                location : 'required'
+                payment : 'required'
             };
 
             let validate = await validation.validation(data,requirement);
