@@ -134,7 +134,7 @@ const register = async(req, res) => {
             }
         } else {
             //   dataJson = {...dataJson, message: "Data Register not valid.", status: 400, error: errValidation };
-            return showApi.showResponse(res,"Data register not valid.",null,null,null,400);
+            return showApi.showResponse(res,"Data register not valid.",null,null,validate,400);
         }
     }catch(error){
         return showApi.showResponse(res,error.message,null,null,null,500);
