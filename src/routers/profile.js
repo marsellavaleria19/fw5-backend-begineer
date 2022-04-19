@@ -1,7 +1,7 @@
 const profile = require('express').Router();
 const getProfile = require('../controllers/profile');
-const { verifyUser } = require('../helpers/auth');
+const { verifyAll } = require('../helpers/auth');
 
-profile.get('/', verifyUser, getProfile);
+profile.get('/', verifyAll, getProfile);
 
 module.exports = profile;
