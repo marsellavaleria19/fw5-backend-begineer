@@ -1,6 +1,7 @@
+
 const jwt = require('jsonwebtoken');
 const showApi = require('../helpers/showApi');
-const { APP_SECRET } = process.env;
+const { APP_SECRET, APP_REFRESH_SECRET  } = process.env;
 
 exports.verifyUser = (req, res, next) => {
     const auth = req.headers.authorization;
@@ -27,6 +28,22 @@ exports.verifyUser = (req, res, next) => {
         } else {
             return showApi.showResponse(res, 'Token must be provided!', null,null,null, 403);
         }
+    }
+};
+
+exports.verifyRefresh = (email,token)=>{
+    console.log("masuk!!");
+    try{
+        console.log("masuk token!!");
+        console.log(token);
+        console.log(jwt.verify(token,APP_REFRESH_SECRET));
+        const payload = jwt.verify(token,APP_REFRESH_SECRET);
+        console.log(payload);
+        if(payload.email==email){
+            return true;
+        }
+    }catch(error){
+        return false;
     }
 };
 

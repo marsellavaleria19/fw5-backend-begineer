@@ -5,8 +5,8 @@ const argon = require('argon2');
 const jwt = require('jsonwebtoken');
 const showApi = require('../helpers/showApi');
 const validation = require('../helpers/validation');
-const { APP_SECRET, APP_EMAIL } = process.env;
-const verifyUser = require("../helpers/auth");
+const { APP_SECRET, APP_REFRESH_SECRET, APP_EMAIL,TOKEN_EXPIRED,TOKEN_REFRESH_EXPIRED } = process.env;
+const {verifyUser,verifyRefresh} = require("../helpers/auth");
 const mail = require('../helpers/mail');
 const emailVerificationModel = require('../models/emailVerification');
 const { get } = require('express/lib/request');
@@ -29,9 +29,10 @@ const login = async(req, res) => {
                 if (checkPassword) {
                     // if (result[0].isVerified == 1) {
                     const data = { id: result[0].id,role:result[0].role };
-                    const token = jwt.sign(data, APP_SECRET);
+                    const accessToken = jwt.sign(data, APP_SECRET,{expiresIn:TOKEN_EXPIRED});
+                    const refreshToken = jwt.sign({email:result[0].email}, APP_REFRESH_SECRET,{expiresIn:TOKEN_REFRESH_EXPIRED});
                     //  dataJson = {...dataJson, message: "Login Success!", result: { token } };
-                    return showApi.showResponse(res,"Login success!",{token});
+                    return showApi.showResponse(res,"Login success!",{token:accessToken,refreshToken});
                     // } else {
                     //     dataJson = {...dataJson, message: "User not authorized!", status: 404 };
                     //     return showApi.showError(dataJson);
@@ -54,6 +55,23 @@ const login = async(req, res) => {
         return showApi.showResponse(res,error.message,null,null,null,500);
     }
     
+};
+
+const refreshForToken = async(req,res)=>{
+    try{
+        const {email,refreshToken} = req.body;
+        const isTokenValid = verifyRefresh(email,refreshToken);
+        if(isTokenValid==true){
+            const result = await userModel.getDataUserEmailAsync(email, null);
+            const data = { id: result[0].id,role:result[0].role };
+            const accessToken = jwt.sign(data, APP_SECRET,{expiresIn:TOKEN_EXPIRED});
+            return showApi.showResponse(res,"refesh token success",{token:accessToken});
+        }else{
+            return showApi.showResponse(res,"Invalid token, try login again.",null,null,null,401);
+        }
+    }catch(error){
+        return showApi.showResponse(res,error.message,null,null,null,500);
+    }
 };
 
 const addCheckUser = async(data,validate,id)=>{
@@ -241,4 +259,4 @@ const forgotPassword = async(req, res) => {
    
 };
 
-module.exports = { login, register, forgotPassword, emailVerification };
+module.exports = { login, register,refreshForToken, forgotPassword, emailVerification };
