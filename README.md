@@ -98,7 +98,7 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```GET``` | /histories?sort=xx&order=xx | Get all data history by sorting and order |
 | ```GET``` | /histories/:id | Get data history by id |
 | ```POST``` | /histories | Create data history|
-| ```PUT``` | /histories/:id | update data history by id|
+| ```PATCH``` | /histories/:id | update data history by id|
 | ```DELETE``` | /histories/:id | delete data history by id|
 
 #### Search Endpoint
@@ -111,5 +111,11 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```GET``` | /search?rate_start=XX&&rate_end=xx | Get all data with range from price start until price end|
 | ```GET``` | /search?pagexx&limit=xx | Get all data with pagination |
 | ```GET``` | /search?sort=xx&order=xx | Get all data by sorting and order |
+
+#### Profile Endpoint
+| METHOD | API | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```GET``` | /profile | Get profile user account who login|
+
 
 
