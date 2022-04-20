@@ -29,7 +29,7 @@ const login = async(req, res) => {
   
                 if (checkPassword) {
                     const data = { id: result[0].id,role:result[0].role };
-                    const token = jwt.sign(data, APP_SECRET,{expiresIn:TOKEN_EXPIRED});
+                    const token = jwt.sign(data, APP_SECRET,{expiresIn:parseInt(TOKEN_EXPIRED)});
                     const refreshToken = jwt.sign({id:result[0].id}, APP_REFRESH_SECRET);
                     const dataRefreshToken = {user_id:result[0].id,token:refreshToken};
                     const inputRefreshToken = await refreshTokenModel.insertDataRefreshToken(dataRefreshToken);
