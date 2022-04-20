@@ -107,10 +107,10 @@ Links or end points provided to access user data, vehicles, history, categories,
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /search?name | Get all data by vehicle name|
-| ```GET``` | /search?category_id=xx&&status_id=xx&&location_id=xx&&isAvailable | Get all data vehicle by category id, status id,location id and isAvailable |
+| ```GET``` | /search?category_id=xx&status_id=xx&location_id=xx&isAvailable | Get all data vehicle by category id, status id,location id and isAvailable |
 | ```GET``` | /search?date=XX | Get all data by rent start date or end rent date|
-| ```GET``` | /search?price_start=XX&&price_end=xx | Get all data with range  from price start until price end|
-| ```GET``` | /search?rate_start=XX&&rate_end=xx | Get all data with range from price start until price end|
+| ```GET``` | /search?price_start=XX&price_end=xx | Get all data with range  from price start until price end|
+| ```GET``` | /search?rate_start=XX&rate_end=xx | Get all data with range from price start until price end|
 | ```GET``` | /search?pagexx&limit=xx | Get all data with pagination |
 | ```GET``` | /search?sort=xx&order=xx | Get all data by sorting and order |
 
