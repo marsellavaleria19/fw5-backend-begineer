@@ -209,14 +209,11 @@ const getPopularVehicle = async (request, response) => {
             const count  = await popularModel.countDataPopularVehicleAsync(data);
             const { total } = count[0];
             dataPages = {...dataPages,total};
-            // dataJson = {...dataJson, message: 'List Data Popular.', result: results, pagination };
             return showApi.showResponse(response,"List data popular vehicle",results,dataPages);
         } else {
-            // dataJson = {...dataJson, message: 'Data Popular not found.', status: 404 };
             return showApi.showResponse(response,"Data popular not found.",null,null,null,404);
         }
     } else {
-        //  dataJson = {...dataJson, message: 'Pagination not valid.', status: 400, error: validation.validationPagination(pagination) };
         return showApi.showResponse(response,"Pagination not valid",null,null,validate,400);
     }
 
