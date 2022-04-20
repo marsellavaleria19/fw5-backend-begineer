@@ -105,41 +105,7 @@ const getVehiclesAsync = async(req, res) => {
     }catch(error){
         return showApi.showResponse(res,error.message,null,null,null,500);
     }
-    
-
 };
-
-// const getVehiclesByMonth = async(req, res) => {
-//     let { month, page, limit, sort, order } = req.query;
-//     sort = sort || 'v.createdAt';
-//     month = month || new Date().getMonth();
-//     page = ((page != null && page !== '') ? parseInt(page) : 1);
-//     limit = ((limit != null && limit !== '') ? parseInt(limit) : 10);
-//     order = order || 'desc';
-//     let pagination = { page, limit };
-//     let dataJson = { response: res, message: '' };
-//     if (validation.validationPagination(pagination) == null) {
-//         const offset = (page - 1) * limit;
-//         let data = { month, limit, offset, sort, order };
-//         var results = await vehicleModel.getDataVehicles(data);
-//         if (results.length > 0) {
-//             vehicleModel.countDataVehicles(data, (count) => {
-//                 const { total } = count[0];
-//                 var route = `vehicles?month=${month}&limit=${limit}`;
-//                 pagination = {...pagination, total: total, route: route };
-//                 dataJson = {...dataJson, message: 'List Data Vehicles.', result: results, pagination };
-//                 return showApi.showSuccessWithPagination(dataJson, pagination);
-//             });
-//         } else {
-//             dataJson = {...dataJson, message: 'Data Vehicle not found', status: 404 };
-//             return showApi.showError(dataJson);
-//         }
-//     } else {
-//         dataJson = {...dataJson, message: 'Pagination not valid', status: 400, error: validation.validationPagination(pagination) };
-//         return showApi.showError(dataJson);
-//     }
-
-// };
 
 const getDataVehiclesByCategory = (req, res) => {
     let { search, page, limit, sort, order } = req.query;
@@ -171,7 +137,7 @@ const getDataVehiclesByCategoryAsync = async (req, res) => {
         const requirement = {
             id : 'required|number'
         };
-        const validateId = validation.validation(data,requirement);
+        const validateId = await validation.validation(data,requirement);
         if(Object.keys(validateId).length == 0){
             let { name, page, limit, sort, order} = req.query;
             name = name || '';
@@ -283,7 +249,7 @@ const getVehicleAsync = async(req, res) => {
             id : 'required|number'
         };
 
-        const validate = validation.validation(data,requirement);
+        const validate = await validation.validation(data,requirement);
         if(Object.keys(validate).length == 0){
             const results = await vehicleModel.getDataVehicleAsync(id);
             if (results.length > 0) {

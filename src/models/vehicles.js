@@ -40,7 +40,7 @@ exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
         sortOrderQuery = `LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`; 
     }
 
-    const query = db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
+    db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
     from vehicles v 
    join categories c on v.category_id = c.id 
    right join locations l on v.location_id = l.id
@@ -49,19 +49,6 @@ exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
         if (error) reject(error);
         resolve(results);
     });
-    console.log(query.sql);
-
-    //  const query = db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
-    //  from vehicles v 
-    // join categories c on v.category_id = c.id 
-    // right join locations l on v.location_id = l.id
-    // where v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
-    // ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
-    // LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, function(error, results) {
-    //      if (error) reject(error);
-    //      resolve(results);
-    //  });
-    //  console.log(query.sql);
 });
 
 exports.getDataVehiclesByCategory = (data, id, cb) => {
@@ -78,17 +65,25 @@ exports.getDataVehiclesByCategory = (data, id, cb) => {
 exports.getDataVehiclesByCategoryAsync = (data, id) => new Promise((resolve,reject)=>{
     var filled = [ "location_id","isAvailable"];
     var resultFillter = "";
+    var sortOrderQuery = null;
     filled.forEach((item) => {
         if (data.filter[item]) {
             resultFillter += ` and ${item}='${data.filter[item]}'`;
         }
     });
+
+    if(data.dataPages.sort!==null && data.dataPages.order!==null){
+        sortOrderQuery = `order by ${data.dataPages.sort} ${data.dataPages.order}
+      LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`;
+    }else{
+        sortOrderQuery = `LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`; 
+    }
+
     db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,l.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
     join categories c on v.category_id = c.id 
     right join locations l on v.location_id = l.id
    where v.category_id = ? and v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
-   ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
-   LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, [id], function(error, results) {
+   ${sortOrderQuery}`, [id], function(error, results) {
         if (error) reject(error);
         resolve(results);
     });
