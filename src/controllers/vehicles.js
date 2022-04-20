@@ -84,17 +84,27 @@ const getVehiclesAsync = async(req, res) => {
             dataPages = pagination.pagination(req.query,dataPages,filledFilter,sort,order);
             let data = {name,filter:dataPages.filter,dataPages};
             const dataVehicle = await vehicleModel.getDataVehiclesAsync(data);
+            console.log("masuk vehicle!!");
             if (dataVehicle.length > 0) {
+                console.log("masuk result vehicle!!");
                 dataVehicle.map((item)=>{
+                    console.log("masuk result vehicle1!!");
                     if(item.photo!==null){
+                        console.log("masuk result vehicle2!!");
                         if(!item.photo.includes('https')){
+                            console.log("masuk result vehicle3!!");
                             item.photo = `${APP_URL}/${item.photo}`;
+                            console.log("masuk result vehicle4!!");
                         }
                     }
                 });
+                console.log("masuk result vehicle5!!");
                 const count = await vehicleModel.countDataVehiclesAsync(data);
+                console.log("masuk count vehicle!!");
                 const { total } = count[0];
+                console.log("masuk count vehicle1!!");
                 dataPages = {...dataPages, total: total};
+                console.log("masuk count vehicle2!!");
                 return showApi.showResponse(res,"List Data Vehicle",dataVehicle,dataPages);
             } else {
                 return showApi.showResponse(res,"Data Vehicle not found",null,null,null,404);
