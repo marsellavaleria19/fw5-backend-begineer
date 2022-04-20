@@ -385,11 +385,7 @@ const updateHistoryAsync = async(request, response) => {
             };
 
             validate = await validation.validation(data,requirement);
-            if(Object.keys(validate).length == 0){
-                validate = {...validate,...addCheckRentDate(data)};
-            }else{
-                validate = {...validate,...addCheckRentDate(data)};
-            }
+            validate = {...validate,...addCheckRentDate(data)};
            
 
             const dataHistory = await historyModel.getDataHistoryAsync(id);
