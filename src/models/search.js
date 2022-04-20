@@ -44,7 +44,7 @@ exports.getDataSearchVehicle = (data) => new Promise((resolve, reject) => {
             // }
         }
     });
-    const query = db.query(`select distinct v.id,v.name as brand,concat('${APP_URL}/',v.photo) as photo,v.price,v.isAvailable,v.rate,l.location
+    const query = db.query(`select distinct v.id,v.name as brand,v.photo,v.price,v.isAvailable,v.rate,l.location
     from histories h right join vehicles v on h.vehicle_id = v.id left join payment_types pt on h.payment_id = pt.id right join categories c on c.id = v.category_id
     right join locations l on l.id = v.location_id
    where v.name like '%${data.name}%' ${resultFillter} ${data.date!=="" ? `and h.rentStartDate = '${data.date}' or h.rentEndDate='${data.date}'` : ""} 

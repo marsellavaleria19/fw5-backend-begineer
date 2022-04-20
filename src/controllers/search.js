@@ -3,6 +3,7 @@ const validation = require('../helpers/validation');
 const showApi = require('../helpers/showApi');
 const pagination = require('../helpers/pagination');
 const moment = require('moment');
+const { APP_URL } = process.env;
 
 const getSearchVehicle = async(req, res) => {
     try{
@@ -32,6 +33,11 @@ const getSearchVehicle = async(req, res) => {
                     if (item.rentStartDate !== null && item.rentEndDate) {
                         item.rentStartDate = moment(item.rentStartDate).format('DD MMM YYYY');
                         item.rentEndDate = moment(item.rentEndDate).format('DD MMM YYYY');
+                    }
+                    if(item.photo!==null){
+                        if(!item.photo.includes('https')){
+                            item.photo = `${APP_URL}/${item.photo}`;
+                        }
                     }
                 });
                 var result = await searchModel.countDataSearchVehicle(data);
