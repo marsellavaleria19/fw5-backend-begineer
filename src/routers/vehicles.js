@@ -1,5 +1,4 @@
 const vehicles = require('express').Router();
-const { verifyAdmin } = require('../helpers/auth');
 
 const {
     //  getVehicles,
@@ -28,11 +27,11 @@ vehicles.get('/:id', getVehicleAsync);
 
 // vehicles.get('/:id', cors(), getVehicle);
 // vehicles.post('/', upload.single('photo'), insertVehicle);
-vehicles.post('/', verifyAdmin, insertVehicleAsync);
+vehicles.post('/', insertVehicleAsync);
 // vehicles.put('/:id', updateVehicle);
-vehicles.put('/:id', verifyAdmin, updateVehicleAsync);
+vehicles.put('/:id', updateVehicleAsync);
 // vehicles.patch('/:id', updatePatchVehicle);
-vehicles.patch('/:id', verifyAdmin, updatePatchVehicleAsync);
+vehicles.patch('/:id', updatePatchVehicleAsync);
 // vehicles.delete('/:id', deleteVehicle);
-vehicles.delete('/:id', verifyAdmin, deleteVehicleAsync);
+vehicles.delete('/:id', deleteVehicleAsync);
 module.exports = vehicles;

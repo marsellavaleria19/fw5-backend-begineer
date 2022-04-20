@@ -307,40 +307,12 @@ const insertVehicle = (req, res) => {
     }
 };
 
-// const addCheckVehicle = async(data,validate)=>{
-//     var result = {}; 
-//     if(Object.keys(data).length > 0){
-//         if(!validate.category_id && data.category_id){
-//             const category = await cate
-//             if(dataVehicle.length == 0){
-//                 result.vehicle_id = "data vehicle not found";
-//             }
-//         }
-   
-//         if(!validate.user_id && data.user_id){
-//             const dataUser = await userModel.getDataUserAsync(data.user_id);
-//             if(dataUser.length == 0){
-//                 result.user_id = "data user not found";
-//             }
-//         }
-
-//         if(!validate.status_id && data.status_id){
-//             const dataStatus = await statusModel.getDataStatusAsync(data.status_id);
-//             console.log(dataStatus);
-//             if(dataStatus.length == 0){
-//                 result.status_id = "data status not found";
-//             }
-//         }
-//     }
-//     return result;
-// };
-
 const insertVehicleAsync = async(request, response) => {
     try{
         const count = await vehicleModel.countAllDataVehiclesAsync();
         request.fileUpload = "vehicle";
         upload(request, response, async function(errorUpload) {
-            auth.verifyUser(request, response, async(error) => {
+            auth.verifyAdmin(request, response, async(error) => {
                 const data = {
                     name: request.body.name,
                     category_id: request.body.category_id,
@@ -449,7 +421,7 @@ const updateVehicleAsync = (req, res) => {
     req.fileUpload = "vehicle";
     try{
         upload(req, res, async(errorUpload) => {
-            auth.verifyUser(req, res, async(error) => {
+            auth.verifyAdmin(req, res, async(error) => {
                 const { id } = req.params;
                 const dataId = {
                     id : id
@@ -557,7 +529,7 @@ const updatePatchVehicleAsync = (req, res) => {
     try{
         req.fileUpload = "vehicle";
         upload(req, res, (errorUpload) => {
-            auth.verifyUser(req, res, async(error) => {
+            auth.verifyAdmin(req, res, async(error) => {
                 const { id } = req.params;
                 
                 const dataId = {
@@ -662,8 +634,7 @@ const deleteVehicle = (req, res) => {
 const deleteVehicleAsync = async(req, res) => {
     try{
         upload(req, res, async(errorUpload) => {
-            auth.verifyUser(req, res, async(error) => {
-                console.log("masuk!!");
+            auth.verifyAdmin(req, res, async(error) => {
                 const { id } = req.params;
                 const dataId = {
                     id : id
