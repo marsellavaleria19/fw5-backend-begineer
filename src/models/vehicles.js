@@ -31,7 +31,8 @@ exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
             resultFillter += ` and ${item}='${data.filter[item]}'`;
         }
     });
-    const query = db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,l.location,v.price,v.qty,v.isAvailable,v.createdAt from vehicles v 
+    const query = db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
+    from vehicles v 
    join categories c on v.category_id = c.id 
    right join locations l on v.location_id = l.id
    where v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
