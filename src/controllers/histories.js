@@ -467,7 +467,7 @@ const updatePatchHistoryAsync = async(req, res) => {
                             requirement[value] = "number";
                         }
                         if(value=='qty'){
-                            requirement[value] = "number|grsther0";
+                            requirement[value] = "number|grather0";
                         }
                         if(value=="rentStartDate" || value=="rentEndDate"){
                             requirement[value] = 'date';
