@@ -25,23 +25,43 @@ exports.getDataVehicles = (data, cb) => {
 
 exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
     var filled = [ "location_id","category_id","isAvailable"];
+    var sortOrderQuery = null;
     var resultFillter = "";
     filled.forEach((item) => {
         if (data.filter[item]) {
             resultFillter += ` and ${item}='${data.filter[item]}'`;
         }
     });
+
+    if(data.dataPages.sort!==null && data.dataPages.order!==null){
+        sortOrderQuery = `order by ${data.dataPages.sort} ${data.dataPages.order}
+        LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`;
+    }else{
+        sortOrderQuery = `LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`; 
+    }
+
     const query = db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
     from vehicles v 
    join categories c on v.category_id = c.id 
    right join locations l on v.location_id = l.id
    where v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
-   ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
-   LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, function(error, results) {
+   ${sortOrderQuery}`, function(error, results) {
         if (error) reject(error);
         resolve(results);
     });
     console.log(query.sql);
+
+    //  const query = db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
+    //  from vehicles v 
+    // join categories c on v.category_id = c.id 
+    // right join locations l on v.location_id = l.id
+    // where v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
+    // ${data.dataPages.sort !==null ? 'order by'+' '+data.dataPages.sort : ''} ${data.dataPages.order!==null ? data.dataPages.order : ''}  
+    // LIMIT ${data.dataPages.limit} OFFSET ${data.dataPages.offset}`, function(error, results) {
+    //      if (error) reject(error);
+    //      resolve(results);
+    //  });
+    //  console.log(query.sql);
 });
 
 exports.getDataVehiclesByCategory = (data, id, cb) => {

@@ -92,10 +92,10 @@ const getVehiclesAsync = async(req, res) => {
                         }
                     }
                 });
-                //  const count = await vehicleModel.countDataVehiclesAsync(data);
-                //  const { total } = count[0];
-                //  dataPages = {...dataPages, total: total};
-                return showApi.showResponse(res,"List Data Vehicle",dataVehicle);
+                const count = await vehicleModel.countDataVehiclesAsync(data);
+                const { total } = count[0];
+                dataPages = {...dataPages, total: total};
+                return showApi.showResponse(res,"List Data Vehicle",dataVehicle,dataPages);
             } else {
                 return showApi.showResponse(res,"Data Vehicle not found",null,null,null,404);
             }
