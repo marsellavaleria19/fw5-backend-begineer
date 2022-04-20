@@ -81,7 +81,7 @@ const getHistoriesAsync = async(request, response) => {
         let dataPages = { page, limit };
         let requirement = {page:'number',limit:'number'};
         var filledFilter = ["search","category_id", "payment_id","status_id","date"];
-        let validate = validation.validation(dataPages,requirement);
+        let validate = await validation.validation(dataPages,requirement);
   
         if (Object.keys(validate).length == 0) {
             dataPages.route = "histories";
