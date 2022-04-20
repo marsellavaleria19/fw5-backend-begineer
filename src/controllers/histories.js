@@ -146,7 +146,7 @@ const getHistoryAsync = async(request, response) => {
         const requirement = {
             id : 'required|number'
         };
-        const validate = validation.validation(data,requirement);
+        const validate = await validation.validation(data,requirement);
         if (Object.keys(validate).length==0) {
             const result = await historyModel.getDataHistoryAsync(id);
             if (result.length > 0) {
