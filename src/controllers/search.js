@@ -18,7 +18,7 @@ const getSearchVehicle = async(req, res) => {
         limit = ((limit != null && limit !== '') ? limit : '10');
         let dataPages = { page, limit };
         let requirement = {page:'number',limit:'number'};
-        const validate = validation.validation(dataPages,requirement);
+        const validate = await validation.validation(dataPages,requirement);
         if(Object.keys(validate).length == 0){
             dataPages.route = "search";
             dataPages.page = parseInt(dataPages.page);
