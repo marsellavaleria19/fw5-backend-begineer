@@ -20,10 +20,13 @@ const { APP_URL } = process.env;
 // });
 
 exports.getDataSearchVehicle = (data) => new Promise((resolve, reject) => {
-    var filled = ["location_id", "type", "payment_id", "category_id",'isAvailable','rate','status_id'];
+    var filled = ["location_id","payment_id", "category_id",'isAvailable','rate','status_id'];
     var resultFillter = "";
     filled.forEach((item) => {
         if (data.filter[item]) {
+            if(resultFillter=="status_id"){
+                resultFillter += ` and h.${item}='${data.filter[item]}'`;
+            }
             resultFillter += ` and v.${item}='${data.filter[item]}'`;
             // if(item!=='no_prepayment'){
             //     if(item=="location" || item=='type' || item=="isAvailable" || item=='category_id' || item=='rate'){
@@ -41,8 +44,9 @@ exports.getDataSearchVehicle = (data) => new Promise((resolve, reject) => {
             // }
         }
     });
-    const query = db.query(`select distinct v.id,v.name as brand,concat('${APP_URL}/',v.photo) as photo,v.price,v.isAvailable,v.rate
+    const query = db.query(`select distinct v.id,v.name as brand,concat('${APP_URL}/',v.photo) as photo,v.price,v.isAvailable,v.rate,l.location
     from histories h right join vehicles v on h.vehicle_id = v.id left join payment_types pt on h.payment_id = pt.id right join categories c on c.id = v.category_id
+    right join locations l on l.id = v.location_id
    where v.name like '%${data.name}%' ${resultFillter} ${data.date!=="" ? `and h.rentStartDate = '${data.date}' or h.rentEndDate='${data.date}'` : ""} 
    ${data.price_start!==""  && data.price_end!=="" ? `and v.price between '${data.price_start}' and '${data.price_end}'` : ""}
    ${data.rate_start!==""  && data.rate_end!=="" ? `and v.rate between '${data.rate_start}' and '${data.rate_end}'` : ""}

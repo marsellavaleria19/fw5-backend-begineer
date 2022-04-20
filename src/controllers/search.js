@@ -13,7 +13,7 @@ const getSearchVehicle = async(req, res) => {
         price_end = price_end || '';
         rate_start  = rate_start || '';
         rate_end = rate_end || '';
-        var filledFilter = ["name","location", "category_id", "payment_id",'isAvailable','status_id','price_start','price_end','rate_start','rate_end'];
+        var filledFilter = ["name","location_id", "category_id", "payment_id",'isAvailable','status_id','price_start','price_end','rate_start','rate_end'];
         page = ((page != null && page !== '') ? page : '1');
         limit = ((limit != null && limit !== '') ? limit : '10');
         let dataPages = { page, limit };
