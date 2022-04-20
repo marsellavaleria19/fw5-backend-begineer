@@ -13,7 +13,8 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```GET``` | /users?sort=xx&order=xx | Get data user by sorting and order |
 | ```GET``` | /users/:id | Get data user by id |
 | ```POST``` | /users | Create data user|
-| ```PUT``` | /users/:id | update data user by id|
+| ```PUT``` | /users/:id | update all data user by id|
+| ```PATCH``` | /users/:id | update partial data user by id|
 | ```DELETE``` | /users/:id | delete data user by id|
 
 #### Category Endpoint
@@ -84,7 +85,7 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```GET``` | /vehicles/popular | Get the most popular data vehicle |
 | ```GET``` | /vehicles/:id | Get data vehicle by id |
 | ```POST``` | /vehicles | Create data vehicle|
-| ```PUT``` | /vehicles/:id | update data vehicle by id|
+| ```PATCH``` | /vehicles/:id | update partial data vehicle by id|
 | ```DELETE``` | /vehicles/:id | delete data vehicle by id|
 
 #### History Endpoint
@@ -98,7 +99,8 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```GET``` | /histories?sort=xx&order=xx | Get all data history by sorting and order |
 | ```GET``` | /histories/:id | Get data history by id |
 | ```POST``` | /histories | Create data history|
-| ```PATCH``` | /histories/:id | update data history by id|
+| ```PUT``` | /payment-types/:id | update all data history by id|
+| ```PATCH``` | /histories/:id | update partial data history by id|
 | ```DELETE``` | /histories/:id | delete data history by id|
 
 #### Search Endpoint
