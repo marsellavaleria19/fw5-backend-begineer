@@ -475,8 +475,8 @@ const updatePatchHistoryAsync = async(req, res) => {
                         if(value=="status_id"){
                             requirement[value] = 'number|checkStatus';
                         }
-                        if(value=="status_id"){
-                            requirement[value] = 'number|checkStatus';
+                        if(value=="payment_id"){
+                            requirement[value] = 'number|checkPayment';
                         }
                         if(value=="user_id"){
                             requirement[value] = 'number|checkUser';
