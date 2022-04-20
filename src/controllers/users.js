@@ -314,6 +314,7 @@ const updateUser = (request, response) => {
 
 const updateUserAsync = async(request, response) => {
     try{
+        request.fileUpload = "user";
         upload(request, response, (errorUpload) => {
             auth.verifyAll(request, response, async(error) => {
                 const { id } = request.params;
@@ -426,6 +427,7 @@ const updatePatchUser = (request, response) => {
 
 const updatePatchUserAsync = (request, response) => {
     try{
+        request.fileUpload = "user";
         upload(request, response, (errorUpload) => {
             auth.verifyAll(request, response, async(error) => {
                 const { id } = request.params;
