@@ -158,7 +158,10 @@ exports.getDataVehicle = (id, cb) => {
 };
 
 exports.getDataVehicleAsync = (id) => new Promise((resolve, reject) => {
-    db.query('select v.id,v.name,v.category_id,c.name category,v.photo,v.location,v.price,v.qty,v.isAvailable from vehicles v join categories c on v.category_id = c.id WHERE v.id=?', [id], (err, res) => {
+    db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,l.location,v.price,v.qty,v.isAvailable 
+    from vehicles v join categories c on v.category_id = c.id 
+    right join locations l on v.location_id = l.id
+    WHERE v.id=?`, [id], (err, res) => {
         if (err) reject(err);
         resolve(res);
     });
