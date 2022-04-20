@@ -49,9 +49,10 @@ Not only that, this program can access endpoints for the most popular vehicles.
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /vehicles | Get all data vehicle|
-| ```GET``` | /vehicles?search=xx | Get all data vehicle by search |
+| ```GET``` | /vehicles?name=xx | Get all data vehicle by name |
 | ```GET``` | /vehicles?pagexx&limit=xx | Get all data vehicle with pagination |
 | ```GET``` | /vehicles?sort=xx&order=xx | Get data vehicle by sorting and order |
+| ```GET``` | /vehicles/category/:id | Get data vehicle by category |
 | ```GET``` | /vehicles/:id | Get data vehicle by id |
 | ```POST``` | /vehicles | Create data vehicle|
 | ```PUT``` | /vehicles/:id | update data vehicle by id|
