@@ -1,5 +1,5 @@
 const histories = require('express').Router();
-const { verifyUser } = require('../helpers/auth');
+const { verifyUser,verifyAdmin } = require('../helpers/auth');
 const {
     //  getHistories,
     getHistoriesAsync,
@@ -15,15 +15,15 @@ const {
     deleteHistoryAsync
 } = require('../controllers/histories');
 // histories.get('/', verifyUser, getHistories);
-histories.get('/', verifyUser, getHistoriesAsync);
+histories.get('/', getHistoriesAsync);
 // histories.get('/:id',verifyUser, getHistory);
-histories.get('/:id', verifyUser, getHistoryAsync);
+histories.get('/:id', getHistoryAsync);
 // histories.post('/', insertHistory);
 histories.post('/', verifyUser, insertHistoryAsync);
 // histories.put('/:id', updateHistory);
-histories.put('/:id', verifyUser, updateHistoryAsync);
-histories.patch('/:id', verifyUser, updatePatchHistoryAsync);
+histories.put('/:id', verifyAdmin, updateHistoryAsync);
+histories.patch('/:id', verifyAdmin, updatePatchHistoryAsync);
 // histories.delete('/:id', verifyUser, deleteHistory);
-histories.delete('/:id', verifyUser, deleteHistoryAsync);
+histories.delete('/:id', verifyAdmin, deleteHistoryAsync);
 
 module.exports = histories;
