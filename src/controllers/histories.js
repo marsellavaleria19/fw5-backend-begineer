@@ -263,10 +263,7 @@ const insertHistoryAsync = async(request, response) => {
         };
 
         var validate = await validation.validation(data,requirement);
-        if(Object.keys(validate).length==0){
-            validate = validation.validation(data,requirement);
-            validate = {...validate,...addCheckRentDate(data)};
-        }
+        validate = {...validate,...addCheckRentDate(data)};
 
         if (Object.keys(validate).length == 0) {
             data.rentStartDate = moment(data.rentStartDate).format('YYYY-MM-DD');
