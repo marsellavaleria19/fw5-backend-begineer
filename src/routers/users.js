@@ -20,11 +20,11 @@ users.get('/', getUsersAsync);
 // users.get('/:id', getUser);
 users.get('/:id', getUserAsync);
 // users.post('/', insertUser);
-users.post('/', insertUserAsync);
+users.post('/', insertUserAsync); // verify admin in controller
 // users.put('/:id', updateUser);
-users.put('/:id',updateUserAsync);
+users.put('/:id',updateUserAsync); // // verify admin in controller
 // users.patch('/:id', updatePatchUser);
-users.patch('/:id',updatePatchUserAsync);
+users.patch('/:id',updatePatchUserAsync); // verify admin in controller
 // users.delete('/:id', deleteUser);
-users.delete('/:id',deleteUserAsync);
+users.delete('/:id',deleteUserAsync); // verify admin in controller
 module.exports = users;

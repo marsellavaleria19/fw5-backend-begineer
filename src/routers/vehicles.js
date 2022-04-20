@@ -27,11 +27,11 @@ vehicles.get('/:id', getVehicleAsync);
 
 // vehicles.get('/:id', cors(), getVehicle);
 // vehicles.post('/', upload.single('photo'), insertVehicle);
-vehicles.post('/', insertVehicleAsync);
+vehicles.post('/', insertVehicleAsync); // verify admin in controller
 // vehicles.put('/:id', updateVehicle);
-vehicles.put('/:id', updateVehicleAsync);
+vehicles.put('/:id', updateVehicleAsync); // verify admin in controller
 // vehicles.patch('/:id', updatePatchVehicle);
-vehicles.patch('/:id', updatePatchVehicleAsync);
+vehicles.patch('/:id', updatePatchVehicleAsync); // verify admin in controller
 // vehicles.delete('/:id', deleteVehicle);
-vehicles.delete('/:id', deleteVehicleAsync);
+vehicles.delete('/:id', deleteVehicleAsync);  // verify admin in controller
 module.exports = vehicles;
