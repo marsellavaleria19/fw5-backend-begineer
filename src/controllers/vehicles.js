@@ -146,7 +146,7 @@ const getDataVehiclesByCategoryAsync = async (req, res) => {
             let dataPages = { page, limit };
             let requirement = {page:'number',limit:'number'};
             var filledFilter = ["name","isAvailable",'location_id'];
-            let validate = validation.validation(dataPages,requirement);
+            let validate = await validation.validation(dataPages,requirement);
    
             if(Object.keys(validate).length == 0){
                 dataPages.route = `vehicles/category/${id}`;
