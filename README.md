@@ -1,19 +1,14 @@
-# fw5-backend-beginner
-
-## ABOUT
-This is the repository API Backend of Rent Vehicle.
+# RVRENTAL BACKEND
 
 ## DESCRIPTION
-This is an API program for Vehicle Rentals.
-This program can process data in the Vehicle rental database by accessing existing links or endpoints. 
-The link or end point provided to access user, vehicle, history, category, status data that has been. 
-Not only that, this program can access endpoints for the most popular vehicles.
+This is the Backend API repository from RVRental. This repository generates a program that can access RV Rental data with an API. This program can make it easier for us to retrieve data from the database by accessing the available links or endpoints.
+Links or end points provided to access user data, vehicles, history, categories, status and others.
  
 #### User Endpoint
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /users | Get all data user|
-| ```GET``` | /users?search=xx | Get all data user by search |
+| ```GET``` | /users?name=xx | Get all data user by name |
 | ```GET``` | /users?pagexx&limit=xx | Get all data User with pagination |
 | ```GET``` | /users?sort=xx&order=xx | Get data user by sorting and order |
 | ```GET``` | /users/:id | Get data user by id |
@@ -25,7 +20,7 @@ Not only that, this program can access endpoints for the most popular vehicles.
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /categories | Get all data category|
-| ```GET``` | /categories?search=xx | Get all data category by search |
+| ```GET``` | /categories?search=xx | Get all data category by category name |
 | ```GET``` | /categories?pagexx&limit=xx | Get all data category with pagination |
 | ```GET``` | /categories?sort=xx&order=xx | Get data category by sorting and order |
 | ```GET``` | /categories/:id | Get data category by id |
@@ -37,13 +32,49 @@ Not only that, this program can access endpoints for the most popular vehicles.
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /status | Get all data status|
-| ```GET``` | /status?search=xx | Get all data status by search |
+| ```GET``` | /status?search=xx | Get all data status by status name |
 | ```GET``` | /status?pagexx&limit=xx | Get all data status with pagination |
 | ```GET``` | /status?sort=xx&order=xx | Get data status by sorting and order |
 | ```GET``` | /status/:id | Get data status by id |
 | ```POST``` | /status | Create data status|
 | ```PUT``` | /status/:id | update data status by id|
 | ```DELETE``` | /status/:id | delete data status by id|
+
+#### Location Endpoint
+| METHOD | API | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```GET``` | /locations | Get all data location|
+| ```GET``` | /locations?search=xx | Get all data location by location name |
+| ```GET``` | /locations?pagexx&limit=xx | Get all data location with pagination |
+| ```GET``` | /locations?sort=xx&order=xx | Get data location by sorting and order |
+| ```GET``` | /locations/:id | Get data location by id |
+| ```POST``` | /locations | Create data location|
+| ```PUT``` | /locations/:id | update data location by id|
+| ```DELETE``` | /locations/:id | delete data location by id|
+
+#### payment type Endpoint
+| METHOD | API | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```GET``` | /payment-types | Get all data payment type |
+| ```GET``` | /payment-types?search=xx | Get all data payment type by payment type name |
+| ```GET``` | /payment-types?pagexx&limit=xx | Get all data payment type with pagination |
+| ```GET``` | /payment-types?sort=xx&order=xx | Get data payment type by sorting and order |
+| ```GET``` | /payment-types/:id | Get data  payment type by id |
+| ```POST``` | /payment-types | Create data payment type|
+| ```PUT``` | /payment-types/:id | update data payment type by id|
+| ```DELETE``` | /payment-types/:id | delete data payment type by id|
+
+#### Authentication Endpoint
+| METHOD | API | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```POST``` | /auth/login | Get all data payment type |
+| ```GET``` | /payment-types?search=xx | Get all data payment type by payment type name |
+| ```GET``` | /payment-types?pagexx&limit=xx | Get all data payment type with pagination |
+| ```GET``` | /payment-types?sort=xx&order=xx | Get data payment type by sorting and order |
+| ```GET``` | /payment-types/:id | Get data  payment type by id |
+| ```POST``` | /payment-types | Create data payment type|
+| ```PUT``` | /payment-types/:id | update data payment type by id|
+| ```DELETE``` | /payment-types/:id | delete data payment type by id|
 
 #### Vehicle Endpoint
 | METHOD | API | REMARKS |
@@ -70,11 +101,3 @@ Not only that, this program can access endpoints for the most popular vehicles.
 | ```PUT``` | /histories/:id | update data history by id|
 | ```DELETE``` | /histories/:id | delete data history by id|
 
-#### Popular Endpoint
-| METHOD | API | REMARKS |
-| :-------------: |:-------------:|:-----------:|
-| ```GET``` | /popular | Get all data popular vehicle|
-| ```GET``` | /popular?search=xx | Get all data popular vehicle by search |
-| ```GET``` | /popular?pagexx&limit=xx | Get all data popular vehicle with pagination |
-| ```GET``` | /popular?sort=xx&order=xx | Get all data popular vehicle by sorting and order |
-| ```GET``` | /popular?month | Get all data popular vehicle by month |
