@@ -67,14 +67,11 @@ Links or end points provided to access user data, vehicles, history, categories,
 #### Authentication Endpoint
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
-| ```POST``` | /auth/login | Get all data payment type |
-| ```GET``` | /payment-types?search=xx | Get all data payment type by payment type name |
-| ```GET``` | /payment-types?pagexx&limit=xx | Get all data payment type with pagination |
-| ```GET``` | /payment-types?sort=xx&order=xx | Get data payment type by sorting and order |
-| ```GET``` | /payment-types/:id | Get data  payment type by id |
-| ```POST``` | /payment-types | Create data payment type|
-| ```PUT``` | /payment-types/:id | update data payment type by id|
-| ```DELETE``` | /payment-types/:id | delete data payment type by id|
+| ```POST``` | /auth/login | used for logging into an application with a pre-registered account |
+| ```POST``` | /auth/register | used for register an account for users who do not have an account |
+| ```POST``` | /auth/forgotpassword | used if the user forgets his account password. |
+| ```POST``` | /auth/emailverification | used to verify the user account that the user has previously registered. |
+| ```POST``` | /auth/refresh | used to get new access token with refresh token ||
 
 #### Vehicle Endpoint
 | METHOD | API | REMARKS |
@@ -84,6 +81,7 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```GET``` | /vehicles?pagexx&limit=xx | Get all data vehicle with pagination |
 | ```GET``` | /vehicles?sort=xx&order=xx | Get data vehicle by sorting and order |
 | ```GET``` | /vehicles/category/:id | Get data vehicle by category |
+| ```GET``` | /vehicles/popular | Get the most popular data vehicle |
 | ```GET``` | /vehicles/:id | Get data vehicle by id |
 | ```POST``` | /vehicles | Create data vehicle|
 | ```PUT``` | /vehicles/:id | update data vehicle by id|
@@ -93,11 +91,25 @@ Links or end points provided to access user data, vehicles, history, categories,
 | METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /histories | Get all data vehicle|
-| ```GET``` | /histories?search=xx | Get all data history by search |
+| ```GET``` | /histories?search=xx | Get all data history by vehicle name |
+| ```GET``` | /histories?category_id=xx&&status_id=xx&&date=XX | Get all data history by category_id and status_id|
+| ```GET``` | /histories?date=XX | Get all data history by rent start date or end rent date|
 | ```GET``` | /histories?pagexx&limit=xx | Get all data history with pagination |
 | ```GET``` | /histories?sort=xx&order=xx | Get all data history by sorting and order |
 | ```GET``` | /histories/:id | Get data history by id |
 | ```POST``` | /histories | Create data history|
 | ```PUT``` | /histories/:id | update data history by id|
 | ```DELETE``` | /histories/:id | delete data history by id|
+
+#### Search Endpoint
+| METHOD | API | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```GET``` | /search?name | Get all data by vehicle name|
+| ```GET``` | /search?category_id=xx&&status_id=xx&&location_id=xx&&isAvailable | Get all data vehicle by category id, status id,location id and isAvailable |
+| ```GET``` | /search?date=XX | Get all data by rent start date or end rent date|
+| ```GET``` | /search?price_start=XX&&price_end=xx | Get all data with range  from price start until price end|
+| ```GET``` | /search?rate_start=XX&&rate_end=xx | Get all data with range from price start until price end|
+| ```GET``` | /search?pagexx&limit=xx | Get all data with pagination |
+| ```GET``` | /search?sort=xx&order=xx | Get all data by sorting and order |
+
 
