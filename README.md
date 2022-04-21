@@ -72,7 +72,6 @@ Links or end points provided to access user data, vehicles, history, categories,
 | ```POST``` | /auth/register | used for register an account for users who do not have an account |
 | ```POST``` | /auth/forgotpassword | used if the user forgets his account password. |
 | ```POST``` | /auth/emailverification | used to verify the user account that the user has previously registered. |
-| ```POST``` | /auth/refresh | used to get new access token with refresh token ||
 
 #### Vehicle Endpoint
 | METHOD | API | REMARKS |
@@ -119,8 +118,9 @@ Links or end points provided to access user data, vehicles, history, categories,
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /profile | Get profile user account who login|
 
-## INSTALL APPLICATION
+## INSTALLATION
 step for install application :
+1. clone 
 1. Create an .env file, then fill it with the following configuration:
   ### Application Configuration
   | CONFIG | DESCRPTION | REMARKS |
