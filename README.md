@@ -119,5 +119,45 @@ Links or end points provided to access user data, vehicles, history, categories,
 | :-------------: |:-------------:|:-----------:|
 | ```GET``` | /profile | Get profile user account who login|
 
+## INSTALL APPLICATION
+step for install application :
+1. Create an .env file, then fill it with the following configuration:
+  ### Application Configuration
+  | CONFIG | DESCRPTION | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+|APP_URL| filled with url API | example : http://localhost:5000|
+|APP_PORT|filled with port API port has make in application | (example : 5000) |
+|APP_SECRET|filled with secret key for sign jwt to get access token|(example : B4ck3nDEng1nn3r) |
+|APP_REFRESH_SECRET|filled with secret key for sign jwt to get access refresh token. |(example : B4ck3nDEng1nn3rR3fr3sh)|
+|TOKEN_EXPIRED|filled with time token will expred |example : 3600 (token will expried in 1 hour)|
 
+ ### Email Configuration
+  | CONFIG | DESCRPTION | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+|APP_EMAIL|filled with email that will be used to send email to user. | |
+|APP_EMAILPASS|filled with email that will be used to send email to user|  |
+|SMTP_HOST|filled with smtp host will be used to send email to user | example : smtp.gmail.com (because email will be send by gmail account, so i use smtp gmail)|
+|SMTP_PORT|filled with smtp port will be used to send email to user. |example : 465 (smtp port gmail)|
 
+ ### Database Configuration
+  | CONFIG | DESCRPTION | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+|DB_HOST|filled with databse host. | example : localhost (because i use xampp, so i filled with 'localhost') |
+|DB_USER|filled with database username|example : root (because i use php my admin, so i filled with 'root')|
+|DB_PASSWORD|filled with database passord, if any| |
+|DB_NAME|filled with database name you make in database tools |example : vehicle_rent (because i make database vehicle_rent in php my admin)|
+
+ ### Cloudinary Configuration -- for save image 
+ Setting coludinary from account detail in dashboard cloudinary website, like this picture.
+ ![image](https://user-images.githubusercontent.com/44119106/164345872-5311e5bc-8916-48c6-b2ba-399db4e374d4.png)
+
+  | CONFIG | DESCRPTION |
+| :-------------: |:-------------:|
+|CLOUD_NAME|filled with cloud name |
+|CLOUD_API_KEY|filled with APY key |
+|CLOUD_API_SECRET|filled with API secret|
+
+ ### Environment Configuration 
+  | CONFIG | DESCRPTION |REMARKS
+| :-------------: |:-------------:|:-------------:|
+|ENVIRONMENT|filled with 'production' or 'development' | if filled with production then url image from cloudinary, else url will localhost.| 
