@@ -120,8 +120,8 @@ Links or end points provided to access user data, vehicles, history, categories,
 
 ## INSTALLATION
 step for install application :
-1. clone 
-1. Create an .env file, then fill it with the following configuration:
+1. clone github with runing code ```git clone https://github.com/marsellavaleria19/rvrental-backend.git``` in git terminal.
+2. Create an .env file, then fill it with the following configuration:
   ### Application Configuration
   | CONFIG | DESCRPTION | REMARKS |
 | :-------------: |:-------------:|:-----------:|
@@ -162,8 +162,8 @@ step for install application :
 | :-------------: |:-------------:|:-------------:|
 |ENVIRONMENT|filled with 'production' or 'development' | if filled with production then image will upload to cloudinary, else url will upload to localhost.|
 
-2. install package with  ```npm install```
-3. run application with  ```npm run dev``` 
+3. install package with running code ```npm install``` in terminal
+4. run application with running code ```npm run dev``` in terminal 
 
 ## DEPLOY APPLICATION
 I deploy to heroku website, so step deploy in heroku :
