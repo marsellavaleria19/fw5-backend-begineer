@@ -147,7 +147,7 @@ step for install application :
 |DB_PASSWORD|filled with database passord, if any| |
 |DB_NAME|filled with database name you make in database tools |example : vehicle_rent (because i make database vehicle_rent in php my admin)|
 
- ### Cloudinary Configuration -- for save image 
+ ### Cloudinary Configuration -- for upload image 
  Setting coludinary from account detail in dashboard cloudinary website, like this picture.
  ![image](https://user-images.githubusercontent.com/44119106/164345872-5311e5bc-8916-48c6-b2ba-399db4e374d4.png)
 
@@ -160,4 +160,13 @@ step for install application :
  ### Environment Configuration 
   | CONFIG | DESCRPTION |REMARKS
 | :-------------: |:-------------:|:-------------:|
-|ENVIRONMENT|filled with 'production' or 'development' | if filled with production then url image from cloudinary, else url will localhost.| 
+|ENVIRONMENT|filled with 'production' or 'development' | if filled with production then image will upload to cloudinary, else url will upload to localhost.|
+
+2. install package with  ```npm install```
+3. run application with  ```npm run dev``` 
+
+## DEPLOY APPLICATION
+I deploy to heroku website, so step deploy in heroku :
+1. Make account in heroku.
+2. if you already have account, login with acount and you will redirect to dashboard like this :
+![image](https://user-images.githubusercontent.com/44119106/164350079-85ffe4d2-7231-4890-9563-e757480d30fb.png)
