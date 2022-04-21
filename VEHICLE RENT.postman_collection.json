@@ -14,17 +14,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/users",
+							"raw": "{{developmentVehicleURL}}/users?sort=id&order=desc",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"users"
 							],
 							"query": [
 								{
-									"key": "search",
-									"value": "iskandar",
+									"key": "name",
+									"value": "ani",
 									"disabled": true
 								},
 								{
@@ -39,13 +39,11 @@
 								},
 								{
 									"key": "sort",
-									"value": "birthDate",
-									"disabled": true
+									"value": "id"
 								},
 								{
 									"key": "order",
-									"value": "desc",
-									"disabled": true
+									"value": "desc"
 								}
 							]
 						}
@@ -65,9 +63,9 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/:id",
+							"raw": "{{developmentVehicleURL}}/users/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"users",
@@ -76,7 +74,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "2"
+									"value": "4"
 								}
 							]
 						}
@@ -93,42 +91,42 @@
 							"formdata": [
 								{
 									"key": "fullName",
-									"value": "abababab",
+									"value": "aaaa",
 									"type": "text"
 								},
 								{
 									"key": "nickName",
-									"value": "bbbbb",
+									"value": "bbbb",
 									"type": "text"
 								},
 								{
 									"key": "gender",
-									"value": "Femaile",
+									"value": "Male",
 									"type": "text"
 								},
 								{
 									"key": "address",
-									"value": "vvvvv",
+									"value": "aaaa",
 									"type": "text"
 								},
 								{
 									"key": "birthDate",
-									"value": "2022/09/08",
+									"value": "2022-01-22",
 									"type": "text"
 								},
 								{
 									"key": "mobileNumber",
-									"value": "dsddsds",
+									"value": "08124445544",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "aaaabbb@gmail.com",
+									"value": "aaa@mail.com",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "xxxxx",
+									"value": "aaa01",
 									"type": "text"
 								},
 								{
@@ -137,16 +135,21 @@
 									"type": "text"
 								},
 								{
+									"key": "role",
+									"value": "customer",
+									"type": "text"
+								},
+								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/SELLA/Pictures/sertifikat laravue.JPG"
+									"src": "/C:/Users/SELLA/Pictures/oceanicon.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/users",
+							"raw": "{{developmentVehicleURL}}/users",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"users"
@@ -185,22 +188,22 @@
 								},
 								{
 									"key": "birthDate",
-									"value": "2001/09/18",
+									"value": "2022-01-24",
 									"type": "text"
 								},
 								{
 									"key": "mobileNumber",
-									"value": "0902930239",
+									"value": "0821234343",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "delin@gmail.com",
+									"value": "delin@mail.com",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "delin_18",
+									"value": "delin01",
 									"type": "text"
 								},
 								{
@@ -209,16 +212,21 @@
 									"type": "text"
 								},
 								{
+									"key": "role",
+									"value": "customer",
+									"type": "text"
+								},
+								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/SELLA/Pictures/Psikotes Marsella.PNG"
+									"src": "/C:/Users/SELLA/Pictures/dark34.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/:id",
+							"raw": "{{developmentVehicleURL}}/users/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"users",
@@ -227,7 +235,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "17"
+									"value": "14"
 								}
 							]
 						}
@@ -256,9 +264,8 @@
 								},
 								{
 									"key": "gender",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "Female",
+									"type": "text"
 								},
 								{
 									"key": "address",
@@ -268,25 +275,29 @@
 								},
 								{
 									"key": "birthDate",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "2022-01-09",
+									"type": "text"
 								},
 								{
 									"key": "mobileNumber",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "081234567",
+									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "deniall@gmail.com",
+									"value": "dogsegies@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "danial08",
+									"value": "ani01",
 									"type": "text"
+								},
+								{
+									"key": "isVerified",
+									"value": "1",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "password",
@@ -297,14 +308,14 @@
 								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/SELLA/Pictures/leetcode1.JPG"
+									"src": "/C:/Users/SELLA/Pictures/Danbo.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/:id",
+							"raw": "{{developmentVehicleURL}}/users/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"users",
@@ -313,7 +324,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "17"
+									"value": "4"
 								}
 							]
 						}
@@ -330,9 +341,9 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/:id",
+							"raw": "{{developmentVehicleURL}}/users/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"users",
@@ -341,7 +352,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "4"
+									"value": "24"
 								}
 							]
 						}
@@ -359,18 +370,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/vehicles",
+							"raw": "{{developmentVehicleURL}}/vehicles?name=honda",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"vehicles"
 							],
 							"query": [
 								{
-									"key": "search",
-									"value": "honda",
-									"disabled": true
+									"key": "name",
+									"value": "honda"
 								},
 								{
 									"key": "page",
@@ -384,12 +394,12 @@
 								},
 								{
 									"key": "sort",
-									"value": "location",
+									"value": "id",
 									"disabled": true
 								},
 								{
 									"key": "order",
-									"value": "asc",
+									"value": "desc",
 									"disabled": true
 								}
 							]
@@ -410,9 +420,9 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "{{baseURL}}/vehicles/:id",
+							"raw": "{{developmentVehicleURL}}/vehicles/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"vehicles",
@@ -421,7 +431,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "34"
 								}
 							]
 						}
@@ -434,9 +444,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/vehicles/category/:id",
+							"raw": "{{developmentVehicleURL}}/vehicles/category/:id?sort=id&order=desc",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"vehicles",
@@ -451,13 +461,11 @@
 								},
 								{
 									"key": "sort",
-									"value": null,
-									"disabled": true
+									"value": "id"
 								},
 								{
 									"key": "order",
-									"value": null,
-									"disabled": true
+									"value": "desc"
 								}
 							],
 							"variable": [
@@ -486,17 +494,17 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Fixie Gray",
+									"value": "aaaa",
 									"type": "text"
 								},
 								{
 									"key": "category_id",
-									"value": "1",
+									"value": "2",
 									"type": "text"
 								},
 								{
-									"key": "location",
-									"value": "Yogyakarta",
+									"key": "location_id",
+									"value": "4",
 									"type": "text"
 								},
 								{
@@ -506,92 +514,33 @@
 								},
 								{
 									"key": "qty",
-									"value": "5",
+									"value": "8",
 									"type": "text"
 								},
 								{
 									"key": "isAvailable",
 									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "ddefefefef",
 									"type": "text"
 								},
 								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/SELLA/Documents/Fazztrack/fw5-react-frontend-tugas/src/assets/images/bike4.png"
+									"src": "/C:/Users/SELLA/Pictures/portofolio/loginadmin.JPG"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/vehicles",
+							"raw": "{{developmentVehicleURL}}/vehicles",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"vehicles"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE VEHICLE",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "Kawasaki Ninja",
-									"type": "text"
-								},
-								{
-									"key": "category_id",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "photo",
-									"value": "4.jpg",
-									"type": "text"
-								},
-								{
-									"key": "location",
-									"value": "Jakarta",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "2000000",
-									"type": "text"
-								},
-								{
-									"key": "qty",
-									"value": "4",
-									"type": "text"
-								},
-								{
-									"key": "isAvailable",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseURL}}/vehicles/:id",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"vehicles",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "30"
-								}
 							]
 						}
 					},
@@ -607,51 +556,46 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "Fixie Gray",
+									"type": "text"
 								},
 								{
 									"key": "category_id",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "1",
+									"type": "text"
 								},
 								{
-									"key": "location",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"key": "location_id",
+									"value": "1",
+									"type": "text"
 								},
 								{
 									"key": "price",
 									"value": "",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "qty",
 									"value": "",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "isAvailable",
 									"value": "",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/SELLA/Downloads/yamaha-fazzio.jpeg"
+									"src": "/C:/Users/SELLA/Documents/Fazztrack/fw5-backend-begineer(tugas)/uploads/fixie-gray.png",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/vehicles/:id",
+							"raw": "{{developmentVehicleURL}}/vehicles/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"vehicles",
@@ -660,7 +604,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "29"
+									"value": "34"
 								}
 							]
 						}
@@ -673,9 +617,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}} /vehicles/:id",
+							"raw": "{{developmentVehicleURL}}/vehicles/:id",
 							"host": [
-								"{{baseURL}} "
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"vehicles",
@@ -684,7 +628,35 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "11"
+									"value": "44"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST POPULAR VEHICLE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/vehicles/popular?sort=total&order=desc",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"vehicles",
+								"popular"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "total"
+								},
+								{
+									"key": "order",
+									"value": "desc"
 								}
 							]
 						}
@@ -702,9 +674,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}} /histories",
+							"raw": "{{developmentVehicleURL}}/histories?search=TOYOTA&sort=id&order=desc",
 							"host": [
-								"{{baseURL}} "
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"histories"
@@ -712,8 +684,7 @@
 							"query": [
 								{
 									"key": "search",
-									"value": "TOYOTA",
-									"disabled": true
+									"value": "TOYOTA"
 								},
 								{
 									"key": "limit",
@@ -724,6 +695,34 @@
 									"key": "page",
 									"value": "2",
 									"disabled": true
+								},
+								{
+									"key": "location",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "status_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "date",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
 								}
 							]
 						}
@@ -736,9 +735,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}} /histories/:id",
+							"raw": "{{developmentVehicleURL}}/histories/:id",
 							"host": [
-								"{{baseURL}} "
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"histories",
@@ -747,7 +746,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "2"
+									"value": "3"
 								}
 							]
 						}
@@ -764,40 +763,75 @@
 							"urlencoded": [
 								{
 									"key": "idUser",
-									"value": "4",
+									"value": "2",
 									"type": "text"
 								},
 								{
 									"key": "idVehicle",
-									"value": "5",
+									"value": "10",
 									"type": "text"
 								},
 								{
 									"key": "startRentDate",
-									"value": "2022-01-02",
+									"value": "2022-01-23",
 									"type": "text"
 								},
 								{
 									"key": "endRentDate",
-									"value": "2022-01-04",
+									"value": "2022-01-29",
 									"type": "text"
 								},
 								{
 									"key": "prepayment",
-									"value": "145000",
+									"value": "0",
 									"type": "text"
 								},
 								{
 									"key": "status",
 									"value": "1",
 									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "aaaa",
+									"type": "text"
+								},
+								{
+									"key": "mobilePhone",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "Bandung",
+									"type": "text"
+								},
+								{
+									"key": "payment_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "emailAddress",
+									"value": "aaaa@mail.com",
+									"type": "text"
+								},
+								{
+									"key": "idCard",
+									"value": "2122121",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "10",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}} /histories",
+							"raw": "{{developmentVehicleURL}}/histories",
 							"host": [
-								"{{baseURL}} "
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"histories"
@@ -816,40 +850,75 @@
 							"urlencoded": [
 								{
 									"key": "idUser",
-									"value": "4",
+									"value": "2",
 									"type": "text"
 								},
 								{
 									"key": "idVehicle",
-									"value": "6",
+									"value": "3",
 									"type": "text"
 								},
 								{
 									"key": "startRentDate",
-									"value": "2022-01-03",
+									"value": "2022-01-07",
 									"type": "text"
 								},
 								{
 									"key": "endRentDate",
-									"value": "2022-01-05",
+									"value": "2022-01-09",
 									"type": "text"
 								},
 								{
 									"key": "prepayment",
-									"value": "145000",
+									"value": "100000",
 									"type": "text"
 								},
 								{
 									"key": "status",
-									"value": "3",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "aaaaa",
+									"type": "text"
+								},
+								{
+									"key": "mobilePhone",
+									"value": "08132233232",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "Bandung",
+									"type": "text"
+								},
+								{
+									"key": "payment_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "emailAddress",
+									"value": "aaaa@mail.com",
+									"type": "text"
+								},
+								{
+									"key": "idCard",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "4",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}} /histories/:id",
+							"raw": "{{developmentVehicleURL}}/histories/:id",
 							"host": [
-								"{{baseURL}} "
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"histories",
@@ -858,31 +927,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "36"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE HISTORY",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}} /histories/:id",
-							"host": [
-								"{{baseURL}} "
-							],
-							"path": [
-								"histories",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "12"
+									"value": "14"
 								}
 							]
 						}
@@ -899,48 +944,77 @@
 							"urlencoded": [
 								{
 									"key": "user_id",
-									"value": "1",
+									"value": "2",
 									"type": "text"
 								},
 								{
 									"key": "vehicle_id",
-									"value": "6",
+									"value": "7",
 									"type": "text"
 								},
 								{
 									"key": "rentStartDate",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "2022-04-07",
+									"type": "text"
 								},
 								{
 									"key": "rentEndDate",
-									"value": "2022-01-09",
+									"value": "2022-04-09",
 									"type": "text"
 								},
 								{
 									"key": "prepayment",
-									"value": "",
-									"type": "text",
-									"disabled": true
+									"value": "0",
+									"type": "text"
 								},
 								{
 									"key": "status_id",
-									"value": "",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "Andi",
+									"type": "text"
+								},
+								{
+									"key": "mobilePhone",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "Bandung",
 									"type": "text",
 									"disabled": true
 								},
 								{
 									"key": "payment_id",
-									"value": "",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "emailAddress",
+									"value": "andi@mail.com",
+									"type": "text"
+								},
+								{
+									"key": "idCard",
+									"value": "12345",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "qty",
+									"value": "5",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}} /histories/:id",
+							"raw": "{{developmentVehicleURL}}/histories/:id",
 							"host": [
-								"{{baseURL}} "
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"histories",
@@ -949,10 +1023,42 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "70"
+									"value": "14"
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE HISTORY",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/histories/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"histories",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -967,9 +1073,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/categories",
+							"raw": "{{developmentVehicleURL}}/categories",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"categories"
@@ -982,12 +1088,12 @@
 								},
 								{
 									"key": "page",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "limit",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
@@ -1011,9 +1117,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/categories/:id",
+							"raw": "{{developmentVehicleURL}}/categories/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"categories",
@@ -1022,7 +1128,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "4"
+									"value": "2"
 								}
 							]
 						}
@@ -1039,15 +1145,15 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "bbbb",
+									"value": "bike",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/categories",
+							"raw": "{{developmentVehicleURL}}/categories",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"categories"
@@ -1066,15 +1172,15 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "motorcycle",
+									"value": "cccc",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/categories/:id",
+							"raw": "{{developmentVehicleURL}}/categories/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"categories",
@@ -1083,7 +1189,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "4"
 								}
 							]
 						}
@@ -1096,9 +1202,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/categories/:id",
+							"raw": "{{developmentVehicleURL}}/categories/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"categories",
@@ -1107,7 +1213,322 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5"
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LOCATION",
+			"item": [
+				{
+					"name": "LIST LOCATION",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/locations",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"locations"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "jak",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DETAIL LOCATION",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/locations/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"locations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD LOCATION",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "location",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{developmentVehicleURL}}/locations",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE LOCATION",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "location",
+									"value": "Kalimantan",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{developmentVehicleURL}}/locations/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"locations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE LOCATION",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/locations/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"locations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PAYMENT_TYPE",
+			"item": [
+				{
+					"name": "LIST PAYMENT TYPE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/payment-types?search=cas",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"payment-types"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "cas"
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DETAIL PAYMENT TYPE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/payment-types/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"payment-types",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD PAYMENT TYPE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "payment",
+									"value": "ferfrfr",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{developmentVehicleURL}}/payment-types",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"payment-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE PAYMENT TYPE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "payment",
+									"value": "cccc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{developmentVehicleURL}}/payment-types/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"payment-types",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE PAYMENT TYPE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/payment-types/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"payment-types",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
 								}
 							]
 						}
@@ -1125,12 +1546,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/status",
+							"raw": "{{developmentVehicleURL}}/status",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"status"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "waiting",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -1140,7 +1568,23 @@
 					"name": "DETAIL STATUS",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/status/:id",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"status",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
 					},
 					"response": []
 				},
@@ -1154,15 +1598,15 @@
 							"urlencoded": [
 								{
 									"key": "status",
-									"value": "Canceled by system",
+									"value": "aaaa",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/status",
+							"raw": "{{developmentVehicleURL}}/status",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"status"
@@ -1181,15 +1625,15 @@
 							"urlencoded": [
 								{
 									"key": "status",
-									"value": "Canceled by system",
+									"value": "bbb",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/status/:id",
+							"raw": "{{developmentVehicleURL}}/status/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"status",
@@ -1198,7 +1642,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "14"
 								}
 							]
 						}
@@ -1211,9 +1655,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/status/:id",
+							"raw": "{{developmentVehicleURL}}/status/:id",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"status",
@@ -1222,7 +1666,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6"
+									"value": "14"
 								}
 							]
 						}
@@ -1244,7 +1688,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "vosov61582@diolang.com",
+									"value": "admin@mail.com",
 									"type": "text"
 								},
 								{
@@ -1255,9 +1699,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/auth/login",
+							"raw": "{{developmentVehicleURL}}/auth/login",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"auth",
@@ -1277,30 +1721,35 @@
 							"urlencoded": [
 								{
 									"key": "fullName",
-									"value": "",
+									"value": "ani",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "",
+									"value": "ani01",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "billy@gmail.com",
+									"value": "dogsegies@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
 									"value": "123",
 									"type": "text"
+								},
+								{
+									"key": "mobileNumber",
+									"value": "08123456",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/auth/register",
+							"raw": "{{developmentVehicleURL}}/auth/register",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"auth",
@@ -1320,7 +1769,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "vosov61582@diolang.com",
+									"value": "dogsegies@gmail.com",
 									"type": "text"
 								},
 								{
@@ -1330,15 +1779,15 @@
 								},
 								{
 									"key": "code",
-									"value": "8200796",
+									"value": "508049",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/auth/emailverification",
+							"raw": "{{developmentVehicleURL}}/auth/emailverification",
 							"host": [
-								"{{baseURL}}"
+								"{{developmentVehicleURL}}"
 							],
 							"path": [
 								"auth",
@@ -1363,29 +1812,62 @@
 								},
 								{
 									"key": "code",
-									"value": "",
+									"value": "816341",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "",
+									"value": "1234",
 									"type": "text"
 								},
 								{
 									"key": "confirmPassword",
-									"value": "",
+									"value": "1234",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/auth/forgotpassword",
+							"raw": "{{developmentVehicleURL}}/auth/forgotpassword",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"auth",
+								"forgotpassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "REFRESH TOKEN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "vosov61582@diolang.com",
+									"type": "text"
+								},
+								{
+									"key": "refreshToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZvc292NjE1ODJAZGlvbGFuZy5jb20iLCJpYXQiOjE2NTAzNTE1MDQsImV4cCI6MTY1MDM1MTU5MH0.vEXUIPt8VFgxjX_qSqmoyX8AxBEHRvkNd8GNyKtHdFI",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/refresh",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"auth",
-								"forgotpassword"
+								"refresh"
 							]
 						}
 					},
@@ -1399,63 +1881,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}} /profile/:id",
+					"raw": "{{developmentVehicleURL}}/profile",
 					"host": [
-						"{{baseURL}} "
+						"{{developmentVehicleURL}}"
 					],
 					"path": [
-						"profile",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "3"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POPULAR",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/popular",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"popular"
-					],
-					"query": [
-						{
-							"key": "month",
-							"value": "1",
-							"disabled": true
-						},
-						{
-							"key": "search",
-							"value": "honda",
-							"disabled": true
-						},
-						{
-							"key": "page",
-							"value": "2",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "total",
-							"disabled": true
-						},
-						{
-							"key": "order",
-							"value": "desc",
-							"disabled": true
-						}
+						"profile"
 					]
 				}
 			},
@@ -1467,9 +1898,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/search?category_id=1",
+					"raw": "{{developmentVehicleURL}}/search?isAvailable=1&location_id=1&price_start=100000&price_end=150000",
 					"host": [
-						"{{baseURL}}"
+						"{{developmentVehicleURL}}"
 					],
 					"path": [
 						"search"
@@ -1482,30 +1913,67 @@
 						},
 						{
 							"key": "date",
-							"value": null,
+							"value": "",
 							"disabled": true
 						},
 						{
 							"key": "category_id",
-							"value": "1"
-						},
-						{
-							"key": "page",
-							"value": null,
-							"disabled": true
-						},
-						{
-							"key": "limit",
-							"value": null,
+							"value": "3",
 							"disabled": true
 						},
 						{
 							"key": "sort",
-							"value": null,
+							"value": "price",
 							"disabled": true
 						},
 						{
 							"key": "order",
+							"value": "desc",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "honda",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "isAvailable",
+							"value": "1"
+						},
+						{
+							"key": "location_id",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "5",
+							"disabled": true
+						},
+						{
+							"key": "price_start",
+							"value": "100000"
+						},
+						{
+							"key": "price_end",
+							"value": "150000"
+						},
+						{
+							"key": "status_id",
+							"value": "6",
+							"disabled": true
+						},
+						{
+							"key": "rate_start",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "rate_end",
 							"value": null,
 							"disabled": true
 						}
