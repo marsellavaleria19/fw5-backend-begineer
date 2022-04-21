@@ -177,5 +177,5 @@ I deploy to heroku website, so step deploy in heroku :
 ![image](https://user-images.githubusercontent.com/44119106/164351007-dd96d7b7-f762-45ae-96dc-2509fddc99fb.png)
 6. Click deploy tab and direct to page like this :
 ![image](https://user-images.githubusercontent.com/44119106/164351374-aa6f0fb4-14c5-4e6b-92a5-840674042727.png)
-7. You can chose deploy with Heroku git or github. If you chose deploy from Heroku git, ypu can follow this step :
+7. You can chose deploy with Heroku git or github. If you chose deploy from Heroku git, you can follow this step :
 ![image](https://user-images.githubusercontent.com/44119106/164351607-4265023b-2a78-46da-bf83-6499d0ef6e1f.png)
