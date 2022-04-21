@@ -170,3 +170,12 @@ I deploy to heroku website, so step deploy in heroku :
 1. Make account in heroku.
 2. if you already have account, login with acount and you will redirect to dashboard like this :
 ![image](https://user-images.githubusercontent.com/44119106/164350079-85ffe4d2-7231-4890-9563-e757480d30fb.png)
+3. Create new application with click new button and chose create new Application and will direct to page like this : 
+![image](https://user-images.githubusercontent.com/44119106/164350603-d656bd85-f66f-401d-8794-8fb21804348b.png)
+4. filled your application name and click create app button.
+5. click your application you had made and will direct to page like this : 
+![image](https://user-images.githubusercontent.com/44119106/164351007-dd96d7b7-f762-45ae-96dc-2509fddc99fb.png)
+6. Click deploy tab and direct to page like this :
+![image](https://user-images.githubusercontent.com/44119106/164351374-aa6f0fb4-14c5-4e6b-92a5-840674042727.png)
+7. You can chose deploy with Heroku git or github. If you chose deploy from Heroku git, ypu can follow this step :
+![image](https://user-images.githubusercontent.com/44119106/164351607-4265023b-2a78-46da-bf83-6499d0ef6e1f.png)
