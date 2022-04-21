@@ -149,7 +149,7 @@ step for install application :
 
  ### Cloudinary Configuration -- for upload image 
  Setting coludinary from account detail in dashboard cloudinary website, like this picture.
- ![image](https://user-images.githubusercontent.com/44119106/164345872-5311e5bc-8916-48c6-b2ba-399db4e374d4.png)
+ ![image](https://user-images.githubusercontent.com/44119106/164353677-b2b38d84-1223-439b-8444-eb554c5d436a.png)
 
   | CONFIG | DESCRPTION |
 | :-------------: |:-------------:|
