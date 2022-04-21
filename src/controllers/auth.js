@@ -29,15 +29,17 @@ const login = async(req, res) => {
   
                 if (checkPassword) {
                     const data = { id: result[0].id,role:result[0].role };
-                    const token = jwt.sign(data, APP_SECRET,{expiresIn:parseInt(TOKEN_EXPIRED)});
-                    const refreshToken = jwt.sign({id:result[0].id}, APP_REFRESH_SECRET);
-                    const dataRefreshToken = {user_id:result[0].id,token:refreshToken};
-                    const inputRefreshToken = await refreshTokenModel.insertDataRefreshToken(dataRefreshToken);
-                    if(inputRefreshToken.affectedRows > 0){
-                        return showApi.showResponse(res,"Login success!",{token,refreshToken});
-                    }else{
-                        return showApi.showResponse(res,"Data refresh token failed to create.",null,null,null,500);
-                    }
+                    //   const token = jwt.sign(data, APP_SECRET,{expiresIn:parseInt(TOKEN_EXPIRED)});
+                    //   const refreshToken = jwt.sign({id:result[0].id}, APP_REFRESH_SECRET);
+                    //   const dataRefreshToken = {user_id:result[0].id,token:refreshToken};
+                    //   const inputRefreshToken = await refreshTokenModel.insertDataRefreshToken(dataRefreshToken);
+                    const token = jwt.sign(data, APP_SECRET);
+                    return showApi.showResponse(res,"Login success!",{token});
+                    //   if(inputRefreshToken.affectedRows > 0){
+                    //       return showApi.showResponse(res,"Login success!",{token,refreshToken});
+                    //   }else{
+                    //       return showApi.showResponse(res,"Data refresh token failed to create.",null,null,null,500);
+                    //   }
                 } else {
                     return showApi.showResponse(res,"Wrong email or password.",null,null,null,400);
                 }
