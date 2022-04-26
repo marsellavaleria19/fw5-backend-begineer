@@ -3,6 +3,7 @@ const { verifyUser,verifyAdmin } = require('../helpers/auth');
 const {
     //  getHistories,
     getHistoriesAsync,
+    getHistoriesByUserIdAsync,
     //  getHistory,
     getHistoryAsync,
     // insertHistory,
@@ -15,7 +16,8 @@ const {
     deleteHistoryAsync
 } = require('../controllers/histories');
 // histories.get('/', verifyUser, getHistories);
-histories.get('/', getHistoriesAsync);
+histories.get('/',verifyAdmin, getHistoriesAsync);
+histories.get('/user/:id',verifyUser,getHistoriesByUserIdAsync);
 // histories.get('/:id',verifyUser, getHistory);
 histories.get('/:id', getHistoryAsync);
 // histories.post('/', insertHistory);
