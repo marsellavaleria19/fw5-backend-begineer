@@ -12,6 +12,7 @@ const vehicleModel = require('../models/vehicles');
 const statusModel = require('../models/status');
 const userModel = require('../models/users');
 const { response } = require('express');
+const {APP_URL, ENVIRONMENT } = process.env;
 
 const getHistories = (request, response) => {
     let { search, status_id, category_id, date, page, limit, sort, order, month } = request.query;
@@ -92,6 +93,13 @@ const getHistoriesAsync = async(request, response) => {
             let data = {search,filter:dataPages.filter,dataPages};
             let result = await historyModel.getDataHistoriesAsync(data);
             if (result.length > 0) {
+                result.map((item)=>{
+                    if(item.photo!==null){
+                        if(!item.photo.includes('https')){
+                            item.photo = `${APP_URL}/${item.photo}`;
+                        }
+                    }
+                });
                 var count = await historyModel.countDataHistoriesAsync(data);
                 const { total } = count[0];
                 dataPages = {...dataPages, total: total};
@@ -100,6 +108,62 @@ const getHistoriesAsync = async(request, response) => {
         } else {
             return showApi.showResponse(response,"Pagination not valid",null,null,validate,400);
         }
+    }catch(error){
+        return showApi.showResponse(response,error.message,null,null,null,500);
+    }
+};
+
+const getHistoriesByUserIdAsync = async(request, response) => {
+    try{
+        const { id } = request.params;
+        const dataId = {
+            id : id
+        };
+
+        const requirementId = {
+            id : 'required|number'
+        };
+        const validateId = await validation.validation(dataId,requirementId);
+        if(Object.keys(validateId).length == 0){
+            let { search,date, page, limit, sort, order, month } = request.query;
+            search = search || '';
+            page = ((page != null && page !== '') ? page : '1');
+            limit = ((limit != null && limit !== '') ? limit : '5');
+            let dataPages = { page, limit };
+            let requirement = {page:'number',limit:'number'};
+            var filledFilter = ["search","category_id", "payment_id","status_id","date"];
+            let validate = await validation.validation(dataPages,requirement);
+   
+            if (Object.keys(validate).length == 0) {
+                dataPages.route = `histories/user/${id}`;
+                dataPages.page = parseInt(dataPages.page);
+                dataPages.limit = parseInt(dataPages.limit);
+                dataPages = pagination.pagination(request.query,dataPages,filledFilter,sort,order);
+                console.log(dataPages);
+                let data = {search,filter:dataPages.filter,dataPages};
+                let result = await historyModel.getDataHistoriesByUserIdAsync(data,id);
+                if (result.length > 0) {
+                    result.map((item)=>{
+                        if(item.photo!==null){
+                            if(!item.photo.includes('https')){
+                                item.photo = `${APP_URL}/${item.photo}`;
+                            }
+                        }
+                    });
+                    var count = await historyModel.countDataHistoriesAsync(data);
+                    const { total } = count[0];
+                    dataPages = {...dataPages, total: total};
+                    return showApi.showResponse(response,"List Data Histories",result,dataPages);
+                }else{
+                    return showApi.showResponse(response,"Data history not found",null,null,null,404);
+                }
+            } else {
+                return showApi.showResponse(response,"Pagination not valid",null,null,validate,400);
+            }
+        }else{
+            return showApi.showResponse(response,"Id was not valid",null,null,validateId,400);
+        }
+  
     }catch(error){
         return showApi.showResponse(response,error.message,null,null,null,500);
     }
@@ -594,4 +658,4 @@ const deleteHistoryAsync = async(request, response) => {
 
 };
 
-module.exports = { getHistories,getHistoriesAsync, getHistory,getHistoryAsync, insertHistory, insertHistoryAsync, updateHistory, updateHistoryAsync, updatePatchHistory, updatePatchHistoryAsync, deleteHistory,deleteHistoryAsync };
+module.exports = { getHistories,getHistoriesAsync,getHistoriesByUserIdAsync, getHistory,getHistoryAsync, insertHistory, insertHistoryAsync, updateHistory, updateHistoryAsync, updatePatchHistory, updatePatchHistoryAsync, deleteHistory,deleteHistoryAsync };
