@@ -74,7 +74,6 @@ const addCheckCurrentPassword = async(data,validate,id)=>{
 
 const changePassword = async(req, res) => {
     try{
-        console.log(req.user);
         const { password, newPassword,confirmNewPassword } = req.body;
         const data = {password,newPassword,confirmNewPassword };
         const requirement = {
