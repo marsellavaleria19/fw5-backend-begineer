@@ -25,7 +25,7 @@ if(ENVIRONMENT=="production"){
         },
     });
 }else{
-    const storage = multer.diskStorage({
+    storage = multer.diskStorage({
         destination: function(req, file, cb) {
             cb(null, 'uploads/');
         },
