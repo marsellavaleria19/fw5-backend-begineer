@@ -52,8 +52,58 @@ const login = async(req, res) => {
         }  
     }catch(error){
         return showApi.showResponse(res,error.message,null,null,null,500);
+    }    
+};
+
+const addCheckCurrentPassword = async(data,validate,id)=>{
+    var result = {}; 
+    if(Object.keys(data).length > 0){
+        if(!validate.password && data.password){
+            const dataUser = await userModel.getDataUserAsync(id);
+            if(dataUser.length > 0){
+                const { password: hashPassword } = dataUser[0];
+                const checkPassword = await argon.verify(hashPassword, data.password);
+                if(!checkPassword){
+                    result.password = "Current password not match";
+                }
+            }
+        }
     }
-    
+    return result;
+};
+
+const changePassword = async(req, res) => {
+    try{
+        console.log(req.user);
+        const { password, newPassword,confirmNewPassword } = req.body;
+        const data = {password,newPassword,confirmNewPassword };
+        const requirement = {
+            password : 'required',
+            newPassword:'required',
+            confirmNewPassword:'required'
+        };
+        var validate = await validation.validation(data,requirement);
+        validate = {...validate,...await addCheckCurrentPassword(data,validate,req.user.id)};
+        if (Object.keys(validate).length == 0) {
+            if(newPassword==confirmNewPassword){
+                const hashPassword = await argon.hash(newPassword);
+                data.newPassword = hashPassword;
+                const changePassword = await userModel.updateDataUserAsync(req.user.id,{password:data.newPassword});
+                if(changePassword.affectedRows > 0){
+                    return showApi.showResponse(res,"Password change successfully.");
+                }else{
+                    return showApi.showResponse(res,"Password failed to change.");
+                }
+            }else {
+                return showApi.showResponse(res,"New Password and confirm new password not match.",null,null,null,400);
+            }
+        } else {
+            return showApi.showResponse(res,"Data not valid",null,null,validate,400);
+        }  
+    }catch(error){
+        return showApi.showResponse(res,error.message,null,null,null,500);
+    }
+   
 };
 
 const refreshForToken = async(req,res)=>{
@@ -273,4 +323,4 @@ const forgotPassword = async(req, res) => {
 };
 
 
-module.exports = { login, register,refreshForToken, forgotPassword, emailVerification };
+module.exports = { login, register,refreshForToken,changePassword, forgotPassword, emailVerification };
