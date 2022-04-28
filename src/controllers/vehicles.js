@@ -255,7 +255,7 @@ const getVehicleAsync = async(req, res) => {
                         results[0].photo = `${APP_URL}/${results[0].photo}`;
                     }
                 }
-                return showApi.showResponse(res,"Detail Vehicle",results);            
+                return showApi.showResponse(res,"Detail Vehicle",results[0]);            
             } else {
                 return showApi.showResponse(res,"Detail vehicle not found",null,null,null,404);
             }
@@ -320,6 +320,7 @@ const insertVehicleAsync = async(request, response) => {
                     description : request.body.description,
                 };
                 
+                console.log(data);
                 const requirement = {
                     name: 'required',
                     category_id: 'required|number|checkCategory',
