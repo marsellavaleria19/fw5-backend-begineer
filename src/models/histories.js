@@ -39,7 +39,7 @@ exports.getDataHistoriesAsync = (data) => new Promise((resolve, reject) => {
             }
         }
     });
-    db.query(`select h.id,h.user_id,h.fullname,h.mobilephone,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,
+    db.query(`select h.id,h.user_id,h.idCard,h.fullname,h.mobilephone,h.bookingCode,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,
     h.qty,h.prepayment,h.status_id,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id join categories c on v.category_id = c.id 
@@ -73,7 +73,7 @@ exports.getDataHistoriesByUserIdAsync = (data,id) => new Promise((resolve, rejec
         sortOrderQuery = 'order by h.id asc'; 
     }
  
-    const query =  db.query(`select h.id,h.user_id,h.fullname,h.mobilephone,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,
+    const query =  db.query(`select h.id,h.user_id,h.idCard,h.fullname,h.mobilephone,h.bookingCode,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,
    h.qty,h.prepayment,h.status_id,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment
    from histories h join users u on h.user_id = u.id 
    join vehicles v on h.vehicle_id = v.id join categories c on v.category_id = c.id 
@@ -144,7 +144,7 @@ exports.countDataHistoriesByUserIdAsync = (data,id) => new Promise((resolve, rej
 });
 
 exports.getDataHistory = (id, cb) => {
-    db.query(`select h.id,h.user_id,h.idCard,h.fullname,h.emailAddress,h.location,h.mobilePhone,v.name as brand,v.price,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,h.payment_type,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment, h.bookingCode,h.paymentCode,h.createdAt
+    db.query(`select h.id,h.user_id,h.bookingCode,h.idCard,h.fullname,h.emailAddress,h.location,h.mobilePhone,v.name as brand,v.price,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,h.payment_type,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment, h.bookingCode,h.paymentCode,h.createdAt
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id
@@ -156,7 +156,7 @@ exports.getDataHistory = (id, cb) => {
 };
 
 exports.getDataHistoryAsync = (id) => new Promise((resolve, reject) => {
-    db.query(`select h.id,h.user_id,h.idCard,h.fullname,h.emailAddress,h.location,h.mobilePhone,v.name as brand,v.price,concat('${APP_URL}/',v.photo) as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,h.payment_type,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*DATEDIFF(h.rentEndDate,h.rentStartDate) as totalPayment,h.createdAt
+    db.query(`select h.id,h.user_id,h.bookingCode,h.idCard,h.fullname,h.emailAddress,h.location,h.mobilePhone,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,h.payment_type,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment,h.createdAt
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id

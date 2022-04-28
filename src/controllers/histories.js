@@ -215,6 +215,11 @@ const getHistoryAsync = async(request, response) => {
             const result = await historyModel.getDataHistoryAsync(id);
             if (result.length > 0) {
                 result.map((item) => {
+                    if(item.photo!==null){
+                        if(!item.photo.includes('https')){
+                            item.photo = `${APP_URL}/${item.photo}`;
+                        }
+                    }
                     item.rentStartDate = moment(item.rentStartDate).format('DD MMM YYYY');
                     item.rentEndDate = moment(item.rentEndDate).format('DD MMM YYYY');
                     return item;
@@ -310,6 +315,7 @@ const insertHistoryAsync = async(request, response) => {
             payment_id : request.body.payment_id
         };
 
+        console.log(data);
         const requirement = {
             user_id: 'required|number|checkUser',
             vehicle_id: 'required|number|checkVehicle',
@@ -318,18 +324,19 @@ const insertHistoryAsync = async(request, response) => {
             prepayment: 'required|number',
             status_id: 'required|number|checkStatus',
             qty: 'required|number|grather0',
-            idCard : 'required|number',
+            idCard : 'number',
             fullname : 'required',
             mobilePhone : 'required|phone',
             emailAddress : 'required|email',
             location : 'required',
-            payment_id : 'required|number|checkPayment'
+            payment_id : 'number|checkPayment'
         };
 
         var validate = await validation.validation(data,requirement);
         validate = {...validate,...addCheckRentDate(data)};
 
         if (Object.keys(validate).length == 0) {
+            data.payment_id = data.payment_id == '' ? null : data.payment_id;
             data.rentStartDate = moment(data.rentStartDate).format('YYYY-MM-DD');
             data.rentEndDate = moment(data.rentEndDate).format('YYYY-MM-DD');
             let randomBookingCode = Math.round(Math.random() * (99999 - 10000) - 10000);
