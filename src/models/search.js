@@ -24,10 +24,12 @@ exports.getDataSearchVehicle = (data) => new Promise((resolve, reject) => {
     var resultFillter = "";
     filled.forEach((item) => {
         if (data.filter[item]) {
-            if(resultFillter=="status_id"){
+            if(item=="status_id" || item=="payment_id"){
                 resultFillter += ` and h.${item}='${data.filter[item]}'`;
+            }else{
+                resultFillter += ` and v.${item}='${data.filter[item]}'`;
             }
-            resultFillter += ` and v.${item}='${data.filter[item]}'`;
+           
             // if(item!=='no_prepayment'){
             //     if(item=="location" || item=='type' || item=="isAvailable" || item=='category_id' || item=='rate'){
             //         resultFillter += ` and v.${item}='${data.filter[item]}'`;
@@ -75,11 +77,15 @@ exports.getDataSearchVehicle = (data) => new Promise((resolve, reject) => {
 // });
 
 exports.countDataSearchVehicle = (data) => new Promise((resolve, reject) => {
-    var filled = ["location_id", "type", "payment_id", "category_id",'isAvailable','status_id'];
+    var filled = ["location_id","payment_id", "category_id",'isAvailable','status_id'];
     var resultFillter = "";
     filled.forEach((item) => {
         if (data.filter[item]) {
-            resultFillter += ` and v.${item}='${data.filter[item]}'`;
+            if(item=="status_id" || item=="payment_id"){
+                resultFillter += ` and h.${item}='${data.filter[item]}'`;
+            }else{
+                resultFillter += ` and v.${item}='${data.filter[item]}'`;
+            }
             // if(item!=='no_prepayment'){
             //     if(item=="location" || item=='type' || item=="isAvailable" || item=='category_id' || item=='rate'){
             //         resultFillter += ` and v.${item}='${data.filter[item]}'`;
