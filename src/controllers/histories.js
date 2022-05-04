@@ -328,7 +328,6 @@ const insertHistoryAsync = async(request, response) => {
             fullname : 'required',
             mobilePhone : 'required|phone',
             emailAddress : 'required|email',
-            location : 'required',
             payment_id : 'number|checkPayment'
         };
 
@@ -451,7 +450,6 @@ const updateHistoryAsync = async(request, response) => {
                 fullname : 'required',
                 mobilePhone : 'required|phone',
                 emailAddress : 'required|email',
-                location : 'required',
                 payment_id : 'required|number|checkPayment'
             };
 
