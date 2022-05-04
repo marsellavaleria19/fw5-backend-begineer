@@ -167,8 +167,6 @@ const getDataVehiclesByCategoryAsync = async (req, res) => {
                     const { total } = count[0];
                     dataPages = {...dataPages,total};
                     return showApi.showResponse(res,"List data vehicle by category",listVehicleCategory,dataPages);
-                }else{
-                    return showApi.showResponse(res,"Data not found",null,null,null,404);
                 }
             }else{
                 return showApi.showResponse(res,"Pagination not valid",null,null,validate,400); 
@@ -327,7 +325,7 @@ const insertVehicleAsync = async(request, response) => {
                     location_id: 'required|number|checkLocation',
                     price: 'required|number|grather0',
                     qty: 'required|number|grather0',
-                    isAvailable: 'required|number',
+                    isAvailable: 'required|number|checkIsAvailable',
                     description : 'required',
                 };
 
@@ -449,7 +447,7 @@ const updateVehicleAsync = (req, res) => {
                             location_id: 'required|number|checkLocation',
                             price: 'required|number|grather0',
                             qty: 'required|number|grather0',
-                            isAvailable: 'required|number',
+                            isAvailable: 'required|number|checkIsAvailable',
                             description : 'required',
                         };
                         var validate = await validation.validation(data,requirement);
@@ -555,8 +553,12 @@ const updatePatchVehicleAsync = (req, res) => {
                                 if(value=="location_id"){
                                     requirement[value] = 'number|checkLocation';
                                 }
-                                if(value=='price' || value=='qty'||value=='isAvailable'){
+                                if(value=='price' || value=='qty'){
                                     requirement[value] = 'number|grather0';
+                                }
+
+                                if(value=='ísAvailable'){
+                                    requirement[value] = 'number|checkIsAvailable';
                                 }
                             }
                             if(req.file){
