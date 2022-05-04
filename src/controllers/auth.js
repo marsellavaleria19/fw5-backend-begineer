@@ -82,20 +82,29 @@ const changePassword = async(req, res) => {
             confirmNewPassword:'required'
         };
         var validate = await validation.validation(data,requirement);
-        validate = {...validate,...await addCheckCurrentPassword(data,validate,req.user.id)};
         if (Object.keys(validate).length == 0) {
-            if(newPassword==confirmNewPassword){
-                const hashPassword = await argon.hash(newPassword);
-                data.newPassword = hashPassword;
-                const changePassword = await userModel.updateDataUserAsync(req.user.id,{password:data.newPassword});
-                if(changePassword.affectedRows > 0){
-                    return showApi.showResponse(res,"Password change successfully.");
+            const dataUser = await userModel.getDataUserAsync(req.user.id);
+            if(dataUser.length > 0){
+                const { password: hashPassword } = dataUser[0];
+                const checkPassword = await argon.verify(hashPassword, data.password);
+                if(checkPassword){
+                    if(newPassword==confirmNewPassword){
+                        const hashPassword = await argon.hash(newPassword);
+                        data.newPassword = hashPassword;
+                        const changePassword = await userModel.updateDataUserAsync(req.user.id,{password:data.newPassword});
+                        if(changePassword.affectedRows > 0){
+                            return showApi.showResponse(res,"Password change successfully.");
+                        }else{
+                            return showApi.showResponse(res,"Password failed to change.");
+                        }
+                    }else {
+                        return showApi.showResponse(res,"New Password and confirm new password not match.",null,null,null,400);
+                    }
                 }else{
-                    return showApi.showResponse(res,"Password failed to change.");
+                    return showApi.showResponse(res,"Current password not match.",null,null,null,400);
                 }
-            }else {
-                return showApi.showResponse(res,"New Password and confirm new password not match.",null,null,null,400);
             }
+         
         } else {
             return showApi.showResponse(res,"Data not valid",null,null,validate,400);
         }  
@@ -235,23 +244,23 @@ const emailVerification = async(req, res) => {
             if(data.email){
                 if (errValidation == null) {
                     const user = await userModel.getDataUserEmailAsync(data.email, null);
-                    const { password: hashPassword } = user[0];
-                    const checkPassword = await argon.verify(hashPassword, password);
-                    if (checkPassword) {
-                        const getEmailVerification = await emailVerificationModel.getEmailVerificationByCode(code);
-                        const updateUser = await userModel.updateDataUserAsync(getEmailVerification[0].user_id, { isVerified: 1 });
-                        const dataUser = await userModel.getDataUserAsync(getEmailVerification[0].user_id);
-                        if (updateUser.affectedRows > 0) {
-                            const updateExpired = await emailVerificationModel.updateEmailVerification({ isExpired: 1 }, getEmailVerification[0].id);
-                            if (updateExpired.affectedRows > 0) {
-                                return showApi.showResponse(res,"Email has been verified.",dataUser[0]);
-                            } else {
-                                return showApi.showResponse(res,"Email verification failed to verify.",null,null,null,500);
-                            }
+                    //   const { password: hashPassword } = user[0];
+                    //   const checkPassword = await argon.verify(hashPassword, password);
+                    //   if (checkPassword) {
+                    const getEmailVerification = await emailVerificationModel.getEmailVerificationByCode(code);
+                    const updateUser = await userModel.updateDataUserAsync(getEmailVerification[0].user_id, { isVerified: 1 });
+                    const dataUser = await userModel.getDataUserAsync(getEmailVerification[0].user_id);
+                    if (updateUser.affectedRows > 0) {
+                        const updateExpired = await emailVerificationModel.updateEmailVerification({ isExpired: 1 }, getEmailVerification[0].id);
+                        if (updateExpired.affectedRows > 0) {
+                            return showApi.showResponse(res,"Email has been verified.",dataUser[0]);
                         } else {
-                            return showApi.showResponse(res,"User failed to update",null,null,null,500);
+                            return showApi.showResponse(res,"Email verification failed to verify.",null,null,null,500);
                         }
+                    } else {
+                        return showApi.showResponse(res,"User failed to update",null,null,null,500);
                     }
+                    //   }
                 } else {
                     return showApi.showResponse(res,"Data not valid.",null,null,errValidation,400);
                 }
@@ -268,9 +277,12 @@ const forgotPassword = async(req, res) => {
     try{
         const { email, code, password, confirmPassword } = req.body;
         const data = { email, code, password, confirmPassword };
+        console.log(data);
         var errValidation = await validation.validationForgotPassword(data);
         if (!data.code) {
+            console.log('masuk if');
             if (errValidation == null) {
+                console.log('masuk err validation');
                 const getDataUser = await userModel.getDataUserEmailAsync(email);
                 let randomCode = Math.abs(Math.floor(Math.random() * (999999 - 100000) + 100000));
                 const reset = await forgotPasswordModel.insertForgotPassword(getDataUser[0].id, randomCode);
@@ -290,7 +302,9 @@ const forgotPassword = async(req, res) => {
                 return showApi.showResponse(res,"Data not valid.",null,null,errValidation,400);
             }
         } else {
+            console.log("masuk else");
             if (data.email) {
+                console.log("masuk 1");
                 if (errValidation == null) {
                     const resultDataForgotPassword = await forgotPasswordModel.getForgotPassword(data.code);
                     const user = await userModel.getDataUserAsync(resultDataForgotPassword[0].user_id);
@@ -312,6 +326,7 @@ const forgotPassword = async(req, res) => {
                         return showApi.showResponse(res,"Confirm password not same as password.",null,null,null,400);
                     }
                 } else {
+                    console.log(errValidation);
                     return showApi.showResponse(res,"Data not valid.",null,null,errValidation,400);
                 }
             }
