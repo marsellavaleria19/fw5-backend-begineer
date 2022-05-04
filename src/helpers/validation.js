@@ -117,6 +117,12 @@ const validateRequirement = async(type,data,key)=>{
                 result[key] = `${key} must be admin or customer`;
             }
         }
+
+        if(type=="checkIsAvailable"){
+            if(data!=='0' && data!=='1'){
+                result[key] = `${key} must be 0 or 1`;
+            }
+        }
     }
     return result;
 };
@@ -405,6 +411,7 @@ exports.validationEmailVerification = async(data) => {
 exports.validationForgotPassword = async(data) => {
     var result = null;
     if ((!data.code || data.code == '') && (!data.password || data.password == '') && (!data.confirmPassword || data.confirmPassword == '')) {
+        console.log('masuk if');
         if (!data.email || data.email == "") {
             result = { email: 'Email must be filled.' };
         } else {
@@ -419,6 +426,7 @@ exports.validationForgotPassword = async(data) => {
         }
     } else {
         if (data.code) {
+            console.log('masuk else');
             const resultForgotPassword = await forgotPasswordModel.getForgotPassword(data.code);
             if (resultForgotPassword.length === 1) {
                 if (resultForgotPassword[0].isExpired) {
