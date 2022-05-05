@@ -338,10 +338,7 @@ const insertHistoryAsync = async(request, response) => {
             data.payment_id = data.payment_id == '' ? null : data.payment_id;
             data.rentStartDate = moment(data.rentStartDate).format('YYYY-MM-DD');
             data.rentEndDate = moment(data.rentEndDate).format('YYYY-MM-DD');
-            let randomBookingCode = Math.round(Math.random() * (99999 - 10000) - 10000);
-            if(randomBookingCode < 0){
-                randomBookingCode = (randomBookingCode*-1);
-            }
+            let randomBookingCode = Math.abs(Math.floor(Math.random() * (999999 - 100000) + 100000));
             data.paymentCode = randomBookingCode;
             data.bookingCode  = `RV${randomBookingCode}`;
             var insert = await historyModel.insertDataHistoryAsync(data);
