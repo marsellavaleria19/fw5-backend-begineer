@@ -1,7 +1,6 @@
 const searchVehicle = require('express').Router();
-const cors = require('cors');
 
 const { getSearchVehicle } = require('../controllers/search');
-searchVehicle.get('/', cors(), getSearchVehicle);
+searchVehicle.get('/', getSearchVehicle);
 
 module.exports = searchVehicle;
