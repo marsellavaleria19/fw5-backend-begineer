@@ -44,6 +44,8 @@ const getSearchVehicle = async(req, res) => {
                 const { total } = result[0];
                 dataPages = {...dataPages, total: total};
                 return showApi.showResponse(res,"List data search",dataSearch,dataPages);
+            }else{
+                return showApi.showResponse(res,"Data search not found",null,null,null,404);
             }
         }else{
             return showApi.showResponse(res,"Pagination not valid",null,null,validate,400); 
