@@ -156,7 +156,7 @@ exports.getDataHistory = (id, cb) => {
 };
 
 exports.getDataHistoryAsync = (id) => new Promise((resolve, reject) => {
-    db.query(`select h.id,h.user_id,h.bookingCode,h.idCard,h.fullname,h.emailAddress,h.location,h.mobilePhone,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,h.payment_type,h.status_id,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment,h.createdAt
+    db.query(`select h.id,h.user_id,h.bookingCode,h.idCard,h.fullname,h.emailAddress,h.location,h.mobilePhone,v.name as brand,v.price,v.photo as photo,c.name as category,h.rentStartDate,h.rentEndDate,h.qty,h.prepayment,h.payment_type,h.status_id,s.status,DATEDIFF(h.rentEndDate,h.rentStartDate)+1 as day,v.price*h.qty*(DATEDIFF(h.rentEndDate,h.rentStartDate)+1) as totalPayment,h.payment_id,h.createdAt
     from histories h join users u on h.user_id = u.id 
     join vehicles v on h.vehicle_id = v.id 
     join categories c on v.category_id = c.id
