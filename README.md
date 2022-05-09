@@ -121,7 +121,7 @@ Links or end points provided to access user data, vehicles, history, categories,
 ## INSTALLATION
 step for install application :
 1. clone github with runing code ```git clone https://github.com/marsellavaleria19/rvrental-backend.git``` in git terminal.
-2. Create an .env file, then fill it with the following configuration:
+2. Copy env-example and change to .env file, then fill it with the following configuration:
   ### Application Configuration
   | CONFIG | DESCRPTION | REMARKS |
 | :-------------: |:-------------:|:-----------:|
