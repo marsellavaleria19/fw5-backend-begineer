@@ -666,10 +666,296 @@
 			]
 		},
 		{
+			"name": "VEHICLE IMAGE",
+			"item": [
+				{
+					"name": "LIST VEHICLE IMAGE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/vehicle-images?name=honda",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicle-images"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "honda"
+								},
+								{
+									"key": "page",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "id",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DETAIL VEHICLE IMAGE",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{baseURL}}/vehicle-images/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicle-images",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "34"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST VEHICLE IMAGE BY VEHICLE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/vehicle-images/vehicle/:id?sort=id&order=desc",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicle-images",
+								"vehicle",
+								":id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD VEHICLE IMAGE",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "vehicle_id",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Pictures/logo2.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/vehicle-images",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicle-images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE VEHICLE IMAGE",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "vehicle_id",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "isPrimary",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/SELLA/Documents/CV dan Porfofolio Marsella.docx"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/vehicle-images/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicle-images",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE VEHICLE IMAGE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/vehicle-images/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"vehicle-images",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "HISTORY",
 			"item": [
 				{
 					"name": "LIST HISTORY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{developmentVehicleURL}}/histories?search=TOYOTA&sort=id&order=desc",
+							"host": [
+								"{{developmentVehicleURL}}"
+							],
+							"path": [
+								"histories"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "TOYOTA"
+								},
+								{
+									"key": "limit",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "location",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "status_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "date",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "id"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST HISTORY BY USER ID",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1841,7 +2127,7 @@
 					"response": []
 				},
 				{
-					"name": "REFRESH TOKEN",
+					"name": "CHANGE PASSWORD",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -1849,25 +2135,37 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "email",
-									"value": "vosov61582@diolang.com",
+									"key": "password",
+									"value": "123",
 									"type": "text"
 								},
 								{
-									"key": "refreshToken",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZvc292NjE1ODJAZGlvbGFuZy5jb20iLCJpYXQiOjE2NTAzNTE1MDQsImV4cCI6MTY1MDM1MTU5MH0.vEXUIPt8VFgxjX_qSqmoyX8AxBEHRvkNd8GNyKtHdFI",
+									"key": "newPassword",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "confirmNewPassword",
+									"value": "1234",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{baseURL}}/auth/refresh",
+							"raw": "{{baseURL}}/auth/changepassword",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"auth",
-								"refresh"
+								"changepassword"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
