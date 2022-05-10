@@ -120,16 +120,14 @@ Links or end points provided to access user data, vehicles, history, categories,
 
 ## INSTALLATION
 step for install application :
-1. clone github with runing code ```git clone https://github.com/marsellavaleria19/rvrental-backend.git``` in git terminal.
-2. Copy env-example and change to .env file, then fill it with the following configuration:
+1. clone this repository ```git clone https://github.com/marsellavaleria19/rvrental-backend.git```.
+2. Copy env-example file and rename to .env file, then fill it with the following configuration:
   ### Application Configuration
   | CONFIG | DESCRPTION | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 |APP_URL| filled with url API | example : http://localhost:5000|
 |APP_PORT|filled with port API port has make in application | (example : 5000) |
 |APP_SECRET|filled with secret key for sign jwt to get access token|(example : B4ck3nDEng1nn3r) |
-|APP_REFRESH_SECRET|filled with secret key for sign jwt to get access refresh token. |(example : B4ck3nDEng1nn3rR3fr3sh)|
-|TOKEN_EXPIRED|filled with time token will expred |example : 3600 (token will expried in 1 hour)|
 
  ### Email Configuration
   | CONFIG | DESCRPTION | REMARKS |
