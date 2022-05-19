@@ -105,7 +105,7 @@ exports.countDataSearchVehicle = (data) => new Promise((resolve, reject) => {
     const query = db.query(`select count(*) as total
       from (select distinct v.id,v.name,concat('${APP_URL}/',v.photo) as photo,v.price,v.isAvailable,rate
       from histories h right join vehicles v on h.vehicle_id = v.id left join payment_types pt on h.payment_id = pt.id right join categories c on c.id = v.category_id
-      where v.name like '%${data.name}%' ${resultFillter} ${data.date!=="" ? `and h.rentStartDate = '${data.date}' or h.rentEndDate='${data.date}'` : ""} 
+      where v.name like '%${data.name}%' ${resultFillter} ${data.date!=="" ? `and (h.rentStartDate = '${data.date}' or h.rentEndDate='${data.date}')` : ""} 
       ${data.price_start!==""  && data.price_end!=="" ? `and v.price between '${data.price_start}' and '${data.price_end}'` : ""}
       ${data.rate_start!==""  && data.rate_end!=="" ? `and v.rate between '${data.rate_start}' and '${data.rate_end}'` : ""}
      ) as filter`, function(error, results) {
