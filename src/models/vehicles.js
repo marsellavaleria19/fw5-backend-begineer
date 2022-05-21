@@ -40,7 +40,7 @@ exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
         sortOrderQuery = `LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`; 
     }
 
-    db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,v.location_id,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
+    db.query(`select v.id AS id,v.name as name,v.category_id as category_id,c.name category,v.photo as photo,v.rate,v.location_id,l.location as location,v.price as price,v.qty as qty,v.isAvailable as isAvailable,v.createdAt as createdAt 
     from vehicles v 
    join categories c on v.category_id = c.id 
    right join locations l on v.location_id = l.id
@@ -52,7 +52,7 @@ exports.getDataVehiclesAsync = (data) =>new Promise((resolve,reject) =>{
 });
 
 exports.getDataVehiclesByCategory = (data, id, cb) => {
-    db.query(`select v.id,v.name,c.name category,concat('${APP_URL}/',v.photo) as photo,v.location,v.description,v.description,v.rate,v.isAvailable from vehicles v 
+    db.query(`select v.id,v.name,c.name category,concat('${APP_URL}/',v.photo) as photo,v.rate,v.location,v.description,v.description,v.rate,v.isAvailable from vehicles v 
   join categories c on v.category_id = c.id 
     where v.category_id = ? 
     order by v.createdAt desc LIMIT ${data.limit} OFFSET ${data.offset}`, [id], function(error, results) {
@@ -79,7 +79,7 @@ exports.getDataVehiclesByCategoryAsync = (data, id) => new Promise((resolve,reje
         sortOrderQuery = `LIMIT ${data.dataPages.limit.toString()} OFFSET ${data.dataPages.offset.toString()}`; 
     }
 
-    db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,v.location_id,l.location,v.price,v.description,v.qty,v.isAvailable,v.createdAt from vehicles v 
+    db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,v.location_id,v.rate,l.location,v.price,v.description,v.qty,v.isAvailable,v.createdAt from vehicles v 
     join categories c on v.category_id = c.id 
     right join locations l on v.location_id = l.id
    where v.category_id = ? and v.name like '%${data.name!==null ? data.name : ''}%'  ${resultFillter}
@@ -158,7 +158,7 @@ exports.getDataVehicle = (id, cb) => {
 };
 
 exports.getDataVehicleAsync = (id) => new Promise((resolve, reject) => {
-    db.query(`select v.id,v.name,v.category_id,c.name category,v.photo,v.location_id,l.location,v.price,v.qty,v.isAvailable,v.description 
+    db.query(`select v.id,v.name,v.category_id,c.name category,v.rate,v.photo,v.location_id,l.location,v.price,v.qty,v.isAvailable,v.description 
     from vehicles v join categories c on v.category_id = c.id 
     right join locations l on v.location_id = l.id
     WHERE v.id=?`, [id], (err, res) => {

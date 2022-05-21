@@ -318,6 +318,7 @@ const insertVehicleAsync = async(request, response) => {
                     qty: request.body.qty,
                     isAvailable: request.body.isAvailable,
                     description : request.body.description,
+                    rate : request.body.rate!==null ? request.body.rate : '0',
                 };
                 
                 console.log(data);
