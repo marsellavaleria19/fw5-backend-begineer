@@ -309,6 +309,7 @@ const insertVehicleAsync = async(request, response) => {
         const count = await vehicleModel.countAllDataVehiclesAsync();
         request.fileUpload = "vehicle";
         upload(request, response, async function(errorUpload) {
+            const rateData = request.body.rate || '0';
             auth.verifyAdmin(request, response, async(error) => {
                 const data = {
                     name: request.body.name,
@@ -318,7 +319,7 @@ const insertVehicleAsync = async(request, response) => {
                     qty: request.body.qty,
                     isAvailable: request.body.isAvailable,
                     description : request.body.description,
-                    rate : request.body.rate!==null ? request.body.rate : '0',
+                    rate : rateData,
                 };
                 
                 console.log(data);
