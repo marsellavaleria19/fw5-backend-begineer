@@ -167,6 +167,8 @@ const getDataVehiclesByCategoryAsync = async (req, res) => {
                     const { total } = count[0];
                     dataPages = {...dataPages,total};
                     return showApi.showResponse(res,"List data vehicle by category",listVehicleCategory,dataPages);
+                }else{
+                    return showApi.showResponse(res,"Data not found",null,null,null,404); 
                 }
             }else{
                 return showApi.showResponse(res,"Pagination not valid",null,null,validate,400); 
